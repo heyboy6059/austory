@@ -1,0 +1,25 @@
+{
+  "name": "austory",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "firebase": "^9.1.3",
+    "next": "11.1.2",
+    "react": "17.0.2",
+    "react-dom": "17.0.2",
+    "react-firebase-hooks": "^3.0.4"
+  },
+  "devDependencies": {
+    "@types/node": "^16.11.1",
+    "@types/react": "^17.0.30",
+    "eslint": "8.0.1",
+    "eslint-config-next": "11.1.2",
+    "typescript": "^4.4.4"
+  }
+}
