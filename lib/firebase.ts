@@ -25,6 +25,8 @@ export const fromMillis = firebase.firestore.Timestamp.fromMillis
 
 export const googleAuthProvider = new firebase.auth.GoogleAuthProvider()
 
+export const serverTimestamp = firebase.firestore.FieldValue.serverTimestamp
+
 /**
  * Gets a users/{uid} document with username
  * @param username
