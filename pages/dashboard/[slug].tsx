@@ -1,4 +1,4 @@
-import styles from "../../styles/Admin.module.css"
+import styles from "../../styles/Dashboard.module.css"
 import AuthCheck from "../../components/AuthCheck"
 import { firestore, auth, serverTimestamp } from "../../lib/firebase"
 
@@ -13,7 +13,7 @@ import toast from "react-hot-toast"
 
 import ImageUploader from "../../components/ImageUploader"
 
-export default function AdminPostEdit(props) {
+export default function OwnerPostEdit(props) {
   return (
     <AuthCheck>
       <PostManager />

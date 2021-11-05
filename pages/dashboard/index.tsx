@@ -1,4 +1,4 @@
-import styles from "../../styles/Admin.module.css"
+import styles from "../../styles/Dashboard.module.css"
 import AuthCheck from "../../components/AuthCheck"
 import PostFeed from "../../components/PostFeed"
 import { UserContext } from "../../lib/context"
@@ -11,7 +11,7 @@ import { useCollection } from "react-firebase-hooks/firestore"
 import kebabCase from "lodash.kebabcase"
 import toast from "react-hot-toast"
 
-export default function AdminPostsPage(props) {
+export default function OwnerPostsPage(props) {
   return (
     <main>
       <AuthCheck>
@@ -35,7 +35,7 @@ function PostList() {
   return (
     <>
       <h1>Manage your Posts</h1>
-      <PostFeed posts={posts} admin />
+      <PostFeed posts={posts} ownerUser />
     </>
   )
 }
@@ -79,7 +79,7 @@ function CreateNewPost() {
     toast.success("Post created!")
 
     // Imperative navigation after doc is set
-    router.push(`/admin/${slug}`)
+    router.push(`/dashboard/${slug}`)
   }
 
   return (

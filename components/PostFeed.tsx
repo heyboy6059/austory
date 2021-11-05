@@ -5,13 +5,13 @@ import { Post } from "../typing/interfaces"
 // TODO: posts interface
 const PostFeed: FC<{
   posts: Post[]
-  admin?: boolean
-}> = ({ posts, admin }): JSX.Element => {
+  ownerUser?: boolean
+}> = ({ posts, ownerUser }): JSX.Element => {
   return (
     <>
       {posts
         ? posts.map((post) => (
-            <PostItem post={post} key={post.slug} admin={admin} />
+            <PostItem post={post} key={post.slug} ownerUser={ownerUser} />
           ))
         : null}
     </>
@@ -20,8 +20,8 @@ const PostFeed: FC<{
 
 const PostItem: FC<{
   post: Post
-  admin?: boolean
-}> = ({ post, admin = false }): JSX.Element => {
+  ownerUser?: boolean
+}> = ({ post, ownerUser = false }): JSX.Element => {
   // Naive method to calc word count and read time
   const wordCount = post?.content.trim().split(/\s+/g).length
   const minutesToRead = (wordCount / 100 + 1).toFixed(0)
@@ -47,10 +47,10 @@ const PostItem: FC<{
         <span className="push-left">💗 {post.heartCount || 0} Hearts</span>
       </footer>
 
-      {/* If admin view, show extra controls for user */}
-      {admin && (
+      {/* If owner user view, show extra controls for user */}
+      {ownerUser && (
         <>
-          <Link href={`/admin/${post.slug}`}>
+          <Link href={`/dashboard/${post.slug}`}>
             <h3>
               <button className="btn-blue">Edit</button>
             </h3>
