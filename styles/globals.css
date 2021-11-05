@@ -8,18 +8,22 @@
   --color-green: #3bdf72;
   --color-gray: #b5bdc4;
 }
-html,
+html {
+  display: flex;
+  justify-content: center;
+}
 body {
   padding: 0;
   margin: 0;
   font-family: "Noto Sans", sans-serif;
   background-color: var(--color-bg);
   color: var(--color-text);
-  margin-top: 50px;
+  width: 600px;
+  /* margin-top: 50px; */
 }
 
 main {
-  padding: 1rem 10vw;
+  padding: 1rem;
 }
 
 h1 {

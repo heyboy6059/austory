@@ -7,6 +7,8 @@ import PostFeed from "../components/PostFeed"
 import Loader from "../components/Loader"
 import { firestore, fromMillis, postToJSON } from "../lib/firebase"
 
+import Divider from "@mui/material/Divider"
+
 import { useState } from "react"
 
 // Max post to query per page
