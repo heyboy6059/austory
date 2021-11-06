@@ -1,6 +1,7 @@
 import { useContext, useState } from "react"
 import Link from "next/link"
 import { UserContext } from "../lib/context"
+import { COLOURS } from "../common/constants"
 
 /**
  * Material UI
@@ -22,6 +23,8 @@ export default function Navbar() {
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
 
+  const [openDrawer, setOpenDrawer] = useState(false)
+
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget)
   }
@@ -32,35 +35,57 @@ export default function Navbar() {
 
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="static" style={{ backgroundColor: "#666666" }}>
+      <AppBar
+        position="static"
+        style={{ backgroundColor: COLOURS.PRIMARY_SPACE_GREY }}
+      >
         <Toolbar variant="dense">
           <IconButton
             size="large"
             edge="start"
-            color="inherit"
+            // color="inherit"
             aria-label="menu"
-            sx={{ mr: 2 }}
+            sx={{
+              mr: 2,
+              svg: {
+                color: COLOURS.PRIMARY_WHITE,
+              },
+            }}
           >
             <MenuIcon />
           </IconButton>
-          <Link href={`/`}>
-            <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-              InKRAU
-            </Typography>
-          </Link>
-          {/* {username && ( */}
-          <div>
-            {/* user is not signed OR has not created username */}
-            {!username ? (
-              <Link href="/enter">
-                <Button>Log in</Button>
-              </Link>
-            ) : (
-              <Link href={`/${username}`}>
-                <img width="30px" height="30px" src={user?.photoURL} />
-              </Link>
-            )}
-            {/* <IconButton
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              width: "100%",
+            }}
+          >
+            <Link href={`/`}>
+              <img
+                src="/InKRAU_Logo.png"
+                width="75px"
+                style={{ cursor: "pointer" }}
+              />
+            </Link>
+            {/* {username && ( */}
+            <div>
+              {/* user is not signed OR has not created username */}
+              {!username ? (
+                <Link href="/enter">
+                  <Button>Log in</Button>
+                </Link>
+              ) : (
+                <Link href={`/${username}`}>
+                  <img
+                    width="30px"
+                    height="30px"
+                    src={user?.photoURL}
+                    style={{ borderRadius: "50%" }}
+                  />
+                </Link>
+              )}
+              {/* <IconButton
                 size="large"
                 aria-label="account of current user"
                 aria-controls="menu-appbar"
@@ -88,6 +113,7 @@ export default function Navbar() {
                 <MenuItem onClick={handleClose}>Profile</MenuItem>
                 <MenuItem onClick={handleClose}>My account</MenuItem>
               </Menu> */}
+            </div>
           </div>
           {/* // )} */}
         </Toolbar>
