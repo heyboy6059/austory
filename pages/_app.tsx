@@ -7,11 +7,14 @@ import { Toaster } from "react-hot-toast"
 function MyApp({ Component, pageProps }) {
   const userData = useUserData()
 
-  console.log({ userData })
   return (
     <UserContext.Provider value={userData}>
       <Navbar />
-      <Component {...pageProps} />
+      <div style={{ display: "flex", justifyContent: "center" }}>
+        <div style={{ width: "700px" }}>
+          <Component {...pageProps} />
+        </div>
+      </div>
       <Toaster />
     </UserContext.Provider>
   )

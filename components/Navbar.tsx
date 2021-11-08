@@ -1,7 +1,9 @@
-import { useContext, useState } from "react"
+import { useContext, useState, useCallback } from "react"
 import Link from "next/link"
+import Image from "next/image"
 import { UserContext } from "../lib/context"
 import { COLOURS } from "../common/constants"
+import { ImageWrapper } from "../common/uiComponents"
 
 /**
  * Material UI
@@ -13,9 +15,14 @@ import Typography from "@mui/material/Typography"
 import IconButton from "@mui/material/IconButton"
 import Button from "@mui/material/Button"
 import MenuIcon from "@mui/icons-material/Menu"
-// import AccountCircle from "@mui/icons-material/AccountCircle"
-// import MenuItem from "@mui/material/MenuItem"
-// import Menu from "@mui/material/Menu"
+import SwipeableDrawer from "@mui/material/SwipeableDrawer"
+import ListItem from "@mui/material/ListItem"
+import ListItemIcon from "@mui/material/ListItemIcon"
+import ListItemText from "@mui/material/ListItemText"
+import List from "@mui/material/List"
+import Divider from "@mui/material/Divider"
+import InboxIcon from "@mui/icons-material/MoveToInbox"
+import MailIcon from "@mui/icons-material/Mail"
 
 // Top navbar
 export default function Navbar() {
@@ -32,6 +39,52 @@ export default function Navbar() {
   const handleClose = () => {
     setAnchorEl(null)
   }
+
+  const toggleDrawer = useCallback(
+    (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
+      if (
+        event &&
+        event.type === "keydown" &&
+        ((event as React.KeyboardEvent).key === "Tab" ||
+          (event as React.KeyboardEvent).key === "Shift")
+      ) {
+        return
+      }
+
+      setOpenDrawer(open)
+    },
+    []
+  )
+
+  const list = () => (
+    <Box
+      role="presentation"
+      onClick={toggleDrawer(false)}
+      onKeyDown={toggleDrawer(false)}
+    >
+      <List>
+        {["Dashboard", "Deals", "Data Central"].map((text, index) => (
+          <ListItem button key={text}>
+            <ListItemIcon>
+              {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+            </ListItemIcon>
+            <ListItemText primary={text} />
+          </ListItem>
+        ))}
+      </List>
+      <Divider />
+      <List>
+        {["Account"].map((text, index) => (
+          <ListItem button key={text}>
+            <ListItemIcon>
+              {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+            </ListItemIcon>
+            <ListItemText primary={text} />
+          </ListItem>
+        ))}
+      </List>
+    </Box>
+  )
 
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -51,6 +104,7 @@ export default function Navbar() {
                 color: COLOURS.PRIMARY_WHITE,
               },
             }}
+            onClick={toggleDrawer(true)}
           >
             <MenuIcon />
           </IconButton>
@@ -61,97 +115,79 @@ export default function Navbar() {
               width: "100%",
             }}
           >
-            <Link href={`/`}>
-              <img
-                src="/InKRAU_Logo.png"
-                width="75px"
-                style={{ cursor: "pointer" }}
-              />
+            <Link href={`/`} passHref>
+              <ImageWrapper style={{ display: "flex", cursor: "pointer" }}>
+                <Image
+                  src="/../public/InKRAU_Logo.png"
+                  width={75}
+                  height={35}
+                  alt="InKRAU logo png file"
+                />
+              </ImageWrapper>
             </Link>
-            {/* {username && ( */}
+
+            {/* user is signed-in and has username */}
+            {/* {username && (
+              <Link href="/dashboard">
+                <button className="btn-blue">Write Posts</button>
+              </Link>
+            )} */}
+
             <div>
               {/* user is not signed OR has not created username */}
               {!username ? (
-                <Link href="/enter">
-                  <Button>Log in</Button>
+                <Link href="/enter" passHref>
+                  <Button size="small" variant="outlined" color="info">
+                    Log in
+                  </Button>
                 </Link>
               ) : (
-                <Link href={`/${username}`}>
-                  <img
-                    width="30px"
-                    height="30px"
-                    src={user?.photoURL}
-                    style={{ borderRadius: "50%" }}
-                  />
-                </Link>
+                // user is signed-in and has username
+                <div
+                  style={{ display: "flex", alignItems: "center", gap: "10px" }}
+                >
+                  <Link href="/dashboard" passHref>
+                    <Button
+                      size="small"
+                      variant="outlined"
+                      style={{
+                        color: COLOURS.PRIMARY_WHITE,
+                        borderColor: COLOURS.PRIMARY_WHITE,
+                      }}
+                    >
+                      Write Posts
+                    </Button>
+                  </Link>
+                  <Link href={`/${username}`} passHref>
+                    <ImageWrapper
+                      style={{
+                        display: "flex",
+                        borderRadius: "50%",
+                        cursor: "pointer",
+                      }}
+                    >
+                      <Image
+                        width={30}
+                        height={30}
+                        src={user?.photoURL}
+                        alt="user photo"
+                      />
+                    </ImageWrapper>
+                  </Link>
+                </div>
               )}
-              {/* <IconButton
-                size="large"
-                aria-label="account of current user"
-                aria-controls="menu-appbar"
-                aria-haspopup="true"
-                onClick={handleMenu}
-                color="inherit"
-              >
-                <AccountCircle />
-              </IconButton>
-              <Menu
-                id="menu-appbar"
-                anchorEl={anchorEl}
-                anchorOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
-                }}
-                keepMounted
-                transformOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
-                }}
-                open={Boolean(anchorEl)}
-                onClose={handleClose}
-              >
-                <MenuItem onClick={handleClose}>Profile</MenuItem>
-                <MenuItem onClick={handleClose}>My account</MenuItem>
-              </Menu> */}
             </div>
           </div>
-          {/* // )} */}
         </Toolbar>
       </AppBar>
+      <SwipeableDrawer
+        anchor="left"
+        open={openDrawer}
+        onClose={toggleDrawer(false)}
+        onOpen={toggleDrawer(true)}
+      >
+        {list()}
+      </SwipeableDrawer>
     </Box>
-    // <nav className="navbar">
-    //   <ul>
-    //     <li>
-    //       <Link href="/">
-    //         <button className="btn-logo">FEED</button>
-    //       </Link>
-    //     </li>
-
-    //     {/* user is signed-in and has username */}
-    //     {username && (
-    //       <>
-    //         <li className="push-left">
-    //           <Link href="/dashboard">
-    //             <button className="btn-blue">Write Posts</button>
-    //           </Link>
-    //         </li>
-    //         <li>
-    //           <Link href={`/${username}`}>
-    //             <img src={user?.photoURL} />
-    //           </Link>
-    //         </li>
-    //       </>
-    //     )}
-
-    //     {/* user is not signed OR has not created username */}
-    //     {!username && (
-    //       <li>
-    //         <Link href="/enter">
-    //           <button className="btn-blue">Log in</button>
-    //         </Link>
-    //       </li>
-    //     )}
-    //   </ul>
-    // </nav>
   )
 }
