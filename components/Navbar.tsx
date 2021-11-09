@@ -3,7 +3,14 @@ import Link from "next/link"
 import Image from "next/image"
 import { UserContext } from "../lib/context"
 import { COLOURS } from "../common/constants"
-import { ImageWrapper } from "../common/uiComponents"
+import {
+  UserImage,
+  LogoImage,
+  FlexVerticalCenterDiv,
+  FlexSpaceBetween,
+} from "../common/uiComponents"
+
+import Logo from "../public/InKRAU_Logo.png"
 
 /**
  * Material UI
@@ -11,7 +18,6 @@ import { ImageWrapper } from "../common/uiComponents"
 import AppBar from "@mui/material/AppBar"
 import Box from "@mui/material/Box"
 import Toolbar from "@mui/material/Toolbar"
-import Typography from "@mui/material/Typography"
 import IconButton from "@mui/material/IconButton"
 import Button from "@mui/material/Button"
 import MenuIcon from "@mui/icons-material/Menu"
@@ -96,7 +102,6 @@ export default function Navbar() {
           <IconButton
             size="large"
             edge="start"
-            // color="inherit"
             aria-label="menu"
             sx={{
               mr: 2,
@@ -108,32 +113,23 @@ export default function Navbar() {
           >
             <MenuIcon />
           </IconButton>
-          <div
+          <FlexSpaceBetween
             style={{
-              display: "flex",
-              justifyContent: "space-between",
+              // display: "flex",
+              // justifyContent: "space-between",
               width: "100%",
             }}
           >
             <Link href={`/`} passHref>
-              <ImageWrapper style={{ display: "flex", cursor: "pointer" }}>
-                <Image
-                  src="/../public/InKRAU_Logo.png"
-                  width={75}
-                  height={35}
-                  alt="InKRAU logo png file"
-                />
-              </ImageWrapper>
+              <LogoImage
+                src={Logo}
+                width={75}
+                height={35}
+                alt="InKRAU logo png file"
+              />
             </Link>
 
-            {/* user is signed-in and has username */}
-            {/* {username && (
-              <Link href="/dashboard">
-                <button className="btn-blue">Write Posts</button>
-              </Link>
-            )} */}
-
-            <div>
+            <FlexVerticalCenterDiv>
               {/* user is not signed OR has not created username */}
               {!username ? (
                 <Link href="/enter" passHref>
@@ -143,9 +139,7 @@ export default function Navbar() {
                 </Link>
               ) : (
                 // user is signed-in and has username
-                <div
-                  style={{ display: "flex", alignItems: "center", gap: "10px" }}
-                >
+                <FlexVerticalCenterDiv style={{ gap: "10px" }}>
                   <Link href="/dashboard" passHref>
                     <Button
                       size="small"
@@ -159,25 +153,17 @@ export default function Navbar() {
                     </Button>
                   </Link>
                   <Link href={`/${username}`} passHref>
-                    <ImageWrapper
-                      style={{
-                        display: "flex",
-                        borderRadius: "50%",
-                        cursor: "pointer",
-                      }}
-                    >
-                      <Image
-                        width={30}
-                        height={30}
-                        src={user?.photoURL}
-                        alt="user photo"
-                      />
-                    </ImageWrapper>
+                    <UserImage
+                      width={30}
+                      height={30}
+                      src={user?.photoURL}
+                      alt="user photo"
+                    />
                   </Link>
-                </div>
+                </FlexVerticalCenterDiv>
               )}
-            </div>
-          </div>
+            </FlexVerticalCenterDiv>
+          </FlexSpaceBetween>
         </Toolbar>
       </AppBar>
       <SwipeableDrawer
