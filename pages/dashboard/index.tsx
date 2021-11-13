@@ -1,8 +1,8 @@
 import styles from "../../styles/Dashboard.module.css"
 import AuthCheck from "../../components/AuthCheck"
 import PostFeed from "../../components/PostFeed"
-import { UserContext } from "../../lib/context"
-import { firestore, auth, serverTimestamp } from "../../lib/firebase"
+import { UserContext } from "../../common/context"
+import { firestore, auth, serverTimestamp } from "../../common/firebase"
 
 import { useContext, useState } from "react"
 import { useRouter } from "next/router"

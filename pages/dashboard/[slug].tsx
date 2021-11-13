@@ -1,8 +1,8 @@
 import styles from "../../styles/Dashboard.module.css"
 import AuthCheck from "../../components/AuthCheck"
-import { firestore, auth, serverTimestamp } from "../../lib/firebase"
+import { firestore, auth, serverTimestamp } from "../../common/firebase"
 
-import { useState } from "react"
+import { useCallback, useEffect, useRef, useState } from "react"
 import { useRouter } from "next/router"
 
 import { useDocumentData } from "react-firebase-hooks/firestore"
@@ -12,6 +12,9 @@ import Link from "next/link"
 import toast from "react-hot-toast"
 
 import ImageUploader from "../../components/ImageUploader"
+
+import { Editor, EditorState, RichUtils } from "draft-js"
+import { convertToHTML } from "draft-convert"
 
 export default function OwnerPostEdit(props) {
   return (
@@ -76,6 +79,26 @@ function PostForm({ defaultValues, postRef, preview }) {
     mode: "onChange",
   })
 
+  const [editorState, setEditorState] = useState(EditorState.createEmpty())
+
+  console.log(
+    "editor current content: ",
+    convertToHTML(editorState?.getCurrentContent())
+  )
+  const editor = useRef(null)
+
+  function focusEditor() {
+    editor.current.focus()
+  }
+
+  // const onBoldClick = useCallback(()=>{
+
+  // },[])
+
+  useEffect(() => {
+    focusEditor()
+  }, [])
+
   //   console.log({ isValid })
   //   console.log({ isDirty })
   //   console.log({ errors })
@@ -92,6 +115,7 @@ function PostForm({ defaultValues, postRef, preview }) {
     toast.success("Post updated successfully!")
   }
 
+  console.log({ editorState })
   return (
     <form onSubmit={handleSubmit(updatePost)}>
       {preview && (
@@ -111,6 +135,18 @@ function PostForm({ defaultValues, postRef, preview }) {
             required: true,
           })}
         ></textarea>
+
+        <div
+          onClick={focusEditor}
+          style={{ backgroundColor: "white", margin: "20px" }}
+        >
+          {/* <button onClick={}>Bold</button> */}
+          <Editor
+            ref={editor}
+            editorState={editorState}
+            onChange={(editorState) => setEditorState(editorState)}
+          />
+        </div>
 
         <fieldset>
           <input

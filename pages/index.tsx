@@ -5,7 +5,7 @@ import toast from "react-hot-toast"
 
 import PostFeed from "../components/PostFeed"
 import Loader from "../components/Loader"
-import { firestore, fromMillis, postToJSON } from "../lib/firebase"
+import { firestore, fromMillis, postToJSON } from "../common/firebase"
 
 import Divider from "@mui/material/Divider"
 

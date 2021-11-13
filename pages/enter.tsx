@@ -1,7 +1,7 @@
 import debounce from "lodash.debounce"
 import { useCallback, useContext, useEffect, useState } from "react"
-import { UserContext } from "../lib/context"
-import { auth, firestore, googleAuthProvider } from "../lib/firebase"
+import { UserContext } from "../common/context"
+import { auth, firestore, googleAuthProvider } from "../common/firebase"
 
 export default function Enter(props) {
   const { user, username } = useContext(UserContext)

@@ -1,6 +1,10 @@
 import styles from "../../styles/Post.module.css"
 import PostContent from "../../components/PostContent"
-import { firestore, getUserWithUsername, postToJSON } from "../../lib/firebase"
+import {
+  firestore,
+  getUserWithUsername,
+  postToJSON,
+} from "../../common/firebase"
 import { useDocumentData } from "react-firebase-hooks/firestore"
 import AuthCheck from "../../components/AuthCheck"
 import HeartButton from "../../components/HeartButton"

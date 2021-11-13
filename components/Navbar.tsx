@@ -1,7 +1,7 @@
 import { useContext, useState, useCallback } from "react"
 import Link from "next/link"
 import Image from "next/image"
-import { UserContext } from "../lib/context"
+import { UserContext } from "../common/context"
 import { COLOURS } from "../common/constants"
 import {
   UserImage,
@@ -29,6 +29,10 @@ import List from "@mui/material/List"
 import Divider from "@mui/material/Divider"
 import InboxIcon from "@mui/icons-material/MoveToInbox"
 import MailIcon from "@mui/icons-material/Mail"
+import DashboardIcon from "@mui/icons-material/Dashboard"
+import CardGiftcardIcon from "@mui/icons-material/CardGiftcard"
+import QueryStatsIcon from "@mui/icons-material/QueryStats"
+import AccountBoxIcon from "@mui/icons-material/AccountBox"
 
 // Top navbar
 export default function Navbar() {
@@ -69,25 +73,33 @@ export default function Navbar() {
       onKeyDown={toggleDrawer(false)}
     >
       <List>
-        {["Dashboard", "Deals", "Data Central"].map((text, index) => (
-          <ListItem button key={text}>
-            <ListItemIcon>
-              {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-            </ListItemIcon>
-            <ListItemText primary={text} />
-          </ListItem>
-        ))}
+        <ListItem button key={"Dashboard"}>
+          <ListItemIcon>
+            <DashboardIcon />
+          </ListItemIcon>
+          <ListItemText primary={"Dashboard"} />
+        </ListItem>
+        <ListItem button key={"Deals"}>
+          <ListItemIcon>
+            <CardGiftcardIcon />
+          </ListItemIcon>
+          <ListItemText primary={"Deals"} />
+        </ListItem>
+        <ListItem button key={"Data Central"}>
+          <ListItemIcon>
+            <QueryStatsIcon />
+          </ListItemIcon>
+          <ListItemText primary={"Data Central"} />
+        </ListItem>
       </List>
       <Divider />
       <List>
-        {["Account"].map((text, index) => (
-          <ListItem button key={text}>
-            <ListItemIcon>
-              {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-            </ListItemIcon>
-            <ListItemText primary={text} />
-          </ListItem>
-        ))}
+        <ListItem button key={"Account"}>
+          <ListItemIcon>
+            <AccountBoxIcon />
+          </ListItemIcon>
+          <ListItemText primary={"Account"} />
+        </ListItem>
       </List>
     </Box>
   )
