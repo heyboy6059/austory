@@ -4,3 +4,5 @@ export enum COLOURS {
   PRIMARY_WHITE = "#d6d6d6",
   LIGHT_BACKGROUND = "f5f5f7",
 }
+
+export const POST_FEED_NUM_LIMIT = 5

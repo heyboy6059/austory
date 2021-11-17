@@ -5,6 +5,7 @@ module.exports = {
       "localhost:3000",
       "lh3.googleusercontent.com",
       "inkrau.vercel.app",
+      "via.placeholder.com",
     ],
   },
 }

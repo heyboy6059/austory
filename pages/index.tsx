@@ -3,23 +3,21 @@ import styles from "../styles/Home.module.css"
 import Link from "next/link"
 import toast from "react-hot-toast"
 
+import { useState } from "react"
 import PostFeed from "../components/Post/PostFeed"
 import Loader from "../components/Loader"
 import { firestore, fromMillis, postToJSON } from "../common/firebase"
 
 import Divider from "@mui/material/Divider"
 
-import { useState } from "react"
-
-// Max post to query per page
-const LIMIT = 1
+import { POST_FEED_NUM_LIMIT } from "../common/constants"
 
 export const getServerSideProps = async (context) => {
   const postsQuery = firestore
     .collection("posts")
     .where("deleted", "==", false)
     .orderBy("createdAt", "desc")
-    .limit(LIMIT)
+    .limit(POST_FEED_NUM_LIMIT)
 
   const posts = (await postsQuery.get()).docs.map(postToJSON)
 
@@ -48,14 +46,14 @@ const Home = (props) => {
       .where("published", "==", true)
       .orderBy("createdAt", "desc")
       .startAfter(cursor)
-      .limit(LIMIT)
+      .limit(POST_FEED_NUM_LIMIT)
 
     const newPosts = (await query.get()).docs.map((doc) => doc.data())
 
     setPosts(posts.concat(newPosts))
     setLoading(false)
 
-    if (newPosts.length < LIMIT) {
+    if (newPosts.length < POST_FEED_NUM_LIMIT) {
       setPostsEnd(true)
     }
   }
