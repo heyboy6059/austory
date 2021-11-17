@@ -3,7 +3,7 @@ import styles from "../styles/Home.module.css"
 import Link from "next/link"
 import toast from "react-hot-toast"
 
-import PostFeed from "../components/PostFeed"
+import PostFeed from "../components/Post/PostFeed"
 import Loader from "../components/Loader"
 import { firestore, fromMillis, postToJSON } from "../common/firebase"
 
@@ -16,8 +16,8 @@ const LIMIT = 1
 
 export const getServerSideProps = async (context) => {
   const postsQuery = firestore
-    .collectionGroup("posts")
-    .where("published", "==", true)
+    .collection("posts")
+    .where("deleted", "==", false)
     .orderBy("createdAt", "desc")
     .limit(LIMIT)
 
@@ -44,7 +44,7 @@ const Home = (props) => {
         : last.createdAt
 
     const query = firestore
-      .collectionGroup("posts")
+      .collection("posts")
       .where("published", "==", true)
       .orderBy("createdAt", "desc")
       .startAfter(cursor)

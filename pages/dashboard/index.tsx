@@ -1,6 +1,6 @@
 import styles from "../../styles/Dashboard.module.css"
 import AuthCheck from "../../components/AuthCheck"
-import PostFeed from "../../components/PostFeed"
+import PostFeed from "../../components/Post/PostFeed"
 import { UserContext } from "../../common/context"
 import { firestore, auth, serverTimestamp } from "../../common/firebase"
 
