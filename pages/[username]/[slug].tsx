@@ -4,6 +4,7 @@ import {
   firestore,
   getUserWithUsername,
   postToJSON,
+  tempPostToJSON,
 } from "../../common/firebase"
 import { useDocumentData } from "react-firebase-hooks/firestore"
 import AuthCheck from "../../components/AuthCheck"
@@ -19,7 +20,7 @@ export async function getStaticProps({ params }) {
 
   if (userDoc) {
     const postRef = userDoc.ref.collection("posts").doc(slug)
-    post = postToJSON(await postRef.get())
+    post = tempPostToJSON(await postRef.get())
 
     path = postRef.path
   }
@@ -70,7 +71,7 @@ export default function Post(props) {
 
         <AuthCheck
           fallback={
-            <Link href="/enter">
+            <Link href="/enter" passHref>
               <button>💗 Sign Up</button>
             </Link>
           }

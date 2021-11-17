@@ -58,3 +58,18 @@ export const postToJSON = (doc: FirebaseDocumentSnapshot<RawPost>): Post => {
     updatedAt: data?.updatedAt?.toMillis() || 0,
   }
 }
+
+/**
+ * Converts a firestore document to JSON
+ * @param doc
+ * @returns
+ */
+export const tempPostToJSON = (doc) => {
+  const data = doc.data()
+  return {
+    ...data,
+    // Gotcha! firestore timestamp NOT serializable to JSON. Must convert to milliseconds
+    createdAt: data?.createdAt?.toMillis() || 0,
+    updatedAt: data?.updatedAt?.toMillis() || 0,
+  }
+}
