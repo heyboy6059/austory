@@ -59,7 +59,7 @@ const Home = (props) => {
   }
 
   return (
-    <main>
+    <div>
       <PostFeed posts={posts} />
 
       {!loading && !postsEnd && (
@@ -69,7 +69,7 @@ const Home = (props) => {
       <Loader show={loading} />
 
       {postsEnd && "You have reached the end!"}
-    </main>
+    </div>
   )
 }
 

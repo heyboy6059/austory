@@ -20,58 +20,67 @@ const PostItem: FC<{
   const wordCount = post?.content.trim().split(/\s+/g).length
   const minutesToRead = (wordCount / 100 + 1).toFixed(0)
 
+  // TODO: div clean up
   return (
     <Card>
       <CardContent sx={{ padding: "16px" }}>
         <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "120px 1fr",
-            gap: "8px",
-          }}
+        // style={{
+        //   display: "grid",
+        //   gridTemplateColumns: "120px 1fr",
+        //   gap: "8px",
+        // }}
         >
           <div>
-            <div style={{ width: "120px", height: "120px" }}>
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "100px 1fr",
+                gap: "10px",
+              }}
+            >
               <Image
-                width={120}
-                height={120}
-                src="https://via.placeholder.com/120x120.png?text=TEST+IMAGE"
+                width={100}
+                height={100}
+                src="https://via.placeholder.com/100x100.png?text=TEST+IMAGE"
                 alt="post feed image"
               />
+              <div>
+                <Link href={`/${post.username}/${post.slug}`} passHref>
+                  <h3>
+                    <a>{post.title}</a>
+                  </h3>
+                </Link>
+                {/* <div style={{ display: "flex", gap: "8px", fontSize: "12px" }}> */}
+                <div style={{ fontSize: "12px" }}>
+                  <div>
+                    <Link href={`/${post.username}`}>
+                      <a>
+                        <span>by {post.username}</span>
+                      </a>
+                    </Link>
+                  </div>
+                  <div>
+                    {/* <span>|</span> */}
+                    <span>
+                      {dayjs(post.createdAt).format("YYYY/MM/DD h:mm A")}
+                    </span>
+                  </div>
+                </div>
+              </div>
             </div>
-            <FlexCenterDiv style={{ gap: "4px" }}>
-              <FlexVerticalCenterDiv>
-                <FavoriteIcon /> {post.heartCount}
-              </FlexVerticalCenterDiv>
-              <FlexVerticalCenterDiv>
-                <CommentIcon /> {post.viewCount}
-              </FlexVerticalCenterDiv>
-            </FlexCenterDiv>
           </div>
           <div>
-            <Link href={`/${post.username}/${post.slug}`} passHref>
-              <h2>
-                <a>{post.title}</a>
-              </h2>
-            </Link>
             <div>{post.content}...</div>
-            <div style={{ display: "flex", gap: "8px" }}>
-              <Link href={`/${post.username}`}>
-                <a>
-                  <span>by @{post.username}</span>
-                </a>
-              </Link>
-              <span>|</span>
-              <span>{dayjs(post.createdAt).format("YYYY/MM/DD h:mm A")}</span>
-            </div>
-            <footer>
+
+            {/* <footer>
               <span>
                 {wordCount} words. {minutesToRead} min read
               </span>
               <span className="push-left">
                 💗 {post.heartCount || 0} Hearts
               </span>
-            </footer>
+            </footer> */}
 
             {/* If owner user view, show extra controls for user */}
             {ownerUser && (
@@ -89,6 +98,16 @@ const PostItem: FC<{
             )} */}
               </>
             )}
+          </div>
+          <div>
+            <FlexCenterDiv style={{ gap: "4px" }}>
+              <FlexVerticalCenterDiv>
+                <FavoriteIcon /> {post.heartCount}
+              </FlexVerticalCenterDiv>
+              <FlexVerticalCenterDiv>
+                <CommentIcon /> {post.viewCount}
+              </FlexVerticalCenterDiv>
+            </FlexCenterDiv>
           </div>
         </div>
       </CardContent>
