@@ -43,12 +43,12 @@ const Home = (props) => {
 
     const query = firestore
       .collection("posts")
-      .where("published", "==", true)
+      .where("deleted", "==", false)
       .orderBy("createdAt", "desc")
       .startAfter(cursor)
       .limit(POST_FEED_NUM_LIMIT)
 
-    const newPosts = (await query.get()).docs.map((doc) => doc.data())
+    const newPosts = (await query.get()).docs.map(postToJSON)
 
     setPosts(posts.concat(newPosts))
     setLoading(false)

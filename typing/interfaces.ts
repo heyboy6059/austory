@@ -53,6 +53,7 @@ export type RawPost = {
   viewCount: number
   //
   content: string
+  imgSrc: string
   //
   createdAt: firestoreTimestamp
   updatedAt: firestoreTimestamp | null
