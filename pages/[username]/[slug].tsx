@@ -61,7 +61,8 @@ export default function Post(props) {
   return (
     <main className={styles.container}>
       <section>
-        <PostContent post={post} />
+        {/* <PostContent post={post} /> */}
+        DEPRECATED
       </section>
 
       <aside className="card">
@@ -76,7 +77,7 @@ export default function Post(props) {
             </Link>
           }
         >
-          <HeartButton postRef={postRef} />
+          {/* <HeartButton postRef={postRef} /> */}
         </AuthCheck>
       </aside>
     </main>
