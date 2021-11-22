@@ -1,5 +1,5 @@
 import styles from "../../styles/Post.module.css"
-import PostContent from "../../components/PostContent"
+import PostContent from "../../components/Post/PostContent"
 import {
   firestore,
   getUserWithUsername,

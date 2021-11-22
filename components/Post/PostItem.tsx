@@ -3,14 +3,13 @@ import dayjs from "dayjs"
 import Link from "next/link"
 import Image from "next/image"
 import { Post } from "../../typing/interfaces"
-import Card from "@mui/material/Card"
-import CardActions from "@mui/material/CardActions"
-import CardContent from "@mui/material/CardContent"
+import Paper from "@mui/material/Paper"
 
 import { FlexVerticalCenterDiv, FlexCenterDiv } from "../../common/uiComponents"
 
 import FavoriteIcon from "@mui/icons-material/Favorite"
 import CommentIcon from "@mui/icons-material/Comment"
+import { KOR_MONTH_DAY_FORMAT } from "../../common/constants"
 
 const PostItem: FC<{
   post: Post
@@ -22,8 +21,8 @@ const PostItem: FC<{
 
   // TODO: div clean up
   return (
-    <Card variant="outlined">
-      <CardContent sx={{ padding: "16px" }}>
+    <Paper elevation={3} style={{ marginBottom: "10px" }}>
+      <div style={{ padding: "16px" }}>
         <div
           style={{
             display: "flex",
@@ -38,7 +37,7 @@ const PostItem: FC<{
             </a>
           </Link>
           <span>|</span>
-          <span>{dayjs(post.createdAt).format("MM월 DD일 h:mm A")}</span>
+          <span>{dayjs(post.createdAt).format(KOR_MONTH_DAY_FORMAT)}</span>
         </div>
         <div
         // style={{
@@ -55,7 +54,8 @@ const PostItem: FC<{
             alt="post feed image"
           /> */}
           <div>
-            <Link href={`/${post.username}/${post.slug}`} passHref>
+            {/* <Link href={`/${post.username}/${post.slug}`} passHref> */}
+            <Link href={`/post/${post.slug}`} passHref>
               <h3>
                 <a>{post.title}</a>
               </h3>
@@ -72,12 +72,6 @@ const PostItem: FC<{
                   <button className="btn-blue">Edit</button>
                 </h3>
               </Link>
-
-              {/* {post.published ? (
-              <p className="text-success">Live</p>
-            ) : (
-              <p className="text-danger">Unpublished</p>
-            )} */}
             </>
           )}
         </div>
@@ -93,8 +87,8 @@ const PostItem: FC<{
             </FlexVerticalCenterDiv>
           </FlexCenterDiv>
         </div>
-      </CardContent>
-    </Card>
+      </div>
+    </Paper>
   )
 }
 

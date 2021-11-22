@@ -5,6 +5,9 @@ export type FirebaseDocumentSnapshot<T = firebase.firestore.DocumentData> =
 
 export type firestoreTimestamp = firebase.firestore.Timestamp
 
+export type FirebaseDocumentRef =
+  firebase.firestore.DocumentReference<firebase.firestore.DocumentData>
+
 // user
 export type User = {
   username: string // user typed in our system
