@@ -3,7 +3,7 @@ import firebase from "firebase/compat/app"
 export type FirebaseDocumentSnapshot<T = firebase.firestore.DocumentData> =
   firebase.firestore.QueryDocumentSnapshot<T>
 
-export type firestoreTimestamp = firebase.firestore.Timestamp
+export type FirestoreTimestamp = firebase.firestore.Timestamp
 
 export type FirebaseDocumentRef =
   firebase.firestore.DocumentReference<firebase.firestore.DocumentData>
@@ -46,7 +46,7 @@ export type TempUser = {
 // }
 
 export type RawPost = {
-  slug: string // 25 characters + unix timestamp = documentId
+  slug: string // email(before @) + unix timestamp = documentId
   uid: string // userId
   username: string
   title: string
@@ -58,8 +58,8 @@ export type RawPost = {
   content: string
   imgSrc: string
   //
-  createdAt: firestoreTimestamp
-  updatedAt: firestoreTimestamp | null
+  createdAt: FirestoreTimestamp
+  updatedAt: FirestoreTimestamp | null
 }
 
 export type Post = Omit<RawPost, "createdAt" | "updatedAt"> & {

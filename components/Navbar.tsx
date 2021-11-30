@@ -152,7 +152,7 @@ export default function Navbar() {
               ) : (
                 // user is signed-in and has username
                 <FlexVerticalCenterDiv style={{ gap: "10px" }}>
-                  <Link href="/dashboard" passHref>
+                  <Link href="/post/write" passHref>
                     <Button
                       size="small"
                       variant="outlined"

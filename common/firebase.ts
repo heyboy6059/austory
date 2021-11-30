@@ -30,6 +30,7 @@ export const googleAuthProvider = new firebase.auth.GoogleAuthProvider()
 export const serverTimestamp = firebase.firestore.FieldValue.serverTimestamp
 
 export const increment = firebase.firestore.FieldValue.increment
+
 /**
  * Gets a users/{uid} document with username
  * @param username
