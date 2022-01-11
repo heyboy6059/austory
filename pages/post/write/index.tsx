@@ -4,27 +4,32 @@ import { UserContext } from "../../../common/context"
 import toast from "react-hot-toast"
 import { firestore, auth, serverTimestamp } from "../../../common/firebase"
 import dayjs from "dayjs"
-import { RawPost, Post, FirestoreTimestamp } from "../../../typing/interfaces"
+import {
+  RawPost,
+  Post,
+  FirestoreTimestamp,
+  PostWrite,
+} from "../../../typing/interfaces"
 
 // UI imports
 import TextField from "@mui/material/TextField"
 import Button from "@mui/material/Button"
 import { FlexCenterDiv } from "../../../common/uiComponents"
+import ImageUploader from "../../../components/ImageUploader"
 
-type PostWrite = Pick<Post, "title" | "content">
-
-export default function PostWrite() {
+export default function WritePost() {
   const { user, username } = useContext(UserContext)
 
   const {
     handleSubmit,
     control,
+    setValue,
     // reset, watch
   } = useForm<PostWrite>({
     defaultValues: {
       title: "",
-      // tags: [],
-      // imgUrls: [],
+      images: [],
+      categories: [],
       content: "",
     },
   })
@@ -42,7 +47,8 @@ export default function PostWrite() {
       deleted: false,
       heartCount: 0,
       viewCount: 0,
-      imgSrc: "",
+      images: [],
+      categories: [],
       createdAt: serverTimestamp() as FirestoreTimestamp,
       updatedAt: serverTimestamp() as FirestoreTimestamp,
     }
@@ -78,6 +84,7 @@ export default function PostWrite() {
             <TextField {...field} multiline rows={10} fullWidth />
           )}
         />
+        <ImageUploader setValue={setValue} />
         <FlexCenterDiv>
           <Button variant="outlined" type="submit">
             완료

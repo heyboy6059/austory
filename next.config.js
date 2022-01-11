@@ -6,6 +6,7 @@ module.exports = {
       "lh3.googleusercontent.com",
       "inkrau.vercel.app",
       "via.placeholder.com",
+      "firebasestorage.googleapis.com",
     ],
   },
 }

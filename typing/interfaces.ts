@@ -45,6 +45,11 @@ export type TempUser = {
 //   updatedAt: Date | number | string
 // }
 
+export type Image = {
+  originalImgUrl: string
+  thumbnailImgUrl: string
+}
+
 export type RawPost = {
   slug: string // email(before @) + unix timestamp = documentId
   uid: string // userId
@@ -56,7 +61,9 @@ export type RawPost = {
   viewCount: number
   //
   content: string
-  imgSrc: string
+  images: Image[]
+  //
+  categories: string[]
   //
   createdAt: FirestoreTimestamp
   updatedAt: FirestoreTimestamp | null
@@ -66,3 +73,8 @@ export type Post = Omit<RawPost, "createdAt" | "updatedAt"> & {
   createdAt: number
   updatedAt: number | null
 }
+
+export type PostWrite = Pick<
+  Post,
+  "title" | "content" | "images" | "categories"
+>
