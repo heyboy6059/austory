@@ -13,4 +13,14 @@ export const KOR_FULL_DATE_FORMAT = "YYYY년 MM월 DD일 h:mm A"
 
 export const MAX_WIDTH_PX = 700
 
-export const RESIZE_IMAGE_EXT = "jpg"
+export const RESIZE_IMAGE_EXT = "jpeg"
+
+export const IMAGE_THUMBNAIL_PREFIX = "Thumbnail_"
+export const IMAGE_ORIGINAL_PREFIX = "Original_"
+
+export const ORIGINAL_IMAGE_UPLOAD_MAX_THRESHOLD = 1024 * 2000 // 2MB
+
+export enum FileExt {
+  GIF = "gif",
+  PNG = "png",
+}
