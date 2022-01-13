@@ -62,6 +62,7 @@ export type RawPost = {
   //
   content: string
   images: Image[]
+  excerpt: string
   //
   categories: string[]
   //
@@ -78,3 +79,5 @@ export type PostWrite = Pick<
   Post,
   "title" | "content" | "images" | "categories"
 >
+
+export type ImgType = "thumbnail" | "original"

@@ -16,14 +16,18 @@ import TextField from "@mui/material/TextField"
 import Button from "@mui/material/Button"
 import { FlexCenterDiv } from "../../../common/uiComponents"
 import ImageUploader from "../../../components/ImageUploader"
+import { useRouter } from "next/router"
+import { generateExcerpt } from "../../../common/functions"
 
 export default function WritePost() {
+  const router = useRouter()
   const { user, username } = useContext(UserContext)
 
   const {
     handleSubmit,
     control,
     setValue,
+    watch,
     // reset, watch
   } = useForm<PostWrite>({
     defaultValues: {
@@ -33,6 +37,8 @@ export default function WritePost() {
       content: "",
     },
   })
+
+  console.log("watch", watch())
 
   const onSubmit = async (data: PostWrite) => {
     const docSlug = `${user.email.split("@")[0]}-${dayjs().unix()}`
@@ -44,10 +50,11 @@ export default function WritePost() {
       username,
       title: data.title,
       content: data.content,
+      excerpt: generateExcerpt(data.content, 50),
       deleted: false,
       heartCount: 0,
       viewCount: 0,
-      images: [],
+      images: data.images,
       categories: [],
       createdAt: serverTimestamp() as FirestoreTimestamp,
       updatedAt: serverTimestamp() as FirestoreTimestamp,
@@ -56,6 +63,8 @@ export default function WritePost() {
     await ref.set(post)
 
     toast.success("Post created!")
+
+    router.push("/")
   }
 
   return (
