@@ -7,6 +7,7 @@ import HeartButton from "../../components/HeartButton"
 import { Post, FirebaseDocumentRef } from "../../typing/interfaces"
 import dayjs from "dayjs"
 import { KOR_FULL_DATE_FORMAT } from "../../common/constants"
+import Image from "next/image"
 
 // import { Editor, EditorState, ContentState } from "draft-js"
 
@@ -42,6 +43,20 @@ const PostContent: FC<PostContentProps> = ({ post, postRef }) => {
         </Link>{" "}
         on {dayjs(post.createdAt).format(KOR_FULL_DATE_FORMAT)}
       </span>
+      {post.images?.[0]?.thumbnailImgUrl ? (
+        <div style={{ width: "300px", margin: "auto" }}>
+          <Image
+            src={post.images[0].thumbnailImgUrl}
+            alt=""
+            width={"100%"}
+            height={"100%"}
+            layout="responsive"
+            objectFit="contain"
+          />
+        </div>
+      ) : (
+        <div></div>
+      )}
       <ReactMarkdown>{post?.content}</ReactMarkdown>
       {/* <Editor
         editorState={editorState}
