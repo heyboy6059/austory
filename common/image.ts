@@ -1,30 +1,39 @@
 import { auth, storage, STATE_CHANGED } from "../common/firebase"
-import { ImgType } from "../typing/interfaces"
+import { ImageDetails, ImgType } from "../typing/interfaces"
 import {
-  IMAGE_THUMBNAIL_PREFIX,
+  IMAGE_THUMBNAIL100_PREFIX,
   IMAGE_ORIGINAL_PREFIX,
-  RESIZE_THUMBNAIL_MAX_WIDTH_HEIGHT,
+  RESIZE_THUMBNAIL300_MAX_WIDTH_HEIGHT,
   RESIZE_ORIGINAL_MAX_WIDTH_HEIGHT,
   RESIZE_IMAGE_EXT,
+  RESIZE_THUMBNAIL100_MAX_WIDTH_HEIGHT,
+  IMAGE_THUMBNAIL300_PREFIX,
 } from "./constants"
 import Resizer from "react-image-file-resizer"
+import { extractFilenameExtension } from "./functions"
 
 export const uploadImageToStorage = async (
   type: ImgType,
+  name: string,
   blob: Blob,
   ext: string
-): Promise<{ imgUrl: string }> => {
-  const ref = storage.ref(
-    `uploads/${auth.currentUser.uid}/${
-      type === "thumbnail" ? IMAGE_THUMBNAIL_PREFIX : IMAGE_ORIGINAL_PREFIX
-    }${Date.now()}.${ext}`
-  )
+): Promise<{ imgUrl: string; savedName: string }> => {
+  const savedName = `${
+    type === "thumbnail100"
+      ? IMAGE_THUMBNAIL100_PREFIX
+      : type === "thumbnail300"
+      ? IMAGE_THUMBNAIL300_PREFIX
+      : IMAGE_ORIGINAL_PREFIX
+  }${name}_${Date.now()}.${ext}`
+
+  const ref = storage.ref(`uploads/${auth.currentUser.uid}/${savedName}`)
 
   const task = await ref.put(blob)
 
   const imgUrl = await task.ref.getDownloadURL()
 
-  return { imgUrl }
+  return { imgUrl, savedName }
+
   // PROGRESS
   // task.on(STATE_CHANGED, (snapshot) => {
   //   const pct = (
@@ -36,14 +45,20 @@ export const uploadImageToStorage = async (
 
 export const resizeImageJpeg = async (
   file: File,
-  type: ImgType
-): Promise<{ imageUrl: string }> => {
+  type: ImgType,
+  name: string
+): Promise<ImageDetails> => {
   const maxWidthHeight =
-    type === "thumbnail"
-      ? RESIZE_THUMBNAIL_MAX_WIDTH_HEIGHT
+    type === "thumbnail100"
+      ? RESIZE_THUMBNAIL100_MAX_WIDTH_HEIGHT
+      : type === "thumbnail300"
+      ? RESIZE_THUMBNAIL300_MAX_WIDTH_HEIGHT
       : RESIZE_ORIGINAL_MAX_WIDTH_HEIGHT
 
-  let imageUrl = ""
+  let url = ""
+  let savedImgName = ""
+  let size = null
+
   await new Promise<void>((resolve) => {
     Resizer.imageFileResizer(
       file,
@@ -53,23 +68,35 @@ export const resizeImageJpeg = async (
       90,
       0,
       async (uri) => {
+        // get resized blob
         const imgBlob = await (await fetch(uri as string)).blob()
-        const { imgUrl } = await uploadImageToStorage(
-          "thumbnail",
+
+        // upload it to firestore
+        const { imgUrl, savedName } = await uploadImageToStorage(
+          type,
+          name,
           imgBlob,
           RESIZE_IMAGE_EXT
         )
-        // setThumbnailImgUrl(imgUrl)
-        imageUrl = imgUrl
+
+        // update return values
+        url = imgUrl
+        size = imgBlob.size
+        savedImgName = savedName
+
         console.log("SUCCESSFULLY GENERATED THUMBNAIL IMAGE")
-        // toast.success(`성공적으로 이미지가 업로드 되었습니다.`)
         resolve()
       },
       "base64"
     )
   })
 
+  const { filename, extension } = extractFilenameExtension(savedImgName)
+
   return {
-    imageUrl,
+    url,
+    name: filename,
+    ext: extension,
+    size,
   }
 }

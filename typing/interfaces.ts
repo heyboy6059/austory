@@ -45,9 +45,17 @@ export type TempUser = {
 //   updatedAt: Date | number | string
 // }
 
+export type ImageDetails = {
+  url: string
+  name: string
+  ext: string
+  size: number
+}
+
 export type Image = {
-  originalImgUrl: string
-  thumbnailImgUrl: string
+  thumbnail100: ImageDetails
+  thumbnail300: ImageDetails
+  original: ImageDetails
 }
 
 export type RawPost = {
@@ -80,4 +88,4 @@ export type PostWrite = Pick<
   "title" | "content" | "images" | "categories"
 >
 
-export type ImgType = "thumbnail" | "original"
+export type ImgType = "thumbnail100" | "thumbnail300" | "original"

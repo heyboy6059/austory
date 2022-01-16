@@ -2,17 +2,15 @@ import { FC, useState } from "react"
 import Loader from "./Loader"
 import Resizer from "react-image-file-resizer"
 import {
-  RESIZE_IMAGE_EXT,
   ORIGINAL_IMAGE_UPLOAD_MAX_THRESHOLD,
   FileExt,
-  RESIZE_THUMBNAIL_MAX_WIDTH_HEIGHT,
-  RESIZE_ORIGINAL_MAX_WIDTH_HEIGHT,
 } from "../common/constants"
 import Image from "next/image"
 import { UseFormSetValue } from "react-hook-form/dist/types/form"
-import { PostWrite } from "../typing/interfaces"
+import { ImageDetails, PostWrite } from "../typing/interfaces"
 import { resizeImageJpeg, uploadImageToStorage } from "../common/image"
 import toast from "react-hot-toast"
+import { extractFilenameExtension } from "../common/functions"
 
 interface Props {
   setValue: UseFormSetValue<PostWrite>
@@ -28,93 +26,68 @@ const ImageUploader: FC<Props> = ({ setValue }) => {
   const uploadFile = async (e) => {
     setUploading(true)
 
-    let thumbnailImgBlob: Blob = null
-    let originalImgBlob: Blob = null
-
-    let thumbnailImgUrl = ""
-    let originalImgUrl = ""
+    let thumbnail100ImageDetails: ImageDetails = null
+    let thumbnail300ImageDetails: ImageDetails = null
+    let originalImageDetails: ImageDetails = null
 
     // Get the file
     const file = Array.from(e.target.files)[0] as File
+    const size = file.size
 
     if (file) {
-      const extension = file.type.split("/")[1]
+      const { filename: name, extension } = extractFilenameExtension(file.name)
 
       try {
-        // Resizer for thumbnail
-        const { imageUrl } = await resizeImageJpeg(file, "thumbnail")
-        setThumbnailImgUrl(imageUrl)
-        thumbnailImgUrl = imageUrl
-        toast.success(`성공적으로 이미지가 업로드 되었습니다.`)
-        // await new Promise<void>((resolve) => {
-        //   Resizer.imageFileResizer(
-        //     file,
-        //     RESIZE_THUMBNAIL_MAX_WIDTH_HEIGHT,
-        //     RESIZE_THUMBNAIL_MAX_WIDTH_HEIGHT,
-        //     RESIZE_IMAGE_EXT,
-        //     85,
-        //     0,
-        //     async (uri) => {
-        //       thumbnailImgBlob = await (await fetch(uri as string)).blob()
-        //       const { imgUrl } = await uploadImageToStorage(
-        //         "thumbnail",
-        //         thumbnailImgBlob,
-        //         RESIZE_IMAGE_EXT
-        //       )
-        //       setThumbnailImgUrl(imgUrl)
-        //       thumbnailImgUrl = imgUrl
-        //       console.log("SUCCESSFULLY GENERATED THUMBNAIL IMAGE")
-        //       toast.success(`성공적으로 이미지가 업로드 되었습니다.`)
-        //       resolve()
-        //     },
-        //     "base64"
-        //   )
-        // })
+        // Resize for thumbnail300
+        thumbnail300ImageDetails = await resizeImageJpeg(
+          file,
+          "thumbnail300",
+          name
+        )
+
+        // update thumbnail url to be shown in UI before storing original image
+        setThumbnailImgUrl(thumbnail300ImageDetails.url)
+
+        // Resize for thumbnail100
+        thumbnail100ImageDetails = await resizeImageJpeg(
+          file,
+          "thumbnail100",
+          name
+        )
 
         if (
-          file.size > ORIGINAL_IMAGE_UPLOAD_MAX_THRESHOLD &&
+          size > ORIGINAL_IMAGE_UPLOAD_MAX_THRESHOLD &&
           extension !== FileExt.GIF // gif cannot be resized to jpeg
         ) {
-          const { imageUrl } = await resizeImageJpeg(file, "original")
-          originalImgUrl = imageUrl
-          // Resizer for original
-          // await new Promise<void>((resolve) => {
-          //   Resizer.imageFileResizer(
-          //     file,
-          //     RESIZE_ORIGINAL_MAX_WIDTH_HEIGHT,
-          //     RESIZE_ORIGINAL_MAX_WIDTH_HEIGHT,
-          //     RESIZE_IMAGE_EXT,
-          //     85,
-          //     0,
-          //     async (uri) => {
-          //       originalImgBlob = await (await fetch(uri as string)).blob()
-          //       const { imgUrl } = await uploadImageToStorage(
-          //         "original",
-          //         originalImgBlob,
-          //         RESIZE_IMAGE_EXT
-          //       )
-          //       originalImgUrl = imgUrl
-          //       console.log("SUCCESSFULLY GENERATED ORIGINAL IMAGE")
-          //       resolve()
-          //     },
-          //     "base64"
-          //   )
-          // })
+          originalImageDetails = await resizeImageJpeg(file, "original", name)
         } else {
-          const { imgUrl } = await uploadImageToStorage(
+          const { imgUrl, savedName } = await uploadImageToStorage(
             "original",
+            name,
             file,
             extension
           )
-          originalImgUrl = imgUrl
+
+          const { filename, extension: ext } =
+            extractFilenameExtension(savedName)
+
+          originalImageDetails = {
+            url: imgUrl,
+            name: filename,
+            ext,
+            size,
+          }
         }
 
         setValue("images", [
           {
-            thumbnailImgUrl,
-            originalImgUrl,
+            thumbnail100: thumbnail100ImageDetails,
+            thumbnail300: thumbnail300ImageDetails,
+            original: originalImageDetails,
           },
         ])
+
+        toast.success(`성공적으로 이미지가 업로드 되었습니다.`)
       } catch (err) {
         console.error(`ERROR in image upload. ${err.message}`)
         toast.error(`이미지 업로드중 에러가 발생했습니다. 다시 시도해주세요.`)

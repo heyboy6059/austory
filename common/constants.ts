@@ -15,11 +15,13 @@ export const MAX_WIDTH_PX = 700
 
 export const RESIZE_IMAGE_EXT = "jpeg"
 
-export const RESIZE_THUMBNAIL_MAX_WIDTH_HEIGHT = 300
+export const RESIZE_THUMBNAIL100_MAX_WIDTH_HEIGHT = 100
+export const RESIZE_THUMBNAIL300_MAX_WIDTH_HEIGHT = 300
 export const RESIZE_ORIGINAL_MAX_WIDTH_HEIGHT = 1920
 
-export const IMAGE_THUMBNAIL_PREFIX = "Thumbnail_"
-export const IMAGE_ORIGINAL_PREFIX = "Original_"
+export const IMAGE_THUMBNAIL100_PREFIX = "thumbnail100_"
+export const IMAGE_THUMBNAIL300_PREFIX = "thumbnail300_"
+export const IMAGE_ORIGINAL_PREFIX = "original_"
 
 export const ORIGINAL_IMAGE_UPLOAD_MAX_THRESHOLD = 1024 * 2000 // 2MB
 
