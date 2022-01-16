@@ -43,10 +43,10 @@ const PostContent: FC<PostContentProps> = ({ post, postRef }) => {
         </Link>{" "}
         on {dayjs(post.createdAt).format(KOR_FULL_DATE_FORMAT)}
       </span>
-      {post.images?.[0]?.thumbnail100?.url ? (
+      {post.images?.[0]?.thumbnail300?.url ? (
         <div style={{ width: "300px", margin: "auto" }}>
           <Image
-            src={post.images[0].thumbnail100.url}
+            src={post.images[0].thumbnail300.url}
             alt=""
             width={"100%"}
             height={"100%"}
