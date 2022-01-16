@@ -44,7 +44,7 @@ const PostItem: FC<{
           style={{
             display: "grid",
             // thumbnailImage? give 100px space
-            gridTemplateColumns: post.images?.[0]?.thumbnailImgUrl
+            gridTemplateColumns: post.images?.[0]?.thumbnail100?.url
               ? "1fr 100px"
               : "1fr",
           }}
@@ -93,9 +93,9 @@ const PostItem: FC<{
             {/**
              * TODO: properly display image - alignment, remove image grid column when there is no image
              */}
-            {post.images?.[0]?.thumbnailImgUrl ? (
+            {post.images?.[0]?.thumbnail100?.url ? (
               <Image
-                src={post.images[0].thumbnailImgUrl}
+                src={post.images[0].thumbnail100?.url}
                 alt=""
                 width={"100%"}
                 height={"100%"}
