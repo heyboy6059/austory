@@ -11,6 +11,7 @@ import { firestore, fromMillis, postToJSON } from "../common/firebase"
 import Divider from "@mui/material/Divider"
 
 import { POST_FEED_NUM_LIMIT } from "../common/constants"
+import { FlexCenterDiv } from "../common/uiComponents"
 
 export const getServerSideProps = async (context) => {
   const postsQuery = firestore
@@ -62,9 +63,11 @@ const Home = (props) => {
     <div>
       <PostFeed posts={posts} />
 
-      {!loading && !postsEnd && (
-        <button onClick={getMorePosts}>Load more</button>
-      )}
+      <FlexCenterDiv style={{ marginBottom: "5px" }}>
+        {!loading && !postsEnd && (
+          <button onClick={getMorePosts}>Load more</button>
+        )}
+      </FlexCenterDiv>
 
       <Loader show={loading} />
 
