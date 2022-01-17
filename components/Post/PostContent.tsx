@@ -52,6 +52,10 @@ const PostContent: FC<PostContentProps> = ({ post, postRef }) => {
             height={"100%"}
             layout="responsive"
             objectFit="contain"
+            onClick={() => {
+              // open original image in a new tab
+              window.open(post.images[0].original.url, "_blank").focus()
+            }}
           />
         </div>
       ) : (
