@@ -49,7 +49,7 @@ const PostContent: FC<PostContentProps> = ({ post, postRef }) => {
             src={post.images[0].thumbnail300.url}
             alt=""
             width={"100%"}
-            height={"100%"}
+            height={"70%"}
             layout="responsive"
             objectFit="contain"
             onClick={() => {

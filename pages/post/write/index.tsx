@@ -77,20 +77,27 @@ export default function WritePost() {
         onSubmit={handleSubmit(onSubmit)}
         style={{ display: "grid", gap: "10px" }}
       >
-        <div>Title</div>
         <Controller
           name="title"
           control={control}
           rules={{ required: true }}
-          render={({ field }) => <TextField {...field} fullWidth />}
+          render={({ field }) => (
+            <TextField label="Title" variant="outlined" {...field} fullWidth />
+          )}
         />
-        <div>Content</div>
         <Controller
           name="content"
           control={control}
           rules={{ required: true }}
           render={({ field }) => (
-            <TextField {...field} multiline rows={10} fullWidth />
+            <TextField
+              label="Content"
+              variant="outlined"
+              {...field}
+              multiline
+              rows={10}
+              fullWidth
+            />
           )}
         />
         <ImageUploader setValue={setValue} />

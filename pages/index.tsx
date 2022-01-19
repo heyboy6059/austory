@@ -9,6 +9,7 @@ import Loader from "../components/Loader"
 import { firestore, fromMillis, postToJSON } from "../common/firebase"
 
 import Divider from "@mui/material/Divider"
+import Button from "@mui/material/Button"
 
 import { POST_FEED_NUM_LIMIT } from "../common/constants"
 import { FlexCenterDiv } from "../common/uiComponents"
@@ -63,15 +64,14 @@ const Home = (props) => {
     <div>
       <PostFeed posts={posts} />
 
-      <FlexCenterDiv style={{ marginBottom: "5px" }}>
+      <FlexCenterDiv style={{ marginBottom: "10px" }}>
         {!loading && !postsEnd && (
-          <button onClick={getMorePosts}>Load more</button>
+          <Button onClick={getMorePosts}>Load more</Button>
         )}
+        {postsEnd && "더 이상 읽을 글이 없습니다."}
       </FlexCenterDiv>
 
       <Loader show={loading} />
-
-      {postsEnd && "You have reached the end!"}
     </div>
   )
 }

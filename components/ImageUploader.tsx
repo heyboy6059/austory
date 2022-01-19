@@ -11,7 +11,8 @@ import { ImageDetails, PostWrite } from "../typing/interfaces"
 import { resizeImageJpeg, uploadImageToStorage } from "../common/image"
 import toast from "react-hot-toast"
 import { extractFilenameExtension } from "../common/functions"
-
+import ImageIcon from "@mui/icons-material/Image"
+import CircularProgress from "@mui/material/CircularProgress"
 interface Props {
   setValue: UseFormSetValue<PostWrite>
 }
@@ -104,25 +105,29 @@ const ImageUploader: FC<Props> = ({ setValue }) => {
   return (
     <div>
       <div>
-        <label className="btn">
-          📸 이미지 <Loader show={uploading} />
+        <label style={{ display: "flex", alignItems: "center" }}>
+          {uploading ? (
+            <CircularProgress size={16} />
+          ) : (
+            <>
+              <ImageIcon /> 이미지
+            </>
+          )}
           <input
             type="file"
             onChange={uploadFile}
             accept="image/x-png,image/gif,image/jpeg"
             disabled={uploading}
-            // TODO:
-            // multiple
           />
         </label>
       </div>
       {thumbnailImgUrl ? (
-        <div style={{ width: "300px" }}>
+        <div style={{ width: "300px", margin: "auto" }}>
           <Image
             src={thumbnailImgUrl}
             alt="thumbnail image"
             width={"100%"}
-            height={"100%"}
+            height={"70%"}
             layout="responsive"
             objectFit="contain"
           />

@@ -33,6 +33,8 @@ import DashboardIcon from "@mui/icons-material/Dashboard"
 import CardGiftcardIcon from "@mui/icons-material/CardGiftcard"
 import QueryStatsIcon from "@mui/icons-material/QueryStats"
 import AccountBoxIcon from "@mui/icons-material/AccountBox"
+import DriveFileRenameOutlineIcon from "@mui/icons-material/DriveFileRenameOutline"
+import Tooltip from "@mui/material/Tooltip"
 
 // Top navbar
 export default function Navbar() {
@@ -153,16 +155,13 @@ export default function Navbar() {
                 // user is signed-in and has username
                 <FlexVerticalCenterDiv style={{ gap: "10px" }}>
                   <Link href="/post/write" passHref>
-                    <Button
-                      size="small"
-                      variant="outlined"
-                      style={{
-                        color: COLOURS.PRIMARY_WHITE,
-                        borderColor: COLOURS.PRIMARY_WHITE,
-                      }}
-                    >
-                      Write Posts
-                    </Button>
+                    <Tooltip title="글쓰기" placement="bottom" arrow>
+                      <span>
+                        <DriveFileRenameOutlineIcon
+                          style={{ cursor: "pointer" }}
+                        />
+                      </span>
+                    </Tooltip>
                   </Link>
                   <Link href={`/${username}`} passHref>
                     <UserImage

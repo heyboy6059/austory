@@ -17,6 +17,15 @@ export const FlexSpaceBetween = styled.div`
   justify-content: space-between;
 `
 
+export const GridDiv = styled.div`
+  display: grid;
+`
+
+export const EllipsisDiv = styled.div`
+  overflow: hidden;
+  text-overflow: ellipsis;
+`
+
 export const UserImage = styled(Image)({
   cursor: "pointer",
   borderRadius: "50%",

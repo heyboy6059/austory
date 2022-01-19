@@ -5,10 +5,17 @@ import Image from "next/image"
 import { Post } from "../../typing/interfaces"
 import Paper from "@mui/material/Paper"
 
-import { FlexVerticalCenterDiv, FlexCenterDiv } from "../../common/uiComponents"
+import {
+  FlexVerticalCenterDiv,
+  FlexCenterDiv,
+  GridDiv,
+  FlexSpaceBetween,
+  EllipsisDiv,
+} from "../../common/uiComponents"
 
 import FavoriteIcon from "@mui/icons-material/Favorite"
 import CommentIcon from "@mui/icons-material/Comment"
+import Typography from "@mui/material/Typography"
 import { KOR_MONTH_DAY_FORMAT } from "../../common/constants"
 
 const PostItem: FC<{
@@ -21,47 +28,47 @@ const PostItem: FC<{
 
   // TODO: div clean up
   return (
-    <Paper elevation={3} style={{ marginBottom: "10px" }}>
+    <Paper elevation={0} style={{ marginBottom: "5px" }}>
       <div style={{ padding: "16px" }}>
-        <div
+        <GridDiv
           style={{
-            display: "flex",
-            justifyContent: "right",
-            gap: "4px",
-            fontSize: "12px",
-          }}
-        >
-          <Link href={`/${post.username}`}>
-            <a>
-              <span>By {post.username}</span>
-            </a>
-          </Link>
-          <span>|</span>
-          <span>{dayjs(post.createdAt).format(KOR_MONTH_DAY_FORMAT)}</span>
-        </div>
-
-        <div
-          style={{
-            display: "grid",
             // thumbnailImage? give 100px space
             gridTemplateColumns: post.images?.[0]?.thumbnail100?.url
               ? "1fr 100px"
               : "1fr",
           }}
         >
-          <div>
-            <div>
-              <div>
-                {/* <Link href={`/${post.username}/${post.slug}`} passHref> */}
-                <Link href={`/post/${post.slug}`} passHref>
-                  <h3>
-                    <a>{post.title}</a>
-                  </h3>
-                </Link>
-              </div>
+          <GridDiv
+            style={{
+              gridTemplateRows: "55px 45px",
+            }}
+          >
+            <div style={{ display: "flex", alignItems: "center" }}>
+              <Link href={`/post/${post.slug}`} passHref>
+                <Typography
+                  style={{
+                    fontSize: "20px",
+                    margin: "2px 0",
+                    wordWrap: "break-word",
+                    fontWeight: "bold",
+                    lineHeight: "1.2",
+                  }}
+                >
+                  <a>{post.title}</a>
+                </Typography>
+              </Link>
             </div>
-            <div>
-              <div>{post.excerpt ? `${post.excerpt}...` : post.content}</div>
+            <EllipsisDiv
+              style={{
+                cursor: "pointer",
+              }}
+            >
+              <Link href={`/post/${post.slug}`} passHref>
+                <Typography>
+                  {post.excerpt ? `${post.excerpt}...` : post.content}
+                </Typography>
+              </Link>
+
               {ownerUser && (
                 <>
                   <Link href={`/dashboard/${post.slug}`} passHref>
@@ -71,42 +78,60 @@ const PostItem: FC<{
                   </Link>
                 </>
               )}
-            </div>
-            <div>
-              <FlexCenterDiv
-                style={{
-                  gap: "4px",
-                  justifyContent: "left",
-                  marginTop: "10px",
-                }}
-              >
-                <FlexVerticalCenterDiv>
-                  <FavoriteIcon /> {post.heartCount}
-                </FlexVerticalCenterDiv>
-                <FlexVerticalCenterDiv>
-                  <CommentIcon /> {post.viewCount}
-                </FlexVerticalCenterDiv>
-              </FlexCenterDiv>
-            </div>
-          </div>
-          <div style={{ width: "100px" }}>
-            {/**
-             * TODO: properly display image - alignment, remove image grid column when there is no image
-             */}
+            </EllipsisDiv>
+          </GridDiv>
+          <div style={{ width: "100px", cursor: "pointer" }}>
             {post.images?.[0]?.thumbnail100?.url ? (
-              <Image
-                src={post.images[0].thumbnail100?.url}
-                alt=""
-                width={"100%"}
-                height={"100%"}
-                layout="responsive"
-                objectFit="contain"
-              />
+              <Link href={`/post/${post.slug}`} passHref>
+                <Image
+                  src={post.images[0].thumbnail100?.url}
+                  alt=""
+                  width={"100%"}
+                  height={"100%"}
+                  layout="responsive"
+                  objectFit="contain"
+                />
+              </Link>
             ) : (
               ``
             )}
           </div>
-        </div>
+        </GridDiv>
+        <FlexSpaceBetween
+          style={{
+            alignItems: "center",
+          }}
+        >
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "left",
+              gap: "4px",
+              fontSize: "12px",
+            }}
+          >
+            <Link href={`/${post.username}`}>
+              <a>
+                <span>{post.username}</span>
+              </a>
+            </Link>
+            <span>|</span>
+            <span>{dayjs(post.createdAt).format(KOR_MONTH_DAY_FORMAT)}</span>
+          </div>
+          <FlexCenterDiv
+            style={{
+              gap: "6px",
+              justifyContent: "right",
+            }}
+          >
+            <FlexVerticalCenterDiv>
+              <FavoriteIcon fontSize="small" /> {post.heartCount}
+            </FlexVerticalCenterDiv>
+            <FlexVerticalCenterDiv>
+              <CommentIcon fontSize="small" /> {post.viewCount}
+            </FlexVerticalCenterDiv>
+          </FlexCenterDiv>
+        </FlexSpaceBetween>
       </div>
     </Paper>
   )

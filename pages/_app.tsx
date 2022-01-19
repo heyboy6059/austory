@@ -11,7 +11,7 @@ function MyApp({ Component, pageProps }) {
     <UserContext.Provider value={userData}>
       <Navbar />
       <div style={{ display: "flex", justifyContent: "center" }}>
-        <div style={{ width: "700px" }}>
+        <div style={{ width: "600px" }}>
           <Component {...pageProps} />
         </div>
       </div>
