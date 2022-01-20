@@ -150,29 +150,24 @@ export default function Navbar() {
             </FlexCenterDiv>
 
             <FlexVerticalCenterDiv>
-              {/* user is not signed OR has not created username */}
-              {!username ? (
-                <Link href="/enter" passHref>
-                  <Button size="small" variant="outlined" color="info">
-                    Log in
-                  </Button>
-                </Link>
-              ) : (
-                // user is signed-in and has username
-                <FlexVerticalCenterDiv style={{ gap: "10px" }}>
-                  <Tooltip title="코로나 전광판" placement="bottom" arrow>
-                    <MasksIcon
-                      style={{ cursor: "pointer", fontSize: "30px" }}
-                      onClick={() => setCovidInfoOpen(true)}
+              {/* // user is signed-in and has username */}
+              <FlexVerticalCenterDiv style={{ gap: "10px" }}>
+                <Tooltip title="코로나 전광판" placement="bottom" arrow>
+                  <MasksIcon
+                    style={{ cursor: "pointer", fontSize: "30px" }}
+                    onClick={() => setCovidInfoOpen(true)}
+                  />
+                </Tooltip>
+                <Link href="/post/write" passHref>
+                  <Tooltip title="글쓰기" placement="bottom" arrow>
+                    <DriveFileRenameOutlineIcon
+                      style={{ cursor: "pointer", fontSize: "28px" }}
                     />
                   </Tooltip>
-                  <Link href="/post/write" passHref>
-                    <Tooltip title="글쓰기" placement="bottom" arrow>
-                      <DriveFileRenameOutlineIcon
-                        style={{ cursor: "pointer", fontSize: "28px" }}
-                      />
-                    </Tooltip>
-                  </Link>
+                </Link>
+
+                {username ? (
+                  // signed in user has username
                   <Link href={`/${username}`} passHref>
                     <UserImage
                       width={30}
@@ -181,8 +176,18 @@ export default function Navbar() {
                       alt="user photo"
                     />
                   </Link>
-                </FlexVerticalCenterDiv>
-              )}
+                ) : (
+                  <Link href="/enter" passHref>
+                    <Button
+                      size="medium"
+                      color="info"
+                      style={{ color: "white", padding: "0px" }}
+                    >
+                      LOG IN
+                    </Button>
+                  </Link>
+                )}
+              </FlexVerticalCenterDiv>
             </FlexVerticalCenterDiv>
           </FlexSpaceBetween>
         </Toolbar>
