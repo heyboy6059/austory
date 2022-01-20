@@ -5,7 +5,7 @@ export enum COLOURS {
   LIGHT_BACKGROUND = "f5f5f7",
 }
 
-export const POST_FEED_NUM_LIMIT = 5
+export const POST_FEED_NUM_LIMIT = 10
 
 export const KOR_MONTH_DAY_FORMAT = "MM월 DD일 h:mm A"
 

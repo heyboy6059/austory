@@ -37,10 +37,12 @@ import Button from "@mui/material/Button"
 import DriveFileRenameOutlineIcon from "@mui/icons-material/DriveFileRenameOutline"
 import MasksIcon from "@mui/icons-material/Masks"
 import Tooltip from "@mui/material/Tooltip"
+import CovidInfoDialog from "./CovidInfoDialog"
 
 // Top navbar
 export default function Navbar() {
   const { user, username } = useContext(UserContext)
+  const [covidInfoOpen, setCovidInfoOpen] = useState(false)
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
 
@@ -161,6 +163,7 @@ export default function Navbar() {
                   <Tooltip title="코로나 전광판" placement="bottom" arrow>
                     <MasksIcon
                       style={{ cursor: "pointer", fontSize: "30px" }}
+                      onClick={() => setCovidInfoOpen(true)}
                     />
                   </Tooltip>
                   <Link href="/post/write" passHref>
@@ -192,6 +195,9 @@ export default function Navbar() {
       >
         {list()}
       </SwipeableDrawer> */}
+      {covidInfoOpen && (
+        <CovidInfoDialog open={covidInfoOpen} setOpen={setCovidInfoOpen} />
+      )}
     </Box>
   )
 }
