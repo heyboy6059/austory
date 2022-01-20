@@ -17,6 +17,7 @@ import FavoriteIcon from "@mui/icons-material/Favorite"
 import CommentIcon from "@mui/icons-material/Comment"
 import Typography from "@mui/material/Typography"
 import { KOR_MONTH_DAY_FORMAT } from "../../common/constants"
+import AccountBoxIcon from "@mui/icons-material/AccountBox"
 
 const PostItem: FC<{
   post: Post
@@ -29,13 +30,14 @@ const PostItem: FC<{
   // TODO: div clean up
   return (
     <Paper elevation={0} style={{ marginBottom: "5px" }}>
-      <div style={{ padding: "16px" }}>
+      <div style={{ padding: "12px" }}>
         <GridDiv
           style={{
             // thumbnailImage? give 100px space
             gridTemplateColumns: post.images?.[0]?.thumbnail100?.url
               ? "1fr 100px"
               : "1fr",
+            gap: "4px",
           }}
         >
           <GridDiv
@@ -110,10 +112,11 @@ const PostItem: FC<{
               fontSize: "12px",
             }}
           >
-            <Link href={`/${post.username}`}>
-              <a>
-                <span>{post.username}</span>
-              </a>
+            <Link href={`/${post.username}`} passHref>
+              <FlexCenterDiv style={{ gap: "2px" }}>
+                <AccountBoxIcon style={{ fontSize: "16px" }} />
+                {post.username}
+              </FlexCenterDiv>
             </Link>
             <span>|</span>
             <span>{dayjs(post.createdAt).format(KOR_MONTH_DAY_FORMAT)}</span>
