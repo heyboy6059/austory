@@ -8,11 +8,28 @@ export type FirestoreTimestamp = firebase.firestore.Timestamp
 export type FirebaseDocumentRef =
   firebase.firestore.DocumentReference<firebase.firestore.DocumentData>
 
+export type Role = "Base"
+
 // user
 export type User = {
   username: string // user typed in our system
   photoURL: string
   displayName: string // user from auth provider (google)?
+  email: string
+  //
+  heartCountTotal: number
+  postCountTotal: number
+  commentCountTotal: number
+  viewCountTotal: number
+  //
+  disabled: boolean
+  isAdmin: boolean
+  isMarketingEmail: boolean
+  role: Role // TODO
+  //
+  createdAt: FirestoreTimestamp
+  updatedAt: FirestoreTimestamp | null
+  disabledAt: FirestoreTimestamp | null
 }
 
 export type TempUser = {

@@ -1,7 +1,19 @@
 import debounce from "lodash.debounce"
 import { useCallback, useContext, useEffect, useState } from "react"
 import { UserContext } from "../common/context"
-import { auth, firestore, googleAuthProvider } from "../common/firebase"
+import {
+  auth,
+  firestore,
+  googleAuthProvider,
+  serverTimestamp,
+} from "../common/firebase"
+import TextField from "@mui/material/TextField"
+import Chip from "@mui/material/Chip"
+import Button from "@mui/material/Button"
+import Checkbox from "@mui/material/Checkbox"
+import FormControlLabel from "@mui/material/FormControlLabel"
+import { FirestoreTimestamp, User } from "../typing/interfaces"
+import { FlexCenterDiv } from "../common/uiComponents"
 
 export default function Enter(props) {
   const { user, username } = useContext(UserContext)
@@ -33,7 +45,7 @@ function SignInButton() {
 
   return (
     <button className="btn-google" onClick={signInWithGoogle}>
-      <img src={"/google.png"} /> Sign in with Google
+      <img src={"/google.png"} /> Google 로그인
     </button>
   )
 }
@@ -44,7 +56,9 @@ function SignOutButton() {
 }
 
 function UsernameForm() {
-  const [formValue, setFormValue] = useState("")
+  const [inkrauUsername, setInkrauUsername] = useState("")
+  const [isMarketingEmail, setIsMarketingEmail] = useState(false)
+
   const [isValid, setIsValid] = useState(false)
   const [loading, setLoading] = useState(false)
 
@@ -55,15 +69,26 @@ function UsernameForm() {
 
     // Create refs for both documents
     const userDoc = firestore.doc(`users/${user.uid}`)
-    const usernameDoc = firestore.doc(`usernames/${formValue}`)
+    const usernameDoc = firestore.doc(`usernames/${inkrauUsername}`)
 
     // Commit both docs together as a batch write
     const batch = firestore.batch()
     batch.set(userDoc, {
-      username: formValue,
+      username: inkrauUsername,
       photoURL: user.photoURL,
       displayName: user.displayName,
-    })
+      email: user.email,
+      heartCountTotal: 0,
+      postCountTotal: 0,
+      commentCountTotal: 0,
+      viewCountTotal: 0,
+      disabled: false,
+      isAdmin: false,
+      isMarketingEmail,
+      role: "Base",
+      createdAt: serverTimestamp() as FirestoreTimestamp,
+      updatedAt: null,
+    } as User)
     batch.set(usernameDoc, {
       uid: user.uid,
     })
@@ -74,25 +99,25 @@ function UsernameForm() {
   const onChange = (e) => {
     // Force form value typed in form to match correct format
     const val = e.target.value.toLowerCase()
-    const re = /^(?=[a-zA-Z0-9._]{3,15}$)(?!.*[_.]{2})[^_.].*[^_.]$/
+    // const re = /^(?=[a-zA-Z0-9._]{3,15}$)(?!.*[_.]{2})[^_.].*[^_.]$/
 
-    // Only set from value if length is < 3 OR it passes regex
-    if (val.length < 3) {
-      setFormValue(val)
+    // Only set from value if length is < 2 OR it passes regex
+    if (val.length < 2) {
+      setInkrauUsername(val)
       setLoading(false)
       setIsValid(false)
     }
 
-    if (re.test(val)) {
-      setFormValue(val)
+    if (val) {
+      setInkrauUsername(val)
       setLoading(true)
       setIsValid(false)
     }
   }
 
   useEffect(() => {
-    checkUsername(formValue)
-  }, [formValue])
+    checkUsername(inkrauUsername)
+  }, [inkrauUsername])
 
   // Hit the database for username match after each debounced change
   // useCallback is required for debounce to work
@@ -112,31 +137,70 @@ function UsernameForm() {
   return (
     !username && (
       <section>
-        <h3>Choose Username</h3>
         <form onSubmit={onSubmit}>
-          <input
-            name="username"
-            placeholder="myname"
-            value={formValue}
-            onChange={onChange}
+          <TextField
+            required={true}
+            label="Email"
+            size="small"
+            fullWidth
+            margin="normal"
+            disabled={true}
+            value={user.email}
           />
+          <TextField
+            required={true}
+            label="활동명"
+            size="small"
+            fullWidth
+            margin="normal"
+            onChange={onChange}
+            value={inkrauUsername}
+            helperText='한글과 영문 모두 가능합니다.'
+          />
+          {inkrauUsername !== user.displayName && (
+            // display it inkrauUsername is not equals to displayName
+            <Chip
+              label={`현재 이메일 프로필 이름 사용하기. ${user.displayName}`}
+              variant="outlined"
+              color="success"
+              size="small"
+              onClick={() => {
+                setInkrauUsername(user.displayName)
+              }}
+            />
+          )}
+
           <UsernameMessage
-            username={formValue}
+            username={inkrauUsername}
             isValid={isValid}
             loading={loading}
           />
-          <button type="submit" className="btn-green" disabled={!isValid}>
-            Choose
-          </button>
 
-          <h3>Debug State</h3>
+          <FormControlLabel
+            control={<Checkbox />}
+            label={
+              <span style={{ fontSize: "0.8rem" }}>
+                인크라우가 제공하는 알림, 호주 소식, 정보 등을 이메일로 받아
+                보시겠습니까?
+              </span>
+            }
+          />
+          {/* <button type="submit" className="btn-green" disabled={!isValid}> */}
+          <FlexCenterDiv style={{ margin: "5px 0" }}>
+            <Button type="submit" disabled={!isValid} variant="outlined">
+              완료
+            </Button>
+          </FlexCenterDiv>
+          {/* </button> */}
+
+          {/* <h3>Debug State</h3>
           <div>
             Username: {formValue}
             <br />
             Loading: {loading.toString()}
             <br />
             Username Valid: {isValid.toString()}
-          </div>
+          </div> */}
         </form>
       </section>
     )
