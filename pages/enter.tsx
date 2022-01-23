@@ -14,6 +14,8 @@ import Checkbox from "@mui/material/Checkbox"
 import FormControlLabel from "@mui/material/FormControlLabel"
 import { FirestoreTimestamp, User } from "../typing/interfaces"
 import { FlexCenterDiv } from "../common/uiComponents"
+import toast from "react-hot-toast"
+import { useRouter } from "next/router"
 
 export default function Enter(props) {
   const { user, username } = useContext(UserContext)
@@ -56,6 +58,8 @@ function SignOutButton() {
 }
 
 function UsernameForm() {
+  const router = useRouter()
+
   const [inkrauUsername, setInkrauUsername] = useState("")
   const [isMarketingEmail, setIsMarketingEmail] = useState(false)
 
@@ -68,51 +72,51 @@ function UsernameForm() {
   const onSubmit = async (e) => {
     e.preventDefault()
 
-    // Create refs for both documents
-    const userDoc = firestore.doc(`users/${user.uid}`)
-    const usernameDoc = firestore.doc(`usernames/${inkrauUsername}`)
+    try {
+      // Create refs for both documents
+      const userDoc = firestore.doc(`users/${user.uid}`)
+      const usernameDoc = firestore.doc(`usernames/${inkrauUsername}`)
 
-    // Commit both docs together as a batch write
-    const batch = firestore.batch()
-    batch.set(userDoc, {
-      username: inkrauUsername,
-      photoURL: user.photoURL,
-      displayName: user.displayName,
-      email: user.email,
-      heartCountTotal: 0,
-      postCountTotal: 0,
-      commentCountTotal: 0,
-      viewCountTotal: 0,
-      disabled: false,
-      isAdmin: false,
-      isMarketingEmail,
-      role: "Base",
-      createdAt: serverTimestamp() as FirestoreTimestamp,
-      updatedAt: null,
-    } as User)
-    batch.set(usernameDoc, {
-      uid: user.uid,
-    })
+      // Commit both docs together as a batch write
+      const batch = firestore.batch()
+      batch.set(userDoc, {
+        username: inkrauUsername,
+        photoURL: user.photoURL,
+        displayName: user.displayName,
+        email: user.email,
+        heartCountTotal: 0,
+        postCountTotal: 0,
+        commentCountTotal: 0,
+        viewCountTotal: 0,
+        disabled: false,
+        isAdmin: false,
+        isMarketingEmail,
+        role: "Base",
+        createdAt: serverTimestamp() as FirestoreTimestamp,
+        updatedAt: null,
+      } as User)
+      batch.set(usernameDoc, {
+        uid: user.uid,
+      })
 
-    await batch.commit()
+      await batch.commit()
 
-    // TODO
-    // success toast
-    // reroute to home page
+      toast.success("환영합니다!")
+
+      // direct to home page
+      router.push("/")
+    } catch (err) {
+      console.error(`Error in sign up. ${err.message}`)
+      toast.error("계정 생성중 에러가 발생했습니다. 다시 시도해주세요.")
+    }
   }
 
   const onChange = (e) => {
     // Force form value typed in form to match correct format
     const val = e.target.value.toLowerCase()
-    // const re = /^(?=[a-zA-Z0-9._]{3,15}$)(?!.*[_.]{2})[^_.].*[^_.]$/
-    const reg = /^[ㄱ-ㅎ|가-힣|a-z|A-Z|0-9|]+$/
 
-    // Only set from value if length is < 2 OR it passes regex
-    // if (val.length < 2) {
-    //   setInkrauUsername(val)
-    //   setLoading(false)
-    //   setIsNotValid(true)
-    // }
+    // Korean, English, number only regex
+    const reg = /^[ㄱ-ㅎ|가-힣|a-z|A-Z|0-9|]+$/
 
     if (reg.test(val) && val.length < 20) {
       setIsNotValid(false)
@@ -209,7 +213,6 @@ function UsernameForm() {
               }
             />
           </div>
-          {/* <button type="submit" className="btn-green" disabled={!isValid}> */}
           <FlexCenterDiv style={{ margin: "10px 0" }}>
             <Button
               type="submit"
