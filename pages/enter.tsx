@@ -1,5 +1,5 @@
 import debounce from "lodash.debounce"
-import { useCallback, useContext, useEffect, useState } from "react"
+import { useCallback, useContext, useEffect, useMemo, useState } from "react"
 import { UserContext } from "../common/context"
 import {
   auth,
@@ -59,7 +59,8 @@ function UsernameForm() {
   const [inkrauUsername, setInkrauUsername] = useState("")
   const [isMarketingEmail, setIsMarketingEmail] = useState(false)
 
-  const [isValid, setIsValid] = useState(false)
+  const [isNotValid, setIsNotValid] = useState(false)
+  const [isExistInDB, setIsExistInDB] = useState(false)
   const [loading, setLoading] = useState(false)
 
   const { user, username } = useContext(UserContext)
@@ -94,25 +95,32 @@ function UsernameForm() {
     })
 
     await batch.commit()
+
+    // TODO
+    // success toast
+    // reroute to home page
   }
 
   const onChange = (e) => {
     // Force form value typed in form to match correct format
     const val = e.target.value.toLowerCase()
     // const re = /^(?=[a-zA-Z0-9._]{3,15}$)(?!.*[_.]{2})[^_.].*[^_.]$/
+    const reg = /^[ㄱ-ㅎ|가-힣|a-z|A-Z|0-9|]+$/
 
     // Only set from value if length is < 2 OR it passes regex
-    if (val.length < 2) {
-      setInkrauUsername(val)
-      setLoading(false)
-      setIsValid(false)
+    // if (val.length < 2) {
+    //   setInkrauUsername(val)
+    //   setLoading(false)
+    //   setIsNotValid(true)
+    // }
+
+    if (reg.test(val) && val.length < 20) {
+      setIsNotValid(false)
+    } else {
+      setIsNotValid(true)
     }
 
-    if (val) {
-      setInkrauUsername(val)
-      setLoading(true)
-      setIsValid(false)
-    }
+    setInkrauUsername(val)
   }
 
   useEffect(() => {
@@ -127,12 +135,24 @@ function UsernameForm() {
         const ref = firestore.doc(`usernames/${username}`)
         const { exists } = await ref.get()
         console.log("Firestore read executed!")
-        setIsValid(!exists)
+        setIsExistInDB(exists)
         setLoading(false)
       }
     }, 500),
     []
   )
+
+  const usernameHelperText = (): string => {
+    console.log("username in callback ", inkrauUsername)
+    if (!inkrauUsername || inkrauUsername.length < 3) {
+      return "한글과 영문 모두 사용 가능합니다."
+    }
+    if (isExistInDB) return "이미 존재하는 활동명 입니다."
+    if (isNotValid) {
+      return "한글, 영문, 숫자 조합으로 최대 20자 까지 가능합니다."
+    }
+    return "한글과 영문 모두 사용 가능합니다."
+  }
 
   return (
     !username && (
@@ -155,9 +175,10 @@ function UsernameForm() {
             margin="normal"
             onChange={onChange}
             value={inkrauUsername}
-            helperText='한글과 영문 모두 가능합니다.'
+            error={inkrauUsername?.length > 2 && (isExistInDB || isNotValid)}
+            helperText={usernameHelperText()}
           />
-          {inkrauUsername !== user.displayName && (
+          {inkrauUsername?.length < 2 && inkrauUsername !== user.displayName && (
             // display it inkrauUsername is not equals to displayName
             <Chip
               label={`현재 이메일 프로필 이름 사용하기. ${user.displayName}`}
@@ -166,28 +187,42 @@ function UsernameForm() {
               size="small"
               onClick={() => {
                 setInkrauUsername(user.displayName)
+                setIsNotValid(false)
               }}
             />
           )}
 
-          <UsernameMessage
+          {/* <UsernameMessage
             username={inkrauUsername}
             isValid={isValid}
             loading={loading}
-          />
+          /> */}
 
-          <FormControlLabel
-            control={<Checkbox />}
-            label={
-              <span style={{ fontSize: "0.8rem" }}>
-                인크라우가 제공하는 알림, 호주 소식, 정보 등을 이메일로 받아
-                보시겠습니까?
-              </span>
-            }
-          />
+          <div style={{ margin: "5px 0" }}>
+            <FormControlLabel
+              control={<Checkbox />}
+              label={
+                <span style={{ fontSize: "0.8rem" }}>
+                  인크라우가 제공하는 알림, 호주 소식, 정보 등을 이메일로 받아
+                  보시겠습니까?
+                </span>
+              }
+            />
+          </div>
           {/* <button type="submit" className="btn-green" disabled={!isValid}> */}
-          <FlexCenterDiv style={{ margin: "5px 0" }}>
-            <Button type="submit" disabled={!isValid} variant="outlined">
+          <FlexCenterDiv style={{ margin: "10px 0" }}>
+            <Button
+              type="submit"
+              disabled={
+                !(
+                  inkrauUsername &&
+                  inkrauUsername.length > 2 &&
+                  !isExistInDB &&
+                  !isNotValid
+                )
+              }
+              variant="outlined"
+            >
               완료
             </Button>
           </FlexCenterDiv>
@@ -207,14 +242,14 @@ function UsernameForm() {
   )
 }
 
-function UsernameMessage({ username, isValid, loading }) {
-  if (loading) {
-    return <p>Checking...</p>
-  } else if (isValid) {
-    return <p className="text-success">{username} is available!</p>
-  } else if (username && !isValid) {
-    return <p className="text-danger">That username is taken!</p>
-  } else {
-    return <p></p>
-  }
-}
+// function UsernameMessage({ username, isValid, loading }) {
+//   if (loading) {
+//     return <p>Checking...</p>
+//   } else if (isValid) {
+//     return <p className="text-success">{username} is available!</p>
+//   } else if (username && !isValid) {
+//     return <p className="text-danger">That username is taken!</p>
+//   } else {
+//     return <p></p>
+//   }
+// }
