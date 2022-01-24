@@ -19,6 +19,14 @@ import { useRouter } from "next/router"
 
 export default function Enter(props) {
   const { user, username } = useContext(UserContext)
+  const router = useRouter()
+
+  // route user to home page if account is already registered
+  useEffect(() => {
+    if (user && username) {
+      router.push("/")
+    }
+  }, [])
 
   // 1. user signed out <SignInButton />
   // 2. user signed in, but missing username <UsernameForm />
@@ -26,11 +34,21 @@ export default function Enter(props) {
   return (
     <main>
       {/* <Metatags title="Enter" description="Sign up for this amazing app!" /> */}
-      {user ? (
+      {/* {user ? (
         !username ? (
           <UsernameForm />
         ) : (
           <SignOutButton />
+        )
+      ) : (
+        <SignInButton />
+      )} */}
+      {user ? (
+        !username ? (
+          <UsernameForm />
+        ) : (
+          // REVIEW: maybe loading indicator?
+          <div></div>
         )
       ) : (
         <SignInButton />
@@ -112,6 +130,9 @@ function UsernameForm() {
   }
 
   const onChange = (e) => {
+    // update setIsExistInDB false first as it will be rechecked with debounce
+    setIsExistInDB(false)
+
     // Force form value typed in form to match correct format
     const val = e.target.value.toLowerCase()
 
@@ -202,7 +223,7 @@ function UsernameForm() {
             loading={loading}
           /> */}
 
-          <div style={{ margin: "5px 0" }}>
+          <div style={{ margin: "20px 0" }}>
             <FormControlLabel
               control={<Checkbox />}
               label={
