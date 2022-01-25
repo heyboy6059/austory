@@ -67,7 +67,7 @@ const PostItem: FC<{
             >
               <Link href={`/post/${post.slug}`} passHref>
                 <Typography>
-                  {post.excerpt ? `${post.excerpt}...` : post.content}
+                  {post.excerpt ? `${post.excerpt}` : post.content}
                 </Typography>
               </Link>
 
@@ -102,6 +102,7 @@ const PostItem: FC<{
         <FlexSpaceBetween
           style={{
             alignItems: "center",
+            margin: "15px 0 5px 0",
           }}
         >
           <div
