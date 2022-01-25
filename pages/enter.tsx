@@ -12,7 +12,7 @@ import Chip from "@mui/material/Chip"
 import Button from "@mui/material/Button"
 import Checkbox from "@mui/material/Checkbox"
 import FormControlLabel from "@mui/material/FormControlLabel"
-import { FirestoreTimestamp, User } from "../typing/interfaces"
+import { FirestoreTimestamp, RawUser } from "../typing/interfaces"
 import { FlexCenterDiv } from "../common/uiComponents"
 import toast from "react-hot-toast"
 import { useRouter } from "next/router"
@@ -112,7 +112,7 @@ function UsernameForm() {
         role: "Base",
         createdAt: serverTimestamp() as FirestoreTimestamp,
         updatedAt: null,
-      } as User)
+      } as RawUser)
       batch.set(usernameDoc, {
         uid: user.uid,
       })

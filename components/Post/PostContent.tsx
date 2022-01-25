@@ -8,6 +8,9 @@ import { Post, FirebaseDocumentRef } from "../../typing/interfaces"
 import dayjs from "dayjs"
 import { KOR_FULL_DATE_FORMAT } from "../../common/constants"
 import Image from "next/image"
+import AccountBoxIcon from "@mui/icons-material/AccountBox"
+import ArrowBackIcon from "@mui/icons-material/ArrowBack"
+import { useRouter } from "next/router"
 
 // import { Editor, EditorState, ContentState } from "draft-js"
 
@@ -17,6 +20,7 @@ interface PostContentProps {
 }
 // UI component for main post content
 const PostContent: FC<PostContentProps> = ({ post, postRef }) => {
+  const router = useRouter()
   // const [editorState, setEditorState] = useState(
   //   EditorState.createWithContent(
   //     ContentState.createFromBlockArray("<h1>HAHAHOHO</h1>")
@@ -35,13 +39,32 @@ const PostContent: FC<PostContentProps> = ({ post, postRef }) => {
 
   return (
     <Paper sx={{ p: 2 }}>
+      <div>
+        <ArrowBackIcon
+          onClick={() =>
+            // router.push("/", undefined, { shallow: true })
+            //REVIEW: go back without reload/refresh/keep scroll
+            router.push("/")
+          }
+        />
+      </div>
       <h1>{post?.title}</h1>
       <span className="text-sm">
-        Written by{" "}
+        {/* Written by{" "}
         <Link href={`/${post.username}/`}>
           <a className="text-info">@{post.username}</a>
         </Link>{" "}
-        on {dayjs(post.createdAt).format(KOR_FULL_DATE_FORMAT)}
+        on {dayjs(post.createdAt).format(KOR_FULL_DATE_FORMAT)} */}
+        {/* <FlexCenterDiv style={{ gap: "2px", alignItems: "center" }}> */}
+        <div style={{ display: "flex", gap: "8px" }}>
+          <div style={{ display: "flex" }}>
+            <AccountBoxIcon style={{ fontSize: "16px" }} />
+            <div>{post.username}</div>
+          </div>
+          <div>|</div>
+          <div>{dayjs(post.createdAt).format(KOR_FULL_DATE_FORMAT)}</div>
+        </div>
+        {/* </FlexCenterDiv> */}
       </span>
       {post.images?.[0]?.thumbnail300?.url ? (
         <div style={{ width: "300px", margin: "auto" }}>

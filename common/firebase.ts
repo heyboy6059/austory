@@ -2,7 +2,13 @@ import firebase from "firebase/compat/app"
 import "firebase/compat/auth"
 import "firebase/compat/firestore"
 import "firebase/compat/storage"
-import { FirebaseDocumentSnapshot, Post, RawPost } from "../typing/interfaces"
+import {
+  FirebaseDocumentSnapshot,
+  Post,
+  RawPost,
+  RawUser,
+  User,
+} from "../typing/interfaces"
 
 const firebaseConfig = {
   apiKey: "AIzaSyDZM4GcEwLya_cjnIHbn2qJth7gnw-U0QU",
@@ -72,5 +78,14 @@ export const tempPostToJSON = (doc) => {
     // Gotcha! firestore timestamp NOT serializable to JSON. Must convert to milliseconds
     createdAt: data?.createdAt?.toMillis() || 0,
     updatedAt: data?.updatedAt?.toMillis() || 0,
+  }
+}
+
+export const userToJSON = (user: FirebaseDocumentSnapshot<RawUser>): User => {
+  const userData = user.data()
+  return {
+    ...userData,
+    createdAt: userData?.createdAt?.toMillis() || 0,
+    updatedAt: userData?.updatedAt?.toMillis() || 0,
   }
 }

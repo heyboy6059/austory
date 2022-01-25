@@ -1,17 +1,34 @@
 import { FC } from "react"
-import { User } from "../typing/interfaces"
+import { RawUser } from "../typing/interfaces"
+import Image from "next/image"
+import styled from "styled-components"
 
 // UI component for user profile
 const UserProfile: FC<{
-  user: User
+  user: RawUser
 }> = ({ user }) => {
+  const RoundedImageWrapper = styled.div`
+    width: 50px;
+    margin: auto;
+    img {
+      border-radius: 50px;
+    }
+  `
+
   return (
     <div className="box-center">
-      <img src={user.photoURL || "/hacker.png"} className="card-img-center" />
+      <RoundedImageWrapper>
+        <Image
+          src={user.photoURL || "/hacker.png"}
+          alt="유저 사진"
+          width={"100%"}
+          height={"100%"}
+        />
+      </RoundedImageWrapper>
       <p>
-        <i>@{user.username}</i>
+        <i>{user.email}</i>
       </p>
-      <h1>{user.displayName || "Anonymous User"}</h1>
+      <h1>{user.username || "등록되지 않은 유저"}</h1>
     </div>
   )
 }

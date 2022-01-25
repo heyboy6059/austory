@@ -11,7 +11,7 @@ export type FirebaseDocumentRef =
 export type Role = "Base"
 
 // user
-export type User = {
+export type RawUser = {
   username: string // user typed in our system
   photoURL: string
   displayName: string // user from auth provider (google)?
@@ -30,6 +30,11 @@ export type User = {
   createdAt: FirestoreTimestamp
   updatedAt: FirestoreTimestamp | null
   disabledAt: FirestoreTimestamp | null
+}
+
+export type User = Omit<RawUser, "createdAt" | "updatedAt"> & {
+  createdAt: number
+  updatedAt: number | null
 }
 
 export type TempUser = {

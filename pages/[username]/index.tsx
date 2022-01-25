@@ -1,7 +1,17 @@
-import { getUserWithUsername, postToJSON } from "../../common/firebase"
+import {
+  getUserWithUsername,
+  postToJSON,
+  userToJSON,
+} from "../../common/firebase"
 import UserProfile from "../../components/UserProfile"
 import PostFeed from "../../components/Post/PostFeed"
-import { Post, User } from "../../typing/interfaces"
+import {
+  FirebaseDocumentSnapshot,
+  Post,
+  RawUser,
+} from "../../typing/interfaces"
+import { FlexCenterDiv } from "../../common/uiComponents"
+import WarningIcon from "@mui/icons-material/Warning"
 
 export const getServerSideProps = async ({ query }) => {
   const { username } = query
@@ -21,27 +31,34 @@ export const getServerSideProps = async ({ query }) => {
 
   if (userDoc) {
     // REVIEW: is it okay to cast?
-    user = userDoc.data() as User
-    const postsQuery = userDoc.ref
-      .collection("posts")
-      .where("published", "==", true)
-      .orderBy("createdAt", "desc")
-      .limit(5)
+    user = userToJSON(userDoc as FirebaseDocumentSnapshot<RawUser>)
+    // console.log({ user })
+    // const postsQuery = userDoc.ref
+    //   .collection("posts")
+    //   .where("published", "==", true)
+    //   .orderBy("createdAt", "desc")
+    //   .limit(5)
 
-    console.log("hit!!!!")
-    posts = (await postsQuery.get()).docs.map(postToJSON)
+    // posts = (await postsQuery.get()).docs.map(postToJSON)
   }
 
   return {
-    props: { user, posts },
+    props: { user },
   }
 }
 
-const UserProfilePage = ({ user, posts }) => {
+const UserProfilePage = ({ user }) => {
   return (
     <main>
       <UserProfile user={user} />
-      <PostFeed posts={posts} />
+      <h3 style={{ textAlign: "center" }}>내가 쓴 글 보기</h3>
+      <FlexCenterDiv style={{ height: "100%" }}>
+        <div style={{ textAlign: "center" }}>
+          <WarningIcon style={{ color: "orange" }} fontSize="large" />
+          <div>준비중 입니다.</div>
+        </div>
+      </FlexCenterDiv>
+      {/* <PostFeed posts={posts} /> */}
     </main>
   )
 }

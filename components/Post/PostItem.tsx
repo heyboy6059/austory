@@ -109,16 +109,17 @@ const PostItem: FC<{
             style={{
               display: "flex",
               justifyContent: "left",
+              alignItems: "center",
               gap: "4px",
-              fontSize: "12px",
+              fontSize: "13px",
             }}
           >
-            <Link href={`/${post.username}`} passHref>
-              <FlexCenterDiv style={{ gap: "2px" }}>
-                <AccountBoxIcon style={{ fontSize: "16px" }} />
-                {post.username}
-              </FlexCenterDiv>
-            </Link>
+            {/* <Link href={`/${post.username}`} passHref> */}
+            <FlexCenterDiv style={{ gap: "2px", alignItems: "center" }}>
+              <AccountBoxIcon style={{ fontSize: "16px" }} />
+              <div>{post.username}</div>
+            </FlexCenterDiv>
+            {/* </Link> */}
             <span>|</span>
             <span>{dayjs(post.createdAt).format(KOR_MONTH_DAY_FORMAT)}</span>
           </div>
