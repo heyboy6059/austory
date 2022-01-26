@@ -3,6 +3,7 @@ export enum COLOURS {
   SECONDARY_SPACE_GREY = "#424245",
   PRIMARY_WHITE = "#d6d6d6",
   LIGHT_BACKGROUND = "f5f5f7",
+  DARK_BLUE = "#10508D",
 }
 
 export const POST_FEED_NUM_LIMIT = 10
