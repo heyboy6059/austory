@@ -16,7 +16,7 @@ export async function getStaticProps({ params }) {
     //   username,
     slug,
   } = params
-  console.log({ slug })
+  // console.log({ slug })
   //   const userDoc = await getUserWithUsername(username)
 
   let post: Post = null
@@ -38,7 +38,7 @@ export async function getStaticProps({ params }) {
 
   //   const ref = firestore.
 
-  console.log("get!!@@", (await query.get()).data())
+  // console.log("get!!@@", (await query.get()).data())
   // post = postToJSON((await query.get()))
   // docs.map(postToJSON)
 

@@ -91,7 +91,7 @@ const PostContent: FC<PostContentProps> = ({ post, postRef }) => {
         onChange={(editorState) => setEditorState(editorState)}
       /> */}
       <div>
-        <AuthCheck
+        {/* <AuthCheck
           fallback={
             <Link href="/enter" passHref>
               <button>💗 Sign Up</button>
@@ -99,7 +99,7 @@ const PostContent: FC<PostContentProps> = ({ post, postRef }) => {
           }
         >
           <HeartButton postRef={postRef} heartCount={post.heartCount} />
-        </AuthCheck>
+        </AuthCheck> */}
       </div>
     </Paper>
   )
