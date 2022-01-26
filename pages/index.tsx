@@ -14,6 +14,9 @@ import Button from "@mui/material/Button"
 import { POST_FEED_NUM_LIMIT } from "../common/constants"
 import { FlexCenterDiv } from "../common/uiComponents"
 
+import ScrollToTop from "react-scroll-up"
+import ArrowCircleUpIcon from "@mui/icons-material/ArrowCircleUp"
+
 export const getServerSideProps = async (context) => {
   const postsQuery = firestore
     .collection("posts")
@@ -72,6 +75,19 @@ const Home = (props) => {
       </FlexCenterDiv>
 
       <Loader show={loading} />
+      <ScrollToTop showUnder={300} style={{ bottom: 25, right: 15 }}>
+        <span>
+          <ArrowCircleUpIcon
+            style={{
+              backgroundColor: "#10508D",
+              color: "white",
+              borderRadius: "30px",
+              fontSize: "35px",
+              opacity: 0.85,
+            }}
+          />
+        </span>
+      </ScrollToTop>
     </div>
   )
 }
