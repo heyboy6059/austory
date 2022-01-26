@@ -42,6 +42,7 @@ const PostContent: FC<PostContentProps> = ({ post, postRef }) => {
       <div>
         <ArrowBackIcon
           onClick={() =>
+            // window.history.pushState("", "", `/post/abcd`)
             // router.push("/", undefined, { shallow: true })
             //REVIEW: go back without reload/refresh/keep scroll
             router.push("/")
