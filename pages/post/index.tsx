@@ -1,7 +1,7 @@
 import { getUserWithUsername, postToJSON } from "../../common/firebase"
 import UserProfile from "../../components/UserProfile"
 import PostFeed from "../../components/Post/PostFeed"
-import { Post, User } from "../../typing/interfaces"
+import { Post, RawUser } from "../../typing/interfaces"
 
 export const getServerSideProps = async ({ query }) => {
   const { username } = query
@@ -21,7 +21,7 @@ export const getServerSideProps = async ({ query }) => {
 
   if (userDoc) {
     // REVIEW: is it okay to cast?
-    user = userDoc.data() as User
+    user = userDoc.data() as RawUser
     const postsQuery = userDoc.ref
       .collection("posts")
       .where("published", "==", true)

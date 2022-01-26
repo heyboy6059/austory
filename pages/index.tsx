@@ -11,7 +11,7 @@ import { firestore, fromMillis, postToJSON } from "../common/firebase"
 import Divider from "@mui/material/Divider"
 import Button from "@mui/material/Button"
 
-import { POST_FEED_NUM_LIMIT } from "../common/constants"
+import { COLOURS, POST_FEED_NUM_LIMIT } from "../common/constants"
 import { FlexCenterDiv } from "../common/uiComponents"
 
 import ScrollToTop from "react-scroll-up"
@@ -79,7 +79,7 @@ const Home = (props) => {
         <span>
           <ArrowCircleUpIcon
             style={{
-              backgroundColor: "#10508D",
+              backgroundColor: COLOURS.DARK_BLUE,
               color: "white",
               borderRadius: "30px",
               fontSize: "35px",
