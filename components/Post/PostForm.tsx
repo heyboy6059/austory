@@ -24,7 +24,6 @@ const PostForm: FC<Props> = ({ editPost }) => {
   const router = useRouter()
   const { user, username } = useContext(UserContext)
   const isEditMode = !!editPost
-  console.log({ isEditMode })
 
   const {
     handleSubmit,
@@ -125,7 +124,13 @@ const PostForm: FC<Props> = ({ editPost }) => {
             />
           )}
         />
-        <ImageUploader setValue={setValue} />
+        <ImageUploader
+          setValue={setValue}
+          editThumbnailImgUrl={
+            // REVIEW: this only supports single thumbnail url
+            isEditMode ? editPost.images[0].thumbnail300.url : null
+          }
+        />
         <FlexCenterDiv>
           <Button variant="outlined" type="submit">
             완료

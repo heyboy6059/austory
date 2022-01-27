@@ -15,13 +15,14 @@ import ImageIcon from "@mui/icons-material/Image"
 import CircularProgress from "@mui/material/CircularProgress"
 interface Props {
   setValue: UseFormSetValue<PostWrite>
+  editThumbnailImgUrl?: string
 }
 
-const ImageUploader: FC<Props> = ({ setValue }) => {
+const ImageUploader: FC<Props> = ({ setValue, editThumbnailImgUrl }) => {
   const [uploading, setUploading] = useState(false)
   const [progress, setProgress] = useState(0)
   const [downloadURL, setDownloadURL] = useState(null)
-  const [thumbnailImgUrl, setThumbnailImgUrl] = useState("")
+  const [thumbnailImgUrl, setThumbnailImgUrl] = useState(editThumbnailImgUrl || "")
 
   // Creates a Firebase Upload Task
   const uploadFile = async (e) => {
