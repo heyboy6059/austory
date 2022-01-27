@@ -1,4 +1,4 @@
-import { FC, useState } from "react"
+import { FC, useContext, useMemo } from "react"
 import Link from "next/link"
 import ReactMarkdown from "react-markdown"
 import Paper from "@mui/material/Paper"
@@ -10,7 +10,10 @@ import { KOR_FULL_DATE_FORMAT } from "../../common/constants"
 import Image from "next/image"
 import AccountBoxIcon from "@mui/icons-material/AccountBox"
 import ArrowBackIcon from "@mui/icons-material/ArrowBack"
+import Button from "@mui/material/Button"
 import { useRouter } from "next/router"
+import { FlexSpaceBetween, H1 } from "../../common/uiComponents"
+import { UserContext } from "../../common/context"
 
 // import { Editor, EditorState, ContentState } from "draft-js"
 
@@ -20,7 +23,13 @@ interface PostContentProps {
 }
 // UI component for main post content
 const PostContent: FC<PostContentProps> = ({ post, postRef }) => {
+  const { username } = useContext(UserContext)
   const router = useRouter()
+  const isPostOwner = useMemo(
+    () => username === post.username,
+    [post, username]
+  )
+
   // const [editorState, setEditorState] = useState(
   //   EditorState.createWithContent(
   //     ContentState.createFromBlockArray("<h1>HAHAHOHO</h1>")
@@ -39,7 +48,7 @@ const PostContent: FC<PostContentProps> = ({ post, postRef }) => {
 
   return (
     <Paper sx={{ p: 2 }}>
-      <div>
+      <FlexSpaceBetween style={{ alignItems: "center" }}>
         <ArrowBackIcon
           onClick={() =>
             // window.history.pushState("", "", `/post/abcd`)
@@ -48,8 +57,19 @@ const PostContent: FC<PostContentProps> = ({ post, postRef }) => {
             router.push("/")
           }
         />
-      </div>
-      <h1>{post?.title}</h1>
+        {isPostOwner && (
+          <Button
+            variant="outlined"
+            size="small"
+            onClick={() => {
+              router.push(`/post/edit/${post.slug}`)
+            }}
+          >
+            EDIT
+          </Button>
+        )}
+      </FlexSpaceBetween>
+      <H1>{post?.title}</H1>
       <span className="text-sm">
         {/* Written by{" "}
         <Link href={`/${post.username}/`}>

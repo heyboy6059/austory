@@ -34,3 +34,8 @@ export const UserImage = styled(Image)({
 export const LogoImage = styled(Image)({
   cursor: "pointer",
 })
+
+export const H1 = styled.div`
+  font-size: 2rem;
+  margin: 10px 0px;
+`
