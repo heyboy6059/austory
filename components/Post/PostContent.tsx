@@ -11,6 +11,7 @@ import AccountBoxIcon from "@mui/icons-material/AccountBox"
 import ArrowBackIcon from "@mui/icons-material/ArrowBack"
 import Button from "@mui/material/Button"
 import VisibilityIcon from "@mui/icons-material/Visibility"
+import EditIcon from "@mui/icons-material/Edit"
 import { useRouter } from "next/router"
 import {
   FlexCenterDiv,
@@ -22,6 +23,7 @@ import { UserContext } from "../../common/context"
 import { firestore } from "../../common/firebase"
 // import Linky from "react-linky"
 import Linkify from "react-linkify"
+import Tooltip from "@mui/material/Tooltip"
 
 // import { Editor, EditorState, ContentState } from "draft-js"
 
@@ -67,26 +69,37 @@ const PostContent: FC<PostContentProps> = ({ post, postRef }) => {
   return (
     <Paper sx={{ p: 2 }}>
       <FlexSpaceBetween style={{ alignItems: "center" }}>
-        <ArrowBackIcon
-          onClick={() =>
-            // window.history.pushState("", "", `/post/abcd`)
-            // router.push("/", undefined, { shallow: true })
-            //REVIEW: go back without reload/refresh/keep scroll
-            router.push("/")
-          }
-          style={{ cursor: "pointer" }}
-        />
-        {isPostOwner && (
-          <Button
-            variant="outlined"
-            size="small"
-            onClick={() => {
-              router.push(`/post/edit/${post.slug}`)
-            }}
-          >
-            EDIT
-          </Button>
-        )}
+        <Tooltip title="뒤로가기" placement="bottom" arrow>
+          <span>
+            <ArrowBackIcon
+              onClick={() =>
+                // window.history.pushState("", "", `/post/abcd`)
+                // router.push("/", undefined, { shallow: true })
+                //REVIEW: go back without reload/refresh/keep scroll
+                router.push("/")
+              }
+              style={{ cursor: "pointer" }}
+            />
+          </span>
+        </Tooltip>
+
+        <FlexCenterDiv style={{ gap: "5px" }}>
+          {isPostOwner && (
+            <Tooltip title="수정" placement="bottom" arrow>
+              <EditIcon
+                // fontSize="small"
+                onClick={() => {
+                  router.push(`/post/edit/${post.slug}`)
+                }}
+                style={{ cursor: "pointer", color: "#0770bb" }}
+              />
+            </Tooltip>
+          )}
+          <FlexCenterDiv style={{ gap: "2px", fontSize: "14px" }}>
+            <VisibilityIcon fontSize="small" style={{ color: "gray" }} />
+            <span>{post.viewCount}</span>
+          </FlexCenterDiv>
+        </FlexCenterDiv>
       </FlexSpaceBetween>
       <H1>{post?.title}</H1>
       <span className="text-sm">
@@ -103,11 +116,6 @@ const PostContent: FC<PostContentProps> = ({ post, postRef }) => {
           </div>
           <div>|</div>
           <div>{dayjs(post.createdAt).format(KOR_FULL_DATE_FORMAT)}</div>
-          <div>|</div>
-          <FlexCenterDiv style={{ gap: "2px" }}>
-            <VisibilityIcon fontSize="small" style={{ color: "gray" }} />
-            <span>{post.viewCount}</span>
-          </FlexCenterDiv>
         </FlexVerticalCenterDiv>
         {/* </FlexCenterDiv> */}
       </span>
