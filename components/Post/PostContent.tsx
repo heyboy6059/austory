@@ -1,21 +1,27 @@
 import { FC, useContext, useMemo, useEffect } from "react"
 import Link from "next/link"
-import ReactMarkdown from "react-markdown"
 import Paper from "@mui/material/Paper"
 import AuthCheck from "../../components/AuthCheck"
 import HeartButton from "../../components/HeartButton"
 import { Post, FirebaseDocumentRef } from "../../typing/interfaces"
 import dayjs from "dayjs"
-import { KOR_FULL_DATE_FORMAT } from "../../common/constants"
+import { COLOURS, KOR_FULL_DATE_FORMAT } from "../../common/constants"
 import Image from "next/image"
 import AccountBoxIcon from "@mui/icons-material/AccountBox"
 import ArrowBackIcon from "@mui/icons-material/ArrowBack"
 import Button from "@mui/material/Button"
 import VisibilityIcon from "@mui/icons-material/Visibility"
 import { useRouter } from "next/router"
-import { FlexCenterDiv, FlexSpaceBetween, H1 } from "../../common/uiComponents"
+import {
+  FlexCenterDiv,
+  FlexSpaceBetween,
+  FlexVerticalCenterDiv,
+  H1,
+} from "../../common/uiComponents"
 import { UserContext } from "../../common/context"
 import { firestore } from "../../common/firebase"
+// import Linky from "react-linky"
+import Linkify from "react-linkify"
 
 // import { Editor, EditorState, ContentState } from "draft-js"
 
@@ -89,7 +95,7 @@ const PostContent: FC<PostContentProps> = ({ post, postRef }) => {
         </Link>{" "}
         on {dayjs(post.createdAt).format(KOR_FULL_DATE_FORMAT)} */}
         {/* <FlexCenterDiv style={{ gap: "2px", alignItems: "center" }}> */}
-        <div style={{ display: "flex", gap: "8px", margin: "5px 0" }}>
+        <FlexVerticalCenterDiv style={{ gap: "8px", margin: "5px 0" }}>
           <div style={{ display: "flex" }}>
             <AccountBoxIcon style={{ fontSize: "16px" }} />
             <div>{post.username}</div>
@@ -101,7 +107,7 @@ const PostContent: FC<PostContentProps> = ({ post, postRef }) => {
             <VisibilityIcon fontSize="small" style={{ color: "gray" }} />
             <span>{post.viewCount}</span>
           </FlexCenterDiv>
-        </div>
+        </FlexVerticalCenterDiv>
         {/* </FlexCenterDiv> */}
       </span>
       {post.images?.[0]?.thumbnail300?.url ? (
@@ -122,7 +128,26 @@ const PostContent: FC<PostContentProps> = ({ post, postRef }) => {
       ) : (
         <div></div>
       )}
-      <ReactMarkdown>{post?.content}</ReactMarkdown>
+      {/* <ReactMarkdown> */}
+      {/* <Linky>
+        <div style={{ whiteSpace: "break-spaces" }}>{post?.content}</div>
+      </Linky> */}
+      <Linkify
+        componentDecorator={(decoratedHref, decoratedText, key) => (
+          <a
+            target="blank"
+            href={decoratedHref}
+            key={key}
+            style={{ color: "#00008B" }}
+          >
+            {decoratedText}
+          </a>
+        )}
+      >
+        <div style={{ whiteSpace: "break-spaces" }}>{post?.content}</div>
+      </Linkify>
+      {/* <TextWithLink text={post?.content} /> */}
+      {/* </ReactMarkdown> */}
       {/* <Editor
         editorState={editorState}
         onChange={(editorState) => setEditorState(editorState)}
