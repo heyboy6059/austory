@@ -98,6 +98,8 @@ export type RawPost = {
   //
   createdAt: FirestoreTimestamp
   updatedAt: FirestoreTimestamp | null
+  //
+  isTest: boolean
 }
 
 export type Post = Omit<RawPost, "createdAt" | "updatedAt"> & {

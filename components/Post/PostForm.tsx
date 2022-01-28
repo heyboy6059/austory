@@ -70,6 +70,7 @@ const PostForm: FC<Props> = ({ editPost }) => {
       const post: RawPost = {
         slug: docSlug,
         uid: auth.currentUser.uid,
+
         username,
         title: data.title,
         content: data.content,
@@ -81,6 +82,7 @@ const PostForm: FC<Props> = ({ editPost }) => {
         categories: [],
         createdAt: serverTimestamp() as FirestoreTimestamp,
         updatedAt: serverTimestamp() as FirestoreTimestamp,
+        isTest: false,
       }
 
       await ref.set(post)
