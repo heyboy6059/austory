@@ -87,6 +87,7 @@ export type RawPost = {
   title: string
   deleted: boolean
   heartCount: number // need another approach?
+  commentCount: number
   //
   viewCount: number
   //

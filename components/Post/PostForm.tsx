@@ -70,7 +70,6 @@ const PostForm: FC<Props> = ({ editPost }) => {
       const post: RawPost = {
         slug: docSlug,
         uid: auth.currentUser.uid,
-
         username,
         title: data.title,
         content: data.content,
@@ -78,6 +77,7 @@ const PostForm: FC<Props> = ({ editPost }) => {
         deleted: false,
         heartCount: 0,
         viewCount: 0,
+        commentCount: 0,
         images: data.images,
         categories: [],
         createdAt: serverTimestamp() as FirestoreTimestamp,

@@ -1,4 +1,4 @@
-import { FC, useContext, useMemo } from "react"
+import { FC, useContext, useMemo, useEffect } from "react"
 import Link from "next/link"
 import ReactMarkdown from "react-markdown"
 import Paper from "@mui/material/Paper"
@@ -11,9 +11,11 @@ import Image from "next/image"
 import AccountBoxIcon from "@mui/icons-material/AccountBox"
 import ArrowBackIcon from "@mui/icons-material/ArrowBack"
 import Button from "@mui/material/Button"
+import VisibilityIcon from "@mui/icons-material/Visibility"
 import { useRouter } from "next/router"
-import { FlexSpaceBetween, H1 } from "../../common/uiComponents"
+import { FlexCenterDiv, FlexSpaceBetween, H1 } from "../../common/uiComponents"
 import { UserContext } from "../../common/context"
+import { firestore } from "../../common/firebase"
 
 // import { Editor, EditorState, ContentState } from "draft-js"
 
@@ -30,6 +32,16 @@ const PostContent: FC<PostContentProps> = ({ post, postRef }) => {
     [post, username]
   )
 
+  // add viewCount in post
+  useEffect(() => {
+    const addViewCount = async () => {
+      const ref = firestore.collection("posts").doc(post.slug)
+      await ref.update({
+        viewCount: post.viewCount + 1,
+      })
+    }
+    addViewCount()
+  }, [])
   // const [editorState, setEditorState] = useState(
   //   EditorState.createWithContent(
   //     ContentState.createFromBlockArray("<h1>HAHAHOHO</h1>")
@@ -77,13 +89,18 @@ const PostContent: FC<PostContentProps> = ({ post, postRef }) => {
         </Link>{" "}
         on {dayjs(post.createdAt).format(KOR_FULL_DATE_FORMAT)} */}
         {/* <FlexCenterDiv style={{ gap: "2px", alignItems: "center" }}> */}
-        <div style={{ display: "flex", gap: "8px" }}>
+        <div style={{ display: "flex", gap: "8px", margin: "5px 0" }}>
           <div style={{ display: "flex" }}>
             <AccountBoxIcon style={{ fontSize: "16px" }} />
             <div>{post.username}</div>
           </div>
           <div>|</div>
           <div>{dayjs(post.createdAt).format(KOR_FULL_DATE_FORMAT)}</div>
+          <div>|</div>
+          <FlexCenterDiv style={{ gap: "2px" }}>
+            <VisibilityIcon fontSize="small" style={{ color: "gray" }} />
+            <span>{post.viewCount}</span>
+          </FlexCenterDiv>
         </div>
         {/* </FlexCenterDiv> */}
       </span>

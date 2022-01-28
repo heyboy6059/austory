@@ -133,7 +133,7 @@ const PostItem: FC<{
               <FavoriteIcon fontSize="small" /> {post.heartCount}
             </FlexVerticalCenterDiv>
             <FlexVerticalCenterDiv>
-              <CommentIcon fontSize="small" /> {post.viewCount}
+              <CommentIcon fontSize="small" /> {post.commentCount || 0}
             </FlexVerticalCenterDiv>
           </FlexCenterDiv>
         </FlexSpaceBetween>
