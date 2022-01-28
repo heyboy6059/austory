@@ -74,6 +74,7 @@ const PostContent: FC<PostContentProps> = ({ post, postRef }) => {
             //REVIEW: go back without reload/refresh/keep scroll
             router.push("/")
           }
+          style={{ cursor: "pointer" }}
         />
         {isPostOwner && (
           <Button
