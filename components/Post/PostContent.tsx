@@ -112,7 +112,14 @@ const PostContent: FC<PostContentProps> = ({ post, postRef }) => {
         {/* </FlexCenterDiv> */}
       </span>
       {post.images?.[0]?.thumbnail300?.url ? (
-        <div style={{ width: "300px", margin: "auto" }}>
+        <div
+          style={{
+            width: "300px",
+            margin: "auto",
+            marginTop: "15px",
+            marginBottom: "15px",
+          }}
+        >
           <Image
             src={post.images[0].thumbnail300.url}
             alt=""
