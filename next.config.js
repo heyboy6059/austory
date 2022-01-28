@@ -7,6 +7,7 @@ module.exports = {
       "inkrau.vercel.app",
       "via.placeholder.com",
       "firebasestorage.googleapis.com",
+      "inkrau.com",
     ],
   },
 }
