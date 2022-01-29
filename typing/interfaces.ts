@@ -97,7 +97,9 @@ export type RawPost = {
   //
   categories: string[]
   //
+  createdBy: string
   createdAt: FirestoreTimestamp
+  updatedBy: string | null
   updatedAt: FirestoreTimestamp | null
   //
   isTest: boolean
