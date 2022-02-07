@@ -1,26 +1,26 @@
-import { useContext, useState, useCallback } from "react"
-import Link from "next/link"
+import { useContext, useState } from 'react'
+import Link from 'next/link'
 // import Image from "next/image"
-import { UserContext } from "../common/context"
-import { COLOURS } from "../common/constants"
+import { UserContext } from '../common/context'
+import { COLOURS } from '../common/constants'
 import {
   UserImage,
   LogoImage,
   FlexVerticalCenterDiv,
   FlexSpaceBetween,
-  FlexCenterDiv,
-} from "../common/uiComponents"
+  FlexCenterDiv
+} from '../common/uiComponents'
 
-import Logo from "../public/InKRAU_Logo.png"
+import Logo from '../public/InKRAU_Logo.png'
 
 /**
  * Material UI
  */
-import AppBar from "@mui/material/AppBar"
-import Box from "@mui/material/Box"
-import Toolbar from "@mui/material/Toolbar"
+import AppBar from '@mui/material/AppBar'
+import Box from '@mui/material/Box'
+import Toolbar from '@mui/material/Toolbar'
 // import IconButton from "@mui/material/IconButton"
-import Button from "@mui/material/Button"
+import Button from '@mui/material/Button'
 // import MenuIcon from "@mui/icons-material/Menu"
 // import SwipeableDrawer from "@mui/material/SwipeableDrawer"
 // import ListItem from "@mui/material/ListItem"
@@ -34,14 +34,15 @@ import Button from "@mui/material/Button"
 // import CardGiftcardIcon from "@mui/icons-material/CardGiftcard"
 // import QueryStatsIcon from "@mui/icons-material/QueryStats"
 // import AccountBoxIcon from "@mui/icons-material/AccountBox"
-import DriveFileRenameOutlineIcon from "@mui/icons-material/DriveFileRenameOutline"
-import MasksIcon from "@mui/icons-material/Masks"
-import Tooltip from "@mui/material/Tooltip"
-import CovidInfoDialog from "./CovidInfoDialog"
+import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutline'
+import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings'
+import MasksIcon from '@mui/icons-material/Masks'
+import Tooltip from '@mui/material/Tooltip'
+import CovidInfoDialog from './CovidInfoDialog'
 
 // Top navbar
 export default function Navbar() {
-  const { user, username } = useContext(UserContext)
+  const { user, username, isAdmin } = useContext(UserContext)
   const [covidInfoOpen, setCovidInfoOpen] = useState(false)
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
@@ -135,7 +136,7 @@ export default function Navbar() {
             style={{
               // display: "flex",
               // justifyContent: "space-between",
-              width: "100%",
+              width: '100%'
             }}
           >
             <FlexCenterDiv>
@@ -151,17 +152,17 @@ export default function Navbar() {
 
             <FlexVerticalCenterDiv>
               {/* // user is signed-in and has username */}
-              <FlexVerticalCenterDiv style={{ gap: "10px" }}>
+              <FlexVerticalCenterDiv style={{ gap: '10px' }}>
                 <Tooltip title="코로나 전광판" placement="bottom" arrow>
                   <MasksIcon
-                    style={{ cursor: "pointer", fontSize: "30px" }}
+                    style={{ cursor: 'pointer', fontSize: '30px' }}
                     onClick={() => setCovidInfoOpen(true)}
                   />
                 </Tooltip>
                 <Link href="/post/write" passHref>
                   <Tooltip title="글쓰기" placement="bottom" arrow>
                     <DriveFileRenameOutlineIcon
-                      style={{ cursor: "pointer", fontSize: "28px" }}
+                      style={{ cursor: 'pointer', fontSize: '28px' }}
                     />
                   </Tooltip>
                 </Link>
@@ -181,11 +182,20 @@ export default function Navbar() {
                     <Button
                       size="medium"
                       color="info"
-                      style={{ color: "white", padding: "0px" }}
+                      style={{ color: 'white', padding: '0px' }}
                     >
                       LOG IN
                     </Button>
                   </Link>
+                )}
+                {isAdmin && (
+                  <Tooltip
+                    title="관리자로 로그인 되었습니다."
+                    placement="bottom"
+                    arrow
+                  >
+                    <AdminPanelSettingsIcon style={{ color: 'orange' }} />
+                  </Tooltip>
                 )}
               </FlexVerticalCenterDiv>
             </FlexVerticalCenterDiv>
