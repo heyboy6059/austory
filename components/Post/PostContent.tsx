@@ -132,10 +132,12 @@ const PostContent: FC<PostContentProps> = ({
               </Tooltip>
             </>
           )}
-          <FlexCenterDiv style={{ gap: '2px', fontSize: '14px' }}>
-            <VisibilityIcon fontSize="small" style={{ color: 'gray' }} />
-            <span>{post.viewCount}</span>
-          </FlexCenterDiv>
+          {isAdmin && (
+            <FlexCenterDiv style={{ gap: '2px', fontSize: '14px' }}>
+              <VisibilityIcon fontSize="small" style={{ color: 'gray' }} />
+              <span>{post.viewCount}</span>
+            </FlexCenterDiv>
+          )}
         </FlexCenterDiv>
       </FlexSpaceBetween>
       <H1>{post?.title}</H1>
