@@ -6,10 +6,9 @@ import {
   useCallback,
   useState
 } from 'react'
-import Link from 'next/link'
 import Paper from '@mui/material/Paper'
-import AuthCheck from '../../components/AuthCheck'
-import HeartButton from '../../components/HeartButton'
+// import AuthCheck from '../../components/AuthCheck'
+// import HeartButton from '../../components/HeartButton'
 import {
   Post,
   FirebaseDocumentRef,
@@ -45,8 +44,11 @@ interface PostContentProps {
   postRef: FirebaseDocumentRef
 }
 // UI component for main post content
-const PostContent: FC<PostContentProps> = ({ post, postRef }) => {
-  const { username } = useContext(UserContext)
+const PostContent: FC<PostContentProps> = ({
+  post
+  // postRef
+}) => {
+  const { username, isAdmin } = useContext(UserContext)
   const router = useRouter()
   const isPostOwner = useMemo(
     () => username === post.username,
@@ -65,7 +67,7 @@ const PostContent: FC<PostContentProps> = ({ post, postRef }) => {
       })
     }
     addViewCount()
-  }, [])
+  }, [post])
 
   const removePost = useCallback(async () => {
     // REVIEW: replace with postRef in prop?
@@ -77,7 +79,7 @@ const PostContent: FC<PostContentProps> = ({ post, postRef }) => {
     })
     toast.success('게시물을 성공적으로 삭제했습니다.')
     router.push('/')
-  }, [])
+  }, [post, router, username])
   // const [editorState, setEditorState] = useState(
   //   EditorState.createWithContent(
   //     ContentState.createFromBlockArray("<h1>HAHAHOHO</h1>")
@@ -110,7 +112,7 @@ const PostContent: FC<PostContentProps> = ({ post, postRef }) => {
         </Tooltip>
 
         <FlexCenterDiv style={{ gap: '5px' }}>
-          {isPostOwner && (
+          {(isPostOwner || isAdmin) && (
             <>
               <Tooltip title="수정" placement="bottom" arrow>
                 <EditIcon
