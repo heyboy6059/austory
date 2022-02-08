@@ -1,21 +1,21 @@
-import debounce from "lodash.debounce"
-import { useCallback, useContext, useEffect, useMemo, useState } from "react"
-import { UserContext } from "../common/context"
+import debounce from 'lodash.debounce'
+import { useCallback, useContext, useEffect, useMemo, useState } from 'react'
+import { UserContext } from '../common/context'
 import {
   auth,
   firestore,
   googleAuthProvider,
-  serverTimestamp,
-} from "../common/firebase"
-import TextField from "@mui/material/TextField"
-import Chip from "@mui/material/Chip"
-import Button from "@mui/material/Button"
-import Checkbox from "@mui/material/Checkbox"
-import FormControlLabel from "@mui/material/FormControlLabel"
-import { FirestoreTimestamp, RawUser } from "../typing/interfaces"
-import { FlexCenterDiv } from "../common/uiComponents"
-import toast from "react-hot-toast"
-import { useRouter } from "next/router"
+  serverTimestamp
+} from '../common/firebase'
+import TextField from '@mui/material/TextField'
+import Chip from '@mui/material/Chip'
+import Button from '@mui/material/Button'
+import Checkbox from '@mui/material/Checkbox'
+import FormControlLabel from '@mui/material/FormControlLabel'
+import { FirestoreTimestamp, RawUser } from '../typing/interfaces'
+import { FlexCenterDiv } from '../common/uiComponents'
+import toast from 'react-hot-toast'
+import { useRouter } from 'next/router'
 
 export default function Enter(props) {
   const { user, username } = useContext(UserContext)
@@ -24,9 +24,9 @@ export default function Enter(props) {
   // route user to home page if account is already registered
   useEffect(() => {
     if (user && username) {
-      router.push("/")
+      router.push('/')
     }
-  }, [])
+  }, [router, user, username])
 
   // 1. user signed out <SignInButton />
   // 2. user signed in, but missing username <UsernameForm />
@@ -65,7 +65,7 @@ function SignInButton() {
 
   return (
     <button className="btn-google" onClick={signInWithGoogle}>
-      <img src={"/google.png"} /> Google 로그인
+      <img src={'/google.png'} /> Google 로그인
     </button>
   )
 }
@@ -78,7 +78,7 @@ function SignOutButton() {
 function UsernameForm() {
   const router = useRouter()
 
-  const [inkrauUsername, setInkrauUsername] = useState("")
+  const [inkrauUsername, setInkrauUsername] = useState('')
   const [isMarketingEmail, setIsMarketingEmail] = useState(false)
 
   const [isNotValid, setIsNotValid] = useState(false)
@@ -87,7 +87,7 @@ function UsernameForm() {
 
   const { user, username } = useContext(UserContext)
 
-  const onSubmit = async (e) => {
+  const onSubmit = async e => {
     e.preventDefault()
 
     try {
@@ -109,27 +109,27 @@ function UsernameForm() {
         disabled: false,
         isAdmin: false,
         isMarketingEmail,
-        role: "Base",
+        role: 'Base',
         createdAt: serverTimestamp() as FirestoreTimestamp,
-        updatedAt: null,
+        updatedAt: null
       } as RawUser)
       batch.set(usernameDoc, {
-        uid: user.uid,
+        uid: user.uid
       })
 
       await batch.commit()
 
-      toast.success("환영합니다!")
+      toast.success('환영합니다!')
 
       // direct to home page
-      router.push("/")
+      router.push('/')
     } catch (err) {
       console.error(`Error in sign up. ${err.message}`)
-      toast.error("계정 생성중 에러가 발생했습니다. 다시 시도해주세요.")
+      toast.error('계정 생성중 에러가 발생했습니다. 다시 시도해주세요.')
     }
   }
 
-  const onChange = (e) => {
+  const onChange = e => {
     // update setIsExistInDB false first as it will be rechecked with debounce
     setIsExistInDB(false)
 
@@ -150,16 +150,16 @@ function UsernameForm() {
 
   useEffect(() => {
     checkUsername(inkrauUsername)
-  }, [inkrauUsername])
+  }, [checkUsername, inkrauUsername])
 
   // Hit the database for username match after each debounced change
   // useCallback is required for debounce to work
   const checkUsername = useCallback(
-    debounce(async (username) => {
+    debounce(async username => {
       if (username.length > 3) {
         const ref = firestore.doc(`usernames/${username}`)
         const { exists } = await ref.get()
-        console.log("Firestore read executed!")
+        console.log('Firestore read executed!')
         setIsExistInDB(exists)
         setLoading(false)
       }
@@ -168,15 +168,15 @@ function UsernameForm() {
   )
 
   const usernameHelperText = (): string => {
-    console.log("username in callback ", inkrauUsername)
+    console.log('username in callback ', inkrauUsername)
     if (!inkrauUsername || inkrauUsername.length < 3) {
-      return "한글과 영문 모두 사용 가능합니다."
+      return '한글과 영문 모두 사용 가능합니다.'
     }
-    if (isExistInDB) return "이미 존재하는 활동명 입니다."
+    if (isExistInDB) return '이미 존재하는 활동명 입니다.'
     if (isNotValid) {
-      return "한글, 영문, 숫자 조합으로 최대 20자 까지 가능합니다."
+      return '한글, 영문, 숫자 조합으로 최대 20자 까지 가능합니다.'
     }
-    return "한글과 영문 모두 사용 가능합니다."
+    return '한글과 영문 모두 사용 가능합니다.'
   }
 
   return (
@@ -223,18 +223,18 @@ function UsernameForm() {
             loading={loading}
           /> */}
 
-          <div style={{ margin: "20px 0" }}>
+          <div style={{ margin: '20px 0' }}>
             <FormControlLabel
               control={<Checkbox />}
               label={
-                <span style={{ fontSize: "0.8rem" }}>
+                <span style={{ fontSize: '0.8rem' }}>
                   인크라우가 제공하는 알림, 호주 소식, 정보 등을 이메일로 받아
                   보시겠습니까?
                 </span>
               }
             />
           </div>
-          <FlexCenterDiv style={{ margin: "10px 0" }}>
+          <FlexCenterDiv style={{ margin: '10px 0' }}>
             <Button
               type="submit"
               disabled={

@@ -61,6 +61,7 @@ const PostForm: FC<Props> = ({ editPost }) => {
       const postRef = firestore.collection('posts').doc(docSlug)
       await postRef.update({
         ...data,
+        excerpt: generateExcerpt(data.content, 50),
         updatedAt: serverTimestamp()
       })
       toast.success('게시물 업데이트가 완료 되었습니다.')
