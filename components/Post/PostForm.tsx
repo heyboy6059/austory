@@ -16,6 +16,8 @@ import TextField from '@mui/material/TextField'
 import ImageUploader from '../ImageUploader'
 import { FlexCenterDiv } from '../../common/uiComponents'
 import Button from '@mui/material/Button'
+import FormControlLabel from '@mui/material/FormControlLabel'
+import Checkbox from '@mui/material/Checkbox'
 
 interface Props {
   editPost?: Post
@@ -25,11 +27,12 @@ const PostForm: FC<Props> = ({ editPost }) => {
   const { user, username } = useContext(UserContext)
   const isEditMode = !!editPost
 
+  console.log({ editPost })
   const {
     handleSubmit,
     control,
-    setValue,
-    watch
+    setValue
+    // watch
     // reset, watch
   } = useForm<PostWrite>({
     defaultValues: isEditMode
@@ -38,18 +41,18 @@ const PostForm: FC<Props> = ({ editPost }) => {
           title: editPost.title,
           images: editPost.images,
           categories: editPost.categories,
-          content: editPost.content
+          content: editPost.content,
+          isTest: editPost.isTest
         }
       : // CREATE
         {
           title: '',
           images: [],
           categories: [],
-          content: ''
+          content: '',
+          isTest: false
         }
   })
-
-  console.log('watch', watch())
 
   const onSubmit = async (data: PostWrite) => {
     // EDIT
@@ -60,7 +63,7 @@ const PostForm: FC<Props> = ({ editPost }) => {
         ...data,
         updatedAt: serverTimestamp()
       })
-      toast.success('Post updated!')
+      toast.success('게시물 업데이트가 완료 되었습니다.')
     }
     // CREATE
     if (!isEditMode) {
@@ -89,7 +92,7 @@ const PostForm: FC<Props> = ({ editPost }) => {
 
       await ref.set(post)
 
-      toast.success('Post created!')
+      toast.success('게시물이 성공적으로 등록 되었습니다.')
     }
 
     router.push('/')
@@ -105,6 +108,16 @@ const PostForm: FC<Props> = ({ editPost }) => {
         onSubmit={handleSubmit(onSubmit)}
         style={{ display: 'grid', gap: '10px' }}
       >
+        <FormControlLabel
+          label={'테스트 게시물 (관리자 전용)'}
+          control={
+            <Controller
+              name="isTest"
+              control={control}
+              render={({ field }) => <Checkbox {...field} />}
+            />
+          }
+        />
         <Controller
           name="title"
           control={control}

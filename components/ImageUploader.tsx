@@ -1,18 +1,16 @@
-import { FC, useState } from "react"
-import Loader from "./Loader"
-import Resizer from "react-image-file-resizer"
+import { FC, useState } from 'react'
 import {
   ORIGINAL_IMAGE_UPLOAD_MAX_THRESHOLD,
-  FileExt,
-} from "../common/constants"
-import Image from "next/image"
-import { UseFormSetValue } from "react-hook-form/dist/types/form"
-import { ImageDetails, PostWrite } from "../typing/interfaces"
-import { resizeImageJpeg, uploadImageToStorage } from "../common/image"
-import toast from "react-hot-toast"
-import { extractFilenameExtension } from "../common/functions"
-import ImageIcon from "@mui/icons-material/Image"
-import CircularProgress from "@mui/material/CircularProgress"
+  FileExt
+} from '../common/constants'
+import Image from 'next/image'
+import { UseFormSetValue } from 'react-hook-form/dist/types/form'
+import { ImageDetails, PostWrite } from '../typing/interfaces'
+import { resizeImageJpeg, uploadImageToStorage } from '../common/image'
+import toast from 'react-hot-toast'
+import { extractFilenameExtension } from '../common/functions'
+import ImageIcon from '@mui/icons-material/Image'
+import CircularProgress from '@mui/material/CircularProgress'
 interface Props {
   setValue: UseFormSetValue<PostWrite>
   editThumbnailImgUrl?: string
@@ -20,12 +18,12 @@ interface Props {
 
 const ImageUploader: FC<Props> = ({ setValue, editThumbnailImgUrl }) => {
   const [uploading, setUploading] = useState(false)
-  const [progress, setProgress] = useState(0)
-  const [downloadURL, setDownloadURL] = useState(null)
-  const [thumbnailImgUrl, setThumbnailImgUrl] = useState(editThumbnailImgUrl || "")
+  const [thumbnailImgUrl, setThumbnailImgUrl] = useState(
+    editThumbnailImgUrl || ''
+  )
 
   // Creates a Firebase Upload Task
-  const uploadFile = async (e) => {
+  const uploadFile = async e => {
     setUploading(true)
 
     let thumbnail100ImageDetails: ImageDetails = null
@@ -43,7 +41,7 @@ const ImageUploader: FC<Props> = ({ setValue, editThumbnailImgUrl }) => {
         // Resize for thumbnail300
         thumbnail300ImageDetails = await resizeImageJpeg(
           file,
-          "thumbnail300",
+          'thumbnail300',
           name
         )
 
@@ -53,7 +51,7 @@ const ImageUploader: FC<Props> = ({ setValue, editThumbnailImgUrl }) => {
         // Resize for thumbnail100
         thumbnail100ImageDetails = await resizeImageJpeg(
           file,
-          "thumbnail100",
+          'thumbnail100',
           name
         )
 
@@ -61,10 +59,10 @@ const ImageUploader: FC<Props> = ({ setValue, editThumbnailImgUrl }) => {
           size > ORIGINAL_IMAGE_UPLOAD_MAX_THRESHOLD &&
           extension !== FileExt.GIF // gif cannot be resized to jpeg
         ) {
-          originalImageDetails = await resizeImageJpeg(file, "original", name)
+          originalImageDetails = await resizeImageJpeg(file, 'original', name)
         } else {
           const { imgUrl, savedName } = await uploadImageToStorage(
-            "original",
+            'original',
             name,
             file,
             extension
@@ -77,19 +75,19 @@ const ImageUploader: FC<Props> = ({ setValue, editThumbnailImgUrl }) => {
             url: imgUrl,
             name: filename,
             ext,
-            size,
+            size
           }
         }
 
-        setValue("images", [
+        setValue('images', [
           {
             thumbnail100: thumbnail100ImageDetails,
             thumbnail300: thumbnail300ImageDetails,
-            original: originalImageDetails,
-          },
+            original: originalImageDetails
+          }
         ])
 
-        toast.success(`성공적으로 이미지가 업로드 되었습니다.`)
+        // toast.success(`성공적으로 이미지가 업로드 되었습니다.`)
       } catch (err) {
         console.error(`ERROR in image upload. ${err.message}`)
         toast.error(`이미지 업로드중 에러가 발생했습니다. 다시 시도해주세요.`)
@@ -106,7 +104,9 @@ const ImageUploader: FC<Props> = ({ setValue, editThumbnailImgUrl }) => {
   return (
     <div>
       <div>
-        <label style={{ display: "flex", alignItems: "center" }}>
+        <label
+          style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}
+        >
           {uploading ? (
             <CircularProgress size={16} />
           ) : (
@@ -123,12 +123,12 @@ const ImageUploader: FC<Props> = ({ setValue, editThumbnailImgUrl }) => {
         </label>
       </div>
       {thumbnailImgUrl ? (
-        <div style={{ width: "300px", margin: "auto" }}>
+        <div style={{ width: '300px', margin: 'auto' }}>
           <Image
             src={thumbnailImgUrl}
             alt="thumbnail image"
-            width={"100%"}
-            height={"70%"}
+            width={'100%'}
+            height={'70%'}
             layout="responsive"
             objectFit="contain"
           />

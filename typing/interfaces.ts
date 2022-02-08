@@ -1,4 +1,4 @@
-import firebase from "firebase/compat/app"
+import firebase from 'firebase/compat/app'
 
 export type FirebaseDocumentSnapshot<T = firebase.firestore.DocumentData> =
   firebase.firestore.QueryDocumentSnapshot<T>
@@ -8,7 +8,7 @@ export type FirestoreTimestamp = firebase.firestore.Timestamp
 export type FirebaseDocumentRef =
   firebase.firestore.DocumentReference<firebase.firestore.DocumentData>
 
-export type Role = "Base"
+export type Role = 'Base'
 
 // user
 export type RawUser = {
@@ -32,7 +32,7 @@ export type RawUser = {
   disabledAt: FirestoreTimestamp | null
 }
 
-export type User = Omit<RawUser, "createdAt" | "updatedAt"> & {
+export type User = Omit<RawUser, 'createdAt' | 'updatedAt'> & {
   createdAt: number
   updatedAt: number | null
 }
@@ -105,14 +105,14 @@ export type RawPost = {
   isTest: boolean
 }
 
-export type Post = Omit<RawPost, "createdAt" | "updatedAt"> & {
+export type Post = Omit<RawPost, 'createdAt' | 'updatedAt'> & {
   createdAt: number
   updatedAt: number | null
 }
 
 export type PostWrite = Pick<
   Post,
-  "title" | "content" | "images" | "categories"
+  'title' | 'content' | 'images' | 'categories' | 'isTest'
 >
 
-export type ImgType = "thumbnail100" | "thumbnail300" | "original"
+export type ImgType = 'thumbnail100' | 'thumbnail300' | 'original'
