@@ -102,7 +102,7 @@ const PostContent: FC<PostContentProps> = ({
       <Metatags
         title={`inKRAU - ${post.title}`}
         description={`${post.excerpt}`}
-        image={`${post.images[0].thumbnail300}`}
+        image={`${post?.images[0]?.thumbnail300} || ''`}
       />
       <Paper sx={{ p: 2 }}>
         <FlexSpaceBetween style={{ alignItems: 'center' }}>
