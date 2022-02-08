@@ -36,6 +36,7 @@ import Linkify from 'react-linkify'
 import Tooltip from '@mui/material/Tooltip'
 import ConfirmDialog from '../../components/Dialog/ConfirmDialog'
 import toast from 'react-hot-toast'
+import Metatags from '../Metatags'
 
 // import { Editor, EditorState, ContentState } from "draft-js"
 
@@ -97,118 +98,124 @@ const PostContent: FC<PostContentProps> = ({
   // }
 
   return (
-    <Paper sx={{ p: 2 }}>
-      <FlexSpaceBetween style={{ alignItems: 'center' }}>
-        <Tooltip title="뒤로가기" placement="bottom" arrow>
-          <ArrowBackIcon
-            onClick={() =>
-              // window.history.pushState("", "", `/post/abcd`)
-              // router.push("/", undefined, { shallow: true })
-              //REVIEW: go back without reload/refresh/keep scroll
-              router.push('/')
-            }
-            style={{ cursor: 'pointer' }}
-          />
-        </Tooltip>
+    <>
+      <Metatags
+        title={`inKRAU - ${post.title}`}
+        description={`${post.excerpt}`}
+        image={`${post.images[0].thumbnail300}`}
+      />
+      <Paper sx={{ p: 2 }}>
+        <FlexSpaceBetween style={{ alignItems: 'center' }}>
+          <Tooltip title="뒤로가기" placement="bottom" arrow>
+            <ArrowBackIcon
+              onClick={() =>
+                // window.history.pushState("", "", `/post/abcd`)
+                // router.push("/", undefined, { shallow: true })
+                //REVIEW: go back without reload/refresh/keep scroll
+                router.push('/')
+              }
+              style={{ cursor: 'pointer' }}
+            />
+          </Tooltip>
 
-        <FlexCenterDiv style={{ gap: '5px' }}>
-          {(isPostOwner || isAdmin) && (
-            <>
-              <Tooltip title="수정" placement="bottom" arrow>
-                <EditIcon
-                  // fontSize="small"
-                  onClick={() => {
-                    router.push(`/post/edit/${post.slug}`)
-                  }}
-                  style={{ cursor: 'pointer', color: '#0770bb' }}
-                />
-              </Tooltip>
-              <Tooltip title="삭제" placement="bottom" arrow>
-                <DeleteIcon
-                  fontSize="small"
-                  style={{ color: '#ff0000', cursor: 'pointer' }}
-                  onClick={() => setDeleteAlertOpen(true)}
-                />
-              </Tooltip>
-            </>
-          )}
-          {isAdmin && (
-            <FlexCenterDiv style={{ gap: '2px', fontSize: '14px' }}>
-              <VisibilityIcon fontSize="small" style={{ color: 'gray' }} />
-              <span>{post.viewCount}</span>
-            </FlexCenterDiv>
-          )}
-        </FlexCenterDiv>
-      </FlexSpaceBetween>
-      <H1>{post?.title}</H1>
-      <span className="text-sm">
-        {/* Written by{" "}
+          <FlexCenterDiv style={{ gap: '5px' }}>
+            {(isPostOwner || isAdmin) && (
+              <>
+                <Tooltip title="수정" placement="bottom" arrow>
+                  <EditIcon
+                    // fontSize="small"
+                    onClick={() => {
+                      router.push(`/post/edit/${post.slug}`)
+                    }}
+                    style={{ cursor: 'pointer', color: '#0770bb' }}
+                  />
+                </Tooltip>
+                <Tooltip title="삭제" placement="bottom" arrow>
+                  <DeleteIcon
+                    fontSize="small"
+                    style={{ color: '#ff0000', cursor: 'pointer' }}
+                    onClick={() => setDeleteAlertOpen(true)}
+                  />
+                </Tooltip>
+              </>
+            )}
+            {isAdmin && (
+              <FlexCenterDiv style={{ gap: '2px', fontSize: '14px' }}>
+                <VisibilityIcon fontSize="small" style={{ color: 'gray' }} />
+                <span>{post.viewCount}</span>
+              </FlexCenterDiv>
+            )}
+          </FlexCenterDiv>
+        </FlexSpaceBetween>
+        <H1>{post?.title}</H1>
+        <span className="text-sm">
+          {/* Written by{" "}
         <Link href={`/${post.username}/`}>
           <a className="text-info">@{post.username}</a>
         </Link>{" "}
         on {dayjs(post.createdAt).format(KOR_FULL_DATE_FORMAT)} */}
-        {/* <FlexCenterDiv style={{ gap: "2px", alignItems: "center" }}> */}
-        <FlexVerticalCenterDiv style={{ gap: '8px', margin: '5px 0' }}>
-          <div style={{ display: 'flex' }}>
-            <AccountBoxIcon style={{ fontSize: '16px' }} />
-            <div>{post.username}</div>
-          </div>
-          <div>|</div>
-          <div>{dayjs(post.createdAt).format(KOR_FULL_DATE_FORMAT)}</div>
-        </FlexVerticalCenterDiv>
-        {/* </FlexCenterDiv> */}
-      </span>
-      {post.images?.[0]?.thumbnail300?.url ? (
-        <div
-          style={{
-            width: '300px',
-            margin: 'auto',
-            marginTop: '15px',
-            marginBottom: '15px'
-          }}
-        >
-          <Image
-            src={post.images[0].thumbnail300.url}
-            alt=""
-            width={'100%'}
-            height={'70%'}
-            layout="responsive"
-            objectFit="contain"
-            onClick={() => {
-              // open original image in a new tab
-              window.open(post.images[0].original.url, '_blank').focus()
+          {/* <FlexCenterDiv style={{ gap: "2px", alignItems: "center" }}> */}
+          <FlexVerticalCenterDiv style={{ gap: '8px', margin: '5px 0' }}>
+            <div style={{ display: 'flex' }}>
+              <AccountBoxIcon style={{ fontSize: '16px' }} />
+              <div>{post.username}</div>
+            </div>
+            <div>|</div>
+            <div>{dayjs(post.createdAt).format(KOR_FULL_DATE_FORMAT)}</div>
+          </FlexVerticalCenterDiv>
+          {/* </FlexCenterDiv> */}
+        </span>
+        {post.images?.[0]?.thumbnail300?.url ? (
+          <div
+            style={{
+              width: '300px',
+              margin: 'auto',
+              marginTop: '15px',
+              marginBottom: '15px'
             }}
-          />
-        </div>
-      ) : (
-        <div></div>
-      )}
-      {/* <ReactMarkdown> */}
-      {/* <Linky>
+          >
+            <Image
+              src={post.images[0].thumbnail300.url}
+              alt=""
+              width={'100%'}
+              height={'70%'}
+              layout="responsive"
+              objectFit="contain"
+              onClick={() => {
+                // open original image in a new tab
+                window.open(post.images[0].original.url, '_blank').focus()
+              }}
+            />
+          </div>
+        ) : (
+          <div></div>
+        )}
+        {/* <ReactMarkdown> */}
+        {/* <Linky>
         <div style={{ whiteSpace: "break-spaces" }}>{post?.content}</div>
       </Linky> */}
-      <Linkify
-        componentDecorator={(decoratedHref, decoratedText, key) => (
-          <a
-            target="blank"
-            href={decoratedHref}
-            key={key}
-            style={{ color: '#00008B' }}
-          >
-            {decoratedText}
-          </a>
-        )}
-      >
-        <div style={{ whiteSpace: 'break-spaces' }}>{post?.content}</div>
-      </Linkify>
-      {/* <TextWithLink text={post?.content} /> */}
-      {/* </ReactMarkdown> */}
-      {/* <Editor
+        <Linkify
+          componentDecorator={(decoratedHref, decoratedText, key) => (
+            <a
+              target="blank"
+              href={decoratedHref}
+              key={key}
+              style={{ color: '#00008B' }}
+            >
+              {decoratedText}
+            </a>
+          )}
+        >
+          <div style={{ whiteSpace: 'break-spaces' }}>{post?.content}</div>
+        </Linkify>
+        {/* <TextWithLink text={post?.content} /> */}
+        {/* </ReactMarkdown> */}
+        {/* <Editor
         editorState={editorState}
         onChange={(editorState) => setEditorState(editorState)}
       /> */}
-      <div>
-        {/* <AuthCheck
+        <div>
+          {/* <AuthCheck
           fallback={
             <Link href="/enter" passHref>
               <button>💗 Sign Up</button>
@@ -217,19 +224,20 @@ const PostContent: FC<PostContentProps> = ({
         >
           <HeartButton postRef={postRef} heartCount={post.heartCount} />
         </AuthCheck> */}
-      </div>
-      {setDeleteAlertOpen && (
-        <ConfirmDialog
-          open={deleteAlertOpen}
-          setOpen={setDeleteAlertOpen}
-          leftLabel="취소"
-          rightLabel="삭제"
-          leftAction={() => setDeleteAlertOpen(false)}
-          rightAction={() => removePost()}
-          content="정말로 이 글을 지우시겠습니까?"
-        />
-      )}
-    </Paper>
+        </div>
+        {setDeleteAlertOpen && (
+          <ConfirmDialog
+            open={deleteAlertOpen}
+            setOpen={setDeleteAlertOpen}
+            leftLabel="취소"
+            rightLabel="삭제"
+            leftAction={() => setDeleteAlertOpen(false)}
+            rightAction={() => removePost()}
+            content="정말로 이 글을 지우시겠습니까?"
+          />
+        )}
+      </Paper>
+    </>
   )
 }
 
