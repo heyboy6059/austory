@@ -11,7 +11,7 @@ import {
   FlexCenterDiv
 } from '../common/uiComponents'
 
-import Logo from '../public/InKRAU_Logo.png'
+import Logo from '../public/inKRAU_New_Logo.png'
 
 /**
  * Material UI
@@ -113,10 +113,7 @@ export default function Navbar() {
 
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <AppBar
-        position="static"
-        style={{ backgroundColor: COLOURS.PRIMARY_SPACE_GREY }}
-      >
+      <AppBar position="static" style={{ backgroundColor: 'white' }}>
         <Toolbar variant="dense">
           {/* <IconButton
             size="large"
@@ -143,8 +140,8 @@ export default function Navbar() {
               <Link href={`/`} passHref>
                 <LogoImage
                   src={Logo}
-                  width={75}
-                  height={35}
+                  width={100}
+                  height={40}
                   alt="InKRAU logo png file"
                 />
               </Link>
@@ -153,16 +150,27 @@ export default function Navbar() {
             <FlexVerticalCenterDiv>
               {/* // user is signed-in and has username */}
               <FlexVerticalCenterDiv style={{ gap: '10px' }}>
-                <Tooltip title="코로나 전광판" placement="bottom" arrow>
+                {/*
+                 * REVIEW: temporarily closed
+                 */}
+                {/* <Tooltip title="코로나 전광판" placement="bottom" arrow>
                   <MasksIcon
-                    style={{ cursor: 'pointer', fontSize: '30px' }}
+                    style={{
+                      cursor: 'pointer',
+                      fontSize: '30px',
+                      color: 'black'
+                    }}
                     onClick={() => setCovidInfoOpen(true)}
                   />
-                </Tooltip>
+                </Tooltip> */}
                 <Link href="/post/write" passHref>
                   <Tooltip title="글쓰기" placement="bottom" arrow>
                     <DriveFileRenameOutlineIcon
-                      style={{ cursor: 'pointer', fontSize: '28px' }}
+                      style={{
+                        cursor: 'pointer',
+                        fontSize: '28px',
+                        color: 'rebeccapurple'
+                      }}
                     />
                   </Tooltip>
                 </Link>
