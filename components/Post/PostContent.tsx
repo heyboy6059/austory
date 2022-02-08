@@ -11,7 +11,7 @@ import Paper from '@mui/material/Paper'
 // import HeartButton from '../../components/HeartButton'
 import {
   Post,
-  FirebaseDocumentRef,
+  // FirebaseDocumentRef,
   FirestoreTimestamp
 } from '../../typing/interfaces'
 import dayjs from 'dayjs'
@@ -41,7 +41,7 @@ import toast from 'react-hot-toast'
 
 interface PostContentProps {
   post: Post
-  postRef: FirebaseDocumentRef
+  // postRef: FirebaseDocumentRef
 }
 // UI component for main post content
 const PostContent: FC<PostContentProps> = ({
