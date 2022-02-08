@@ -31,8 +31,8 @@ const PostForm: FC<Props> = ({ editPost }) => {
   const {
     handleSubmit,
     control,
-    setValue
-    // watch
+    setValue,
+    watch
     // reset, watch
   } = useForm<PostWrite>({
     defaultValues: isEditMode
@@ -87,7 +87,7 @@ const PostForm: FC<Props> = ({ editPost }) => {
         createdAt: serverTimestamp() as FirestoreTimestamp,
         updatedBy: null,
         updatedAt: null,
-        isTest: false
+        isTest: data.isTest
       }
 
       await ref.set(post)
@@ -108,8 +108,11 @@ const PostForm: FC<Props> = ({ editPost }) => {
         onSubmit={handleSubmit(onSubmit)}
         style={{ display: 'grid', gap: '10px' }}
       >
+        {/**
+         * REVIEW: react-hook-form & mui checkbox doesn't work with default value
+         */}
         <FormControlLabel
-          label={'테스트 게시물 (관리자 전용)'}
+          label={`테스트 게시물 (관리자 전용) - ${watch().isTest}`}
           control={
             <Controller
               name="isTest"
