@@ -190,7 +190,10 @@ export default function Navbar() {
                     <Button
                       size="medium"
                       color="info"
-                      style={{ color: 'white', padding: '0px' }}
+                      style={{
+                        color: COLOURS.PRIMARY_SPACE_GREY,
+                        padding: '0px'
+                      }}
                     >
                       LOG IN
                     </Button>

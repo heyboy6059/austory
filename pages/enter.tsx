@@ -148,12 +148,9 @@ function UsernameForm() {
     setInkrauUsername(val)
   }
 
-  useEffect(() => {
-    checkUsername(inkrauUsername)
-  }, [checkUsername, inkrauUsername])
-
   // Hit the database for username match after each debounced change
   // useCallback is required for debounce to work
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const checkUsername = useCallback(
     debounce(async username => {
       if (username.length > 3) {
@@ -166,6 +163,10 @@ function UsernameForm() {
     }, 500),
     []
   )
+
+  useEffect(() => {
+    checkUsername(inkrauUsername)
+  }, [checkUsername, inkrauUsername])
 
   const usernameHelperText = (): string => {
     console.log('username in callback ', inkrauUsername)
@@ -206,7 +207,7 @@ function UsernameForm() {
           {inkrauUsername?.length < 2 && inkrauUsername !== user.displayName && (
             // display it inkrauUsername is not equals to displayName
             <Chip
-              label={`현재 이메일 프로필 이름 사용하기. ${user.displayName}`}
+              label={`기존 이메일 프로필 사용. ${user.displayName}`}
               variant="outlined"
               color="success"
               size="small"
