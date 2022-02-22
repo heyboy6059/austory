@@ -37,6 +37,7 @@ import Tooltip from '@mui/material/Tooltip'
 import ConfirmDialog from '../../components/Dialog/ConfirmDialog'
 import toast from 'react-hot-toast'
 import Metatags from '../Metatags'
+import Heart from '../Heart'
 
 // import { Editor, EditorState, ContentState } from "draft-js"
 
@@ -146,6 +147,11 @@ const PostContent: FC<PostContentProps> = ({
                 <span>{post.viewCount}</span>
               </FlexCenterDiv>
             )}
+            <Heart
+              postId={post.slug}
+              heartCount={post.heartCount}
+              username={username}
+            />
           </FlexCenterDiv>
         </FlexSpaceBetween>
         <H1>{post?.title}</H1>

@@ -8,7 +8,8 @@ import PostFeed from '../../components/Post/PostFeed'
 import {
   FirebaseDocumentSnapshot,
   Post,
-  RawUser
+  RawUser,
+  User
 } from '../../typing/interfaces'
 import { FlexCenterDiv } from '../../common/uiComponents'
 import WarningIcon from '@mui/icons-material/Warning'
@@ -27,7 +28,7 @@ export const getServerSideProps = async ({ query }) => {
   }
 
   // JSON serializable data
-  let user = null
+  let user: User = null
   // let posts = null
 
   if (userDoc) {
@@ -49,13 +50,16 @@ export const getServerSideProps = async ({ query }) => {
 }
 
 const UserProfilePage = ({ user }) => {
+  const isAdmin = user.isAdmin
   return (
     <main>
       <UserProfile user={user} />
-      <FlexCenterDiv style={{ margin: '15px 0px' }}>
-        <span>관리자</span>
-        <AdminPanelSettingsIcon style={{ color: 'orange' }} />
-      </FlexCenterDiv>
+      {isAdmin && (
+        <FlexCenterDiv style={{ margin: '15px 0px' }}>
+          <span>관리자</span>
+          <AdminPanelSettingsIcon style={{ color: 'orange' }} />
+        </FlexCenterDiv>
+      )}
       <h3 style={{ textAlign: 'center' }}>내가 쓴 글 보기</h3>
       <FlexCenterDiv style={{ height: '100%' }}>
         <div style={{ textAlign: 'center' }}>

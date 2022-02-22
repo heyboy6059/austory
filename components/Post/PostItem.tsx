@@ -60,7 +60,8 @@ const PostItem: FC<{
                     margin: '2px 0',
                     wordWrap: 'break-word',
                     fontWeight: 'bold',
-                    lineHeight: '1.2'
+                    lineHeight: '1.2',
+                    cursor: 'pointer'
                   }}
                 >
                   {post.isTest && <Chip label="TEST" color="primary" />}
