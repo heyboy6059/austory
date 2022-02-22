@@ -147,11 +147,6 @@ const PostContent: FC<PostContentProps> = ({
                 <span>{post.viewCount}</span>
               </FlexCenterDiv>
             )}
-            <Heart
-              postId={post.slug}
-              heartCount={post.heartCount}
-              username={username}
-            />
           </FlexCenterDiv>
         </FlexSpaceBetween>
         <H1>{post?.title}</H1>
@@ -215,6 +210,13 @@ const PostContent: FC<PostContentProps> = ({
         >
           <div style={{ whiteSpace: 'break-spaces' }}>{post?.content}</div>
         </Linkify>
+        <div style={{ width: '40px', margin: 'auto', marginTop: '10px' }}>
+          <Heart
+            postId={post.slug}
+            heartCount={post.heartCount}
+            username={username}
+          />
+        </div>
         {/* <TextWithLink text={post?.content} /> */}
         {/* </ReactMarkdown> */}
         {/* <Editor

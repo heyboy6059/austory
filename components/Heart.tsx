@@ -1,11 +1,11 @@
-import { FC, useCallback, useEffect } from 'react'
+import { FC, useCallback, useState } from 'react'
 import { firestore, increment } from '../common/firebase'
 import { getHeartDocumentId } from '../common/helper'
 import { useDocument } from 'react-firebase-hooks/firestore'
-import {
-  FirebaseDocumentRef,
-  FirebaseDocumentSnapshot
-} from '../typing/interfaces'
+import {} from '../typing/interfaces'
+import FavoriteIcon from '@mui/icons-material/Favorite'
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder'
+import { FlexCenterDiv } from '../common/uiComponents'
 
 interface Props {
   postId: string
@@ -17,8 +17,7 @@ const Heart: FC<Props> = ({ postId, heartCount, username }) => {
     .collection('hearts')
     .doc(`${getHeartDocumentId(postId, username)}`)
   const [heartDoc] = useDocument(heartRef)
-  console.log({ heartData: heartDoc })
-  console.log('heartDoc exist?', heartDoc?.exist)
+  const [localAdd, setLocalAdd] = useState(0)
   // const heartRef =
   // useEffect(() => {
   //   if (postId && username) {
@@ -57,6 +56,9 @@ const Heart: FC<Props> = ({ postId, heartCount, username }) => {
       postId,
       value: 1
     })
+    setLocalAdd(1)
+
+    // TODO: add/remove count in user heartTotalCount
 
     await batch.commit()
   }, [heartRef, postId, username])
@@ -67,18 +69,23 @@ const Heart: FC<Props> = ({ postId, heartCount, username }) => {
     const postRef = firestore.collection('posts').doc(postId)
     batch.update(postRef, { heartCount: increment(-1) })
     batch.delete(heartRef)
+    setLocalAdd(0)
+
+    // TODO: add/remove count in user heartTotalCount
 
     await batch.commit()
   }, [heartRef, postId])
 
   return heartDoc?.exists ? (
-    <div onClick={() => removeHeart()}>
-      HEART (you clicked) {heartCount || 0}
-    </div>
+    <FlexCenterDiv style={{ cursor: 'pointer' }} onClick={() => removeHeart()}>
+      <FavoriteIcon />{' '}
+      <span style={{ fontSize: '18px' }}>{(heartCount || 0) + localAdd}</span>
+    </FlexCenterDiv>
   ) : (
-    <div onClick={() => addHeart()}>
-      HEART (you did not click) {heartCount || 0}
-    </div>
+    <FlexCenterDiv style={{ cursor: 'pointer' }} onClick={() => addHeart()}>
+      <FavoriteBorderIcon />{' '}
+      <span style={{ fontSize: '18px' }}>{(heartCount || 0) + localAdd}</span>
+    </FlexCenterDiv>
   )
 }
 
