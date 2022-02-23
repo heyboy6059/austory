@@ -10,6 +10,7 @@ import { FlexCenterDiv } from '../common/uiComponents'
 
 import ScrollToTop from 'react-scroll-up'
 import ArrowCircleUpIcon from '@mui/icons-material/ArrowCircleUp'
+import Head from 'next/head'
 
 export const getServerSideProps = async context => {
   context
@@ -60,6 +61,9 @@ const Home = props => {
 
   return (
     <div>
+      <Head>
+        <title>inKRAU 인크라우</title>
+      </Head>
       <PostFeed posts={posts} />
 
       <FlexCenterDiv style={{ marginBottom: '10px' }}>
