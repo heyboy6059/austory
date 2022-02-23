@@ -1,11 +1,12 @@
-import { FC, useCallback, useState } from 'react'
-import { firestore, increment } from '../common/firebase'
+import { FC, useCallback, useContext, useState } from 'react'
+import { firestore, increment, serverTimestamp } from '../common/firebase'
 import { getHeartDocumentId } from '../common/helper'
 import { useDocument } from 'react-firebase-hooks/firestore'
-import {} from '../typing/interfaces'
 import FavoriteIcon from '@mui/icons-material/Favorite'
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder'
 import { FlexCenterDiv } from '../common/uiComponents'
+import { batchUpdateUsers } from '../common/update'
+import { UserContext } from '../common/context'
 
 interface Props {
   postId: string
@@ -13,78 +14,64 @@ interface Props {
   username: string
 }
 const Heart: FC<Props> = ({ postId, heartCount, username }) => {
+  // REVIEW: better way to have user?
+  const { user } = useContext(UserContext)
   const heartRef = firestore
     .collection('hearts')
     .doc(`${getHeartDocumentId(postId, username)}`)
   const [heartDoc] = useDocument(heartRef)
-  const [localAdd, setLocalAdd] = useState(0)
-  // const heartRef =
-  // useEffect(() => {
-  //   if (postId && username) {
-  //     console.log({ username })
-  //     const getHeart = async () => {
-  //       console.log('run!!!')
-  //       const ref = firestore
-  //         .collection('hearts')
-  //         .doc(`${getHeartDocumentId(postId, username)}`)
-  //       const docSnapshot = await ref.get()
-  //       console.log({ docSnapshot })
-  //       console.log('doc data?', docSnapshot.data())
-  //     }
+  const [localHeartCount, setLocalHeartCount] = useState(heartCount)
 
-  //     getHeart()
-  //   }
-  // }, [postId, username])
+  const addRemoveHeart = useCallback(
+    async (addOrRemove: 'add' | 'remove') => {
+      const incrementValue = addOrRemove === 'add' ? 1 : -1
 
-  //   const addHeart = useCallback(async () => {
+      const batch = firestore.batch()
+      const postRef = firestore.collection('posts').doc(postId)
 
-  //   }, [postId, username])
+      // update post heartCount
+      batch.update(postRef, { heartCount: increment(incrementValue) })
+      if (addOrRemove === 'add') {
+        batch.set(heartRef, {
+          username,
+          postId,
+          createdAt: serverTimestamp(),
+          value: 1
+        })
+      }
+      // remove
+      else {
+        batch.delete(heartRef)
+      }
 
-  // const addRemoveHeart = useCallback(()=>{
-  //   if (heartData?.exists) {
+      // update user heartCountTotal
+      batchUpdateUsers(batch, user.uid, {
+        heartCountTotal: increment(1)
+      })
 
-  //   }
-  // },[])
+      setLocalHeartCount(prev => prev + incrementValue)
 
-  const addHeart = useCallback(async () => {
-    // return alert('haha')
-    const batch = firestore.batch()
-    const postRef = firestore.collection('posts').doc(postId)
-    batch.update(postRef, { heartCount: increment(1) })
-    batch.set(heartRef, {
-      username,
-      postId,
-      value: 1
-    })
-    setLocalAdd(1)
-
-    // TODO: add/remove count in user heartTotalCount
-
-    await batch.commit()
-  }, [heartRef, postId, username])
-
-  const removeHeart = useCallback(async () => {
-    // return alert('haha')
-    const batch = firestore.batch()
-    const postRef = firestore.collection('posts').doc(postId)
-    batch.update(postRef, { heartCount: increment(-1) })
-    batch.delete(heartRef)
-    setLocalAdd(0)
-
-    // TODO: add/remove count in user heartTotalCount
-
-    await batch.commit()
-  }, [heartRef, postId])
+      // commit the all batch updates
+      await batch.commit()
+    },
+    [heartRef, postId, user, username]
+  )
 
   return heartDoc?.exists ? (
-    <FlexCenterDiv style={{ cursor: 'pointer' }} onClick={() => removeHeart()}>
+    <FlexCenterDiv
+      style={{ cursor: 'pointer' }}
+      onClick={() => addRemoveHeart('remove')}
+    >
       <FavoriteIcon />{' '}
-      <span style={{ fontSize: '18px' }}>{(heartCount || 0) + localAdd}</span>
+      <span style={{ fontSize: '18px' }}>{localHeartCount}</span>
     </FlexCenterDiv>
   ) : (
-    <FlexCenterDiv style={{ cursor: 'pointer' }} onClick={() => addHeart()}>
+    <FlexCenterDiv
+      style={{ cursor: 'pointer' }}
+      onClick={() => addRemoveHeart('add')}
+    >
       <FavoriteBorderIcon />{' '}
-      <span style={{ fontSize: '18px' }}>{(heartCount || 0) + localAdd}</span>
+      <span style={{ fontSize: '18px' }}>{localHeartCount}</span>
     </FlexCenterDiv>
   )
 }

@@ -1,23 +1,23 @@
-import firebase from "firebase/compat/app"
-import "firebase/compat/auth"
-import "firebase/compat/firestore"
-import "firebase/compat/storage"
+import firebase from 'firebase/compat/app'
+import 'firebase/compat/auth'
+import 'firebase/compat/firestore'
+import 'firebase/compat/storage'
 import {
   FirebaseDocumentSnapshot,
   Post,
   RawPost,
   RawUser,
-  User,
-} from "../typing/interfaces"
+  User
+} from '../typing/interfaces'
 
 const firebaseConfig = {
-  apiKey: "AIzaSyDZM4GcEwLya_cjnIHbn2qJth7gnw-U0QU",
-  authDomain: "austory-danpark.firebaseapp.com",
-  projectId: "austory-danpark",
-  storageBucket: "austory-danpark.appspot.com",
-  messagingSenderId: "937500945011",
-  appId: "1:937500945011:web:f83bf20ccf46139ebfd806",
-  measurementId: "G-FXZVL0QDVQ",
+  apiKey: 'AIzaSyDZM4GcEwLya_cjnIHbn2qJth7gnw-U0QU',
+  authDomain: 'austory-danpark.firebaseapp.com',
+  projectId: 'austory-danpark',
+  storageBucket: 'austory-danpark.appspot.com',
+  messagingSenderId: '937500945011',
+  appId: '1:937500945011:web:f83bf20ccf46139ebfd806',
+  measurementId: 'G-FXZVL0QDVQ'
 }
 
 if (!firebase.apps.length) {
@@ -45,8 +45,8 @@ export const increment = firebase.firestore.FieldValue.increment
 export const getUserWithUsername = async (
   username: string
 ): Promise<FirebaseDocumentSnapshot> => {
-  const usersRef = firestore.collection("users")
-  const query = usersRef.where("username", "==", username).limit(1)
+  const usersRef = firestore.collection('users')
+  const query = usersRef.where('username', '==', username).limit(1)
   const userDoc = (await query.get()).docs[0]
   return userDoc
 }
@@ -62,7 +62,7 @@ export const postToJSON = (doc: FirebaseDocumentSnapshot<RawPost>): Post => {
     ...data,
     // Gotcha! firestore timestamp NOT serializable to JSON. Must convert to milliseconds
     createdAt: data?.createdAt?.toMillis() || 0,
-    updatedAt: data?.updatedAt?.toMillis() || 0,
+    updatedAt: data?.updatedAt?.toMillis() || 0
   }
 }
 
@@ -71,13 +71,13 @@ export const postToJSON = (doc: FirebaseDocumentSnapshot<RawPost>): Post => {
  * @param doc
  * @returns
  */
-export const tempPostToJSON = (doc) => {
+export const tempPostToJSON = doc => {
   const data = doc.data()
   return {
     ...data,
     // Gotcha! firestore timestamp NOT serializable to JSON. Must convert to milliseconds
     createdAt: data?.createdAt?.toMillis() || 0,
-    updatedAt: data?.updatedAt?.toMillis() || 0,
+    updatedAt: data?.updatedAt?.toMillis() || 0
   }
 }
 
@@ -86,6 +86,6 @@ export const userToJSON = (user: FirebaseDocumentSnapshot<RawUser>): User => {
   return {
     ...userData,
     createdAt: userData?.createdAt?.toMillis() || 0,
-    updatedAt: userData?.updatedAt?.toMillis() || 0,
+    updatedAt: userData?.updatedAt?.toMillis() || 0
   }
 }
