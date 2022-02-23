@@ -12,6 +12,7 @@ export type Role = 'Base'
 
 // user
 export type RawUser = {
+  uid: string
   username: string // user typed in our system
   photoURL: string
   displayName: string // user from auth provider (google)?
@@ -32,7 +33,17 @@ export type RawUser = {
   disabledAt: FirestoreTimestamp | null
 }
 
-export type User = Omit<RawUser, 'createdAt' | 'updatedAt'> & {
+export type User = Omit<
+  RawUser,
+  | 'createdAt'
+  | 'updatedAt'
+  | 'heartCountTotal'
+  | 'postCountTotal'
+  | 'commentCountTotal'
+> & {
+  heartCountTotal: number | firebase.firestore.FieldValue
+  postCountTotal: number | firebase.firestore.FieldValue
+  commentCountTotal: number | firebase.firestore.FieldValue
   createdAt: number
   updatedAt: number | null
 }
