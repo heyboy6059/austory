@@ -30,7 +30,7 @@ import {
   H1
 } from '../../common/uiComponents'
 import { UserContext } from '../../common/context'
-import { firestore, serverTimestamp } from '../../common/firebase'
+import { firestore, increment, serverTimestamp } from '../../common/firebase'
 // import Linky from "react-linky"
 import Linkify from 'react-linkify'
 import Tooltip from '@mui/material/Tooltip'
@@ -38,6 +38,7 @@ import ConfirmDialog from '../../components/Dialog/ConfirmDialog'
 import toast from 'react-hot-toast'
 import Metatags from '../Metatags'
 import Heart from '../Heart'
+import { batchUpdateUsers } from '../../common/update'
 
 // import { Editor, EditorState, ContentState } from "draft-js"
 
@@ -50,7 +51,7 @@ const PostContent: FC<PostContentProps> = ({
   post
   // postRef
 }) => {
-  const { username, isAdmin } = useContext(UserContext)
+  const { user, username, isAdmin } = useContext(UserContext)
   const router = useRouter()
   const isPostOwner = useMemo(
     () => username === post.username,
@@ -73,15 +74,22 @@ const PostContent: FC<PostContentProps> = ({
 
   const removePost = useCallback(async () => {
     // REVIEW: replace with postRef in prop?
-    const ref = firestore.collection('posts').doc(post.slug)
-    await ref.update({
+    const postRef = firestore.collection('posts').doc(post.slug)
+
+    const batch = firestore.batch()
+    batch.update(postRef, {
       deleted: true,
       updatedBy: username,
       updatedAt: serverTimestamp() as FirestoreTimestamp
     })
+
+    batchUpdateUsers(batch, user.uid, {
+      postCountTotal: increment(-1)
+    })
+    await batch.commit()
     toast.success('게시물을 성공적으로 삭제했습니다.')
     router.push('/')
-  }, [post, router, username])
+  }, [post.slug, router, user, username])
   // const [editorState, setEditorState] = useState(
   //   EditorState.createWithContent(
   //     ContentState.createFromBlockArray("<h1>HAHAHOHO</h1>")

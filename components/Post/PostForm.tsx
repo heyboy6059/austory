@@ -6,7 +6,12 @@ import {
   RawPost
 } from '../../typing/interfaces'
 import { UserContext } from '../../common/context'
-import { firestore, auth, serverTimestamp } from '../../common/firebase'
+import {
+  firestore,
+  auth,
+  serverTimestamp,
+  increment
+} from '../../common/firebase'
 import { useRouter } from 'next/router'
 import { useForm, Controller } from 'react-hook-form'
 import dayjs from 'dayjs'
@@ -18,6 +23,7 @@ import { FlexCenterDiv } from '../../common/uiComponents'
 import Button from '@mui/material/Button'
 import FormControlLabel from '@mui/material/FormControlLabel'
 import Checkbox from '@mui/material/Checkbox'
+import { batchUpdateUsers } from '../../common/update'
 
 interface Props {
   editPost?: Post
@@ -58,6 +64,7 @@ const PostForm: FC<Props> = ({ editPost }) => {
     // EDIT
     if (isEditMode) {
       const docSlug = editPost.slug
+
       const postRef = firestore.collection('posts').doc(docSlug)
       await postRef.update({
         ...data,
@@ -69,7 +76,8 @@ const PostForm: FC<Props> = ({ editPost }) => {
     // CREATE
     if (!isEditMode) {
       const docSlug = `${user.email.split('@')[0]}-${dayjs().unix()}`
-      const ref = firestore.collection('posts').doc(docSlug)
+
+      const postRef = firestore.collection('posts').doc(docSlug)
 
       const post: RawPost = {
         slug: docSlug,
@@ -91,7 +99,14 @@ const PostForm: FC<Props> = ({ editPost }) => {
         isTest: data.isTest
       }
 
-      await ref.set(post)
+      const batch = firestore.batch()
+      batch.set(postRef, post)
+
+      batchUpdateUsers(batch, user.uid, {
+        postCountTotal: increment(1)
+      })
+
+      await batch.commit()
 
       toast.success('게시물이 성공적으로 등록 되었습니다.')
     }
@@ -149,7 +164,7 @@ const PostForm: FC<Props> = ({ editPost }) => {
           setValue={setValue}
           editThumbnailImgUrl={
             // REVIEW: this only supports single thumbnail url
-            isEditMode ? editPost.images[0].thumbnail300.url : null
+            isEditMode ? editPost?.images?.[0]?.thumbnail300?.url || '' : null
           }
         />
         <FlexCenterDiv>
