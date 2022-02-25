@@ -39,6 +39,7 @@ import toast from 'react-hot-toast'
 import Metatags from '../Metatags'
 import Heart from '../Heart'
 import { batchUpdateUsers } from '../../common/update'
+import Comment from '../Comment/Comment'
 
 // import { Editor, EditorState, ContentState } from "draft-js"
 
@@ -242,6 +243,7 @@ const PostContent: FC<PostContentProps> = ({
           <HeartButton postRef={postRef} heartCount={post.heartCount} />
         </AuthCheck> */}
         </div>
+        <Comment />
         {setDeleteAlertOpen && (
           <ConfirmDialog
             open={deleteAlertOpen}

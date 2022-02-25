@@ -127,3 +127,21 @@ export type PostWrite = Pick<
 >
 
 export type ImgType = 'thumbnail100' | 'thumbnail300' | 'original'
+
+export type RawComment = {
+  commentId: string
+  username: string
+  level: number
+  parentCommentId: string | null
+  content: string
+  deleted: boolean
+  createdBy: string
+  createdAt: FirestoreTimestamp
+  updatedBy: string
+  updatedAt: FirestoreTimestamp
+}
+
+export type Comment = Omit<RawComment, 'CreatedAt' | 'updatedAt'> & {
+  createdAt: number
+  updatedAT: number | null
+}
