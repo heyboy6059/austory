@@ -1,11 +1,39 @@
 import { FC, useState, useEffect } from 'react'
 import TextField from '@mui/material/TextField'
 import { COMMENT_CONTENT_MAX_COUNT } from '../../common/constants'
+import CommentTree from './CommentTree'
+import {
+  FirebaseDocumentRef,
+  RawComment,
+  FirebaseDocumentSnapshot,
+  Comment
+} from '../../typing/interfaces'
+import { commentToJSON } from '../../common/firebase'
 
-const Comment: FC = () => {
+interface Props {
+  postRef: FirebaseDocumentRef
+}
+const CommentMain: FC<Props> = ({ postRef }) => {
   const [content, setContent] = useState('')
   const [initFocus, setInitFocus] = useState(false)
   const [multiRows, setMultiRows] = useState(1)
+
+  const commentRef = postRef.collection('comments')
+  const [comments, setComments] = useState<Comment[]>([])
+
+  useEffect(() => {
+    if (commentRef) {
+      const getAllComments = async () => {
+        const allRawComments = await commentRef.get()
+        setComments(
+          allRawComments.docs.map(comment =>
+            commentToJSON(comment as FirebaseDocumentSnapshot<RawComment>)
+          )
+        )
+      }
+      getAllComments()
+    }
+  }, [commentRef])
 
   // increase textField rows for initial click
   useEffect(() => {
@@ -16,7 +44,7 @@ const Comment: FC = () => {
 
   return (
     <div>
-      <div>3개의 댓글</div>
+      <div>{comments.length}개의 댓글</div>
       <div style={{ margin: '15px' }}>
         {/* <FormControl style={{ width: '100%' }}> */}
         <TextField
@@ -32,10 +60,10 @@ const Comment: FC = () => {
         <div>
           {content.length} / {COMMENT_CONTENT_MAX_COUNT}
         </div>
-        {/* </FormControl> */}
+        <CommentTree comments={comments} />
       </div>
     </div>
   )
 }
 
-export default Comment
+export default CommentMain

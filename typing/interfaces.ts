@@ -135,13 +135,15 @@ export type RawComment = {
   parentCommentId: string | null
   content: string
   deleted: boolean
+  adminDeleted: boolean
+  adminDeletedReason: string | null
   createdBy: string
   createdAt: FirestoreTimestamp
   updatedBy: string
   updatedAt: FirestoreTimestamp
 }
 
-export type Comment = Omit<RawComment, 'CreatedAt' | 'updatedAt'> & {
+export type Comment = Omit<RawComment, 'createdAt' | 'updatedAt'> & {
   createdAt: number
-  updatedAT: number | null
+  updatedAt: number | null
 }

@@ -5,6 +5,8 @@ import 'firebase/compat/storage'
 import {
   FirebaseDocumentSnapshot,
   Post,
+  RawComment,
+  Comment,
   RawPost,
   RawUser,
   User
@@ -89,3 +91,16 @@ export const userToJSON = (user: FirebaseDocumentSnapshot<RawUser>): User => {
     updatedAt: userData?.updatedAt?.toMillis() || 0
   }
 }
+
+export const commentToJSON = (
+  comment: FirebaseDocumentSnapshot<RawComment>
+): Comment => {
+  const commentData = comment.data()
+  return {
+    ...commentData,
+    createdAt: commentData?.createdAt?.toMillis() || 0,
+    updatedAt: commentData?.updatedAt?.toMillis() || 0
+  }
+}
+
+// TODO: generalize all dataToJSON functions

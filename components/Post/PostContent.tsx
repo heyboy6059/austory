@@ -39,7 +39,7 @@ import toast from 'react-hot-toast'
 import Metatags from '../Metatags'
 import Heart from '../Heart'
 import { batchUpdateUsers } from '../../common/update'
-import Comment from '../Comment/Comment'
+import CommentMain from '../Comment/CommentMain'
 
 // import { Editor, EditorState, ContentState } from "draft-js"
 
@@ -52,6 +52,7 @@ const PostContent: FC<PostContentProps> = ({
   post
   // postRef
 }) => {
+  const postRef = firestore.collection('posts').doc(post.slug)
   const { user, username, isAdmin } = useContext(UserContext)
   const router = useRouter()
   const isPostOwner = useMemo(
@@ -64,19 +65,14 @@ const PostContent: FC<PostContentProps> = ({
   // add viewCount in post
   useEffect(() => {
     const addViewCount = async () => {
-      // REVIEW: replace with postRef in prop?
-      const ref = firestore.collection('posts').doc(post.slug)
-      await ref.update({
+      await postRef.update({
         viewCount: post.viewCount + 1
       })
     }
     addViewCount()
-  }, [post])
+  }, [postRef, post])
 
   const removePost = useCallback(async () => {
-    // REVIEW: replace with postRef in prop?
-    const postRef = firestore.collection('posts').doc(post.slug)
-
     const batch = firestore.batch()
     batch.update(postRef, {
       deleted: true,
@@ -90,7 +86,7 @@ const PostContent: FC<PostContentProps> = ({
     await batch.commit()
     toast.success('게시물을 성공적으로 삭제했습니다.')
     router.push('/')
-  }, [post.slug, router, user, username])
+  }, [postRef, router, user, username])
   // const [editorState, setEditorState] = useState(
   //   EditorState.createWithContent(
   //     ContentState.createFromBlockArray("<h1>HAHAHOHO</h1>")
@@ -113,7 +109,7 @@ const PostContent: FC<PostContentProps> = ({
         title={`inKRAU - ${post.title}`}
         description={`${post.excerpt}`}
         // TODO: change fallback to logo image
-        image={post?.images[0]?.original?.url || ''}
+        image={post?.images?.[0]?.original?.url || ''}
       />
       <Paper sx={{ p: 2 }}>
         <FlexSpaceBetween style={{ alignItems: 'center' }}>
@@ -243,7 +239,7 @@ const PostContent: FC<PostContentProps> = ({
           <HeartButton postRef={postRef} heartCount={post.heartCount} />
         </AuthCheck> */}
         </div>
-        <Comment />
+        <CommentMain postRef={postRef} />
         {setDeleteAlertOpen && (
           <ConfirmDialog
             open={deleteAlertOpen}
