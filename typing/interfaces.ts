@@ -5,8 +5,8 @@ export type FirebaseDocumentSnapshot<T = firebase.firestore.DocumentData> =
 
 export type FirestoreTimestamp = firebase.firestore.Timestamp
 
-export type FirebaseDocumentRef =
-  firebase.firestore.DocumentReference<firebase.firestore.DocumentData>
+export type FirebaseDocumentRef<T = firebase.firestore.DocumentData> =
+  firebase.firestore.DocumentReference<T>
 
 export type Role = 'Base'
 
