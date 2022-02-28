@@ -20,23 +20,17 @@ export type RawUser = {
   photoURL: string
   displayName: string // user from auth provider (google)?
   email: string
-  // receivedHeartCountTotal
-  // providedHeartCountTotal
-  heartCountTotal: number
-  // myPostCountTotal
-  postCountTotal: number
-  // receivedCommentCountTotal
-  // providedCommentCountTotal
-  commentCountTotal: number
-  // receivedPostViewCountTotal
-  // providedPostViewCountTotal
-  viewCountTotal: number
-  //
+  providedHeartCountTotal: number
+  receivedHeartCountTotal: number
+  myPostCountTotal: number
+  receivedCommentCountTotal: number
+  providedCommentCountTotal: number
+  receivedViewCountTotal: number
+  providedViewCountTotal: number
   disabled: boolean
   isAdmin: boolean
   isMarketingEmail: boolean
-  role: Role // TODO
-  //
+  role: Role
   createdAt: FirestoreTimestamp
   updatedAt: FirestoreTimestamp | null
   disabledAt: FirestoreTimestamp | null
@@ -46,13 +40,21 @@ export type User = Omit<
   RawUser,
   | 'createdAt'
   | 'updatedAt'
-  | 'heartCountTotal'
-  | 'postCountTotal'
-  | 'commentCountTotal'
+  | 'providedHeartCountTotal'
+  | 'receivedHeartCountTotal'
+  | 'myPostCountTotal'
+  | 'receivedCommentCountTotal'
+  | 'providedCommentCountTotal'
+  | 'receivedViewCountTotal'
+  | 'providedViewCountTotal'
 > & {
-  heartCountTotal: number | firebase.firestore.FieldValue
-  postCountTotal: number | firebase.firestore.FieldValue
-  commentCountTotal: number | firebase.firestore.FieldValue
+  providedHeartCountTotal: number | firebase.firestore.FieldValue
+  receivedHeartCountTotal: number | firebase.firestore.FieldValue
+  myPostCountTotal: number | firebase.firestore.FieldValue
+  receivedCommentCountTotal: number | firebase.firestore.FieldValue
+  providedCommentCountTotal: number | firebase.firestore.FieldValue
+  receivedViewCountTotal: number | firebase.firestore.FieldValue
+  providedViewCountTotal: number | firebase.firestore.FieldValue
   createdAt: number
   updatedAt: number | null
 }

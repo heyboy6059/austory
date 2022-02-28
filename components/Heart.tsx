@@ -46,7 +46,7 @@ const Heart: FC<Props> = ({ postId, heartCount, username }) => {
 
       // update user heartCountTotal
       batchUpdateUsers(batch, user.uid, {
-        heartCountTotal: increment(incrementValue)
+        providedHeartCountTotal: increment(incrementValue)
       })
 
       setLocalHeartCount(prev => prev + incrementValue)

@@ -103,16 +103,20 @@ function UsernameForm() {
         photoURL: user.photoURL,
         displayName: user.displayName,
         email: user.email,
-        heartCountTotal: 0,
-        postCountTotal: 0,
-        commentCountTotal: 0,
-        viewCountTotal: 0,
+        providedHeartCountTotal: 0,
+        receivedHeartCountTotal: 0,
+        myPostCountTotal: 0,
+        receivedCommentCountTotal: 0,
+        providedCommentCountTotal: 0,
+        receivedViewCountTotal: 0,
+        providedViewCountTotal: 0,
         disabled: false,
         isAdmin: false,
         isMarketingEmail,
         role: 'Base',
         createdAt: serverTimestamp() as FirestoreTimestamp,
-        updatedAt: null
+        updatedAt: null,
+        disabledAt: null
       } as RawUser)
       batch.set(usernameDoc, {
         uid: user.uid
