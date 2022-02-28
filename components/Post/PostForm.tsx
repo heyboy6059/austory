@@ -103,7 +103,7 @@ const PostForm: FC<Props> = ({ editPost }) => {
       batch.set(postRef, post)
 
       batchUpdateUsers(batch, user.uid, {
-        postCountTotal: increment(1)
+        myPostCountTotal: increment(1)
       })
 
       await batch.commit()

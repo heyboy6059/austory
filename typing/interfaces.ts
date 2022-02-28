@@ -13,7 +13,6 @@ export type FirebaseCollectionRef<T = firebase.firestore.DocumentData> =
 
 export type Role = 'Base'
 
-// user
 export type RawUser = {
   uid: string
   username: string // user typed in our system
@@ -58,36 +57,6 @@ export type User = Omit<
   createdAt: number
   updatedAt: number | null
 }
-
-export type TempUser = {
-  username: string
-  photoURL: string
-  displayName: string
-  heartCountTotal: number
-  postCountTotal: number
-  commentCountTotal: number
-  viewCountTotal: number
-  isAdmin: boolean
-  disabled: boolean
-  createdAt: Date | number | string
-  updatedAt: Date | number | string | null
-  disabledAt: Date | number | string | null
-}
-
-// post
-// export type Post = {
-//   username: string
-//   slug: string
-//   title: string
-//   published: boolean
-//   heartCount: number
-//   //
-//   uid: string
-//   content: string
-//   // REVIEW: JSON cast number or string
-//   createdAt: Date | number | string
-//   updatedAt: Date | number | string
-// }
 
 export type ImageDetails = {
   url: string

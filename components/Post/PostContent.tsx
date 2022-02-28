@@ -81,7 +81,7 @@ const PostContent: FC<PostContentProps> = ({
     })
 
     batchUpdateUsers(batch, user.uid, {
-      postCountTotal: increment(-1)
+      myPostCountTotal: increment(-1)
     })
     await batch.commit()
     toast.success('게시물을 성공적으로 삭제했습니다.')
