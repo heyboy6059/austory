@@ -15,14 +15,14 @@ import { UserContext } from '../../common/context'
 import toast from 'react-hot-toast'
 
 interface Props {
-  commentRef: FirebaseCollectionRef
+  commentCollectionRef: FirebaseCollectionRef
   comment?: Comment
   level: number
   //   createComment?: (content: string, level: number) => void
   editComment?: () => void
 }
 const CommentEditor: FC<Props> = ({
-  commentRef,
+  commentCollectionRef,
   comment,
   level,
   //   createComment,
@@ -55,11 +55,11 @@ const CommentEditor: FC<Props> = ({
 
         const commentId = generateCommentId(username)
         const batch = firestore.batch()
-        const comment: RawComment = {
+        const newComment: RawComment = {
           commentId,
           username,
           level,
-          parentCommentId: null, // TODO: sub comments
+          parentCommentId: level === 1 ? null : comment.commentId, // TODO: sub comments
           content,
           deleted: false,
           adminDeleted: false,
@@ -70,7 +70,7 @@ const CommentEditor: FC<Props> = ({
           updatedAt: null
         }
 
-        batch.set(commentRef.doc(commentId), comment)
+        batch.set(commentCollectionRef.doc(commentId), newComment)
 
         // TODO: add counts in post / user
         // batchUpdateUsers()
@@ -90,7 +90,7 @@ const CommentEditor: FC<Props> = ({
         toast.error('댓글 등록에 실패하였습니다. 다시 시도해주세요.')
       }
     },
-    [commentRef, level, username]
+    [comment, commentCollectionRef, level, username]
   )
   return (
     <div>
