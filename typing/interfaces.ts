@@ -8,6 +8,9 @@ export type FirestoreTimestamp = firebase.firestore.Timestamp
 export type FirebaseDocumentRef<T = firebase.firestore.DocumentData> =
   firebase.firestore.DocumentReference<T>
 
+export type FirebaseCollectionRef<T = firebase.firestore.DocumentData> =
+  firebase.firestore.CollectionReference<T>
+
 export type Role = 'Base'
 
 // user
@@ -17,10 +20,16 @@ export type RawUser = {
   photoURL: string
   displayName: string // user from auth provider (google)?
   email: string
-  //
+  // receivedHeartCountTotal
+  // providedHeartCountTotal
   heartCountTotal: number
+  // myPostCountTotal
   postCountTotal: number
+  // receivedCommentCountTotal
+  // providedCommentCountTotal
   commentCountTotal: number
+  // receivedPostViewCountTotal
+  // providedPostViewCountTotal
   viewCountTotal: number
   //
   disabled: boolean

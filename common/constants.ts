@@ -1,8 +1,10 @@
 export enum COLOURS {
   PRIMARY_SPACE_GREY = 'rgba(0,0,0,0.8)',
   SECONDARY_SPACE_GREY = '#424245',
+  TEXT_GREY = '#808080',
   PRIMARY_WHITE = '#d6d6d6',
   LIGHT_BACKGROUND = 'f5f5f7',
+  LINE_GREY = '#D3D3D3',
   DARK_BLUE = '#10508D'
 }
 
