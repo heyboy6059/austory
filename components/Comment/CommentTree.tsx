@@ -9,8 +9,13 @@ import CommentItem from './CommentItem'
 interface Props {
   comments: Comment[]
   commentCollectionRef: FirebaseCollectionRef
+  refetchCommentData: () => Promise<void>
 }
-const CommentTree: FC<Props> = ({ comments, commentCollectionRef }) => {
+const CommentTree: FC<Props> = ({
+  comments,
+  commentCollectionRef,
+  refetchCommentData
+}) => {
   const extendedComments: CommentWithChildren[] = useMemo(() => {
     if (comments.length) {
       const commentWithChildren = comments.reduce(
@@ -45,6 +50,7 @@ const CommentTree: FC<Props> = ({ comments, commentCollectionRef }) => {
             key={comment.commentId}
             comment={comment}
             commentCollectionRef={commentCollectionRef}
+            refetchCommentData={refetchCommentData}
           />
         ))}
     </div>

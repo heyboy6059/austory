@@ -1,4 +1,4 @@
-import { FC, useState, useEffect } from 'react'
+import { FC, useState, useEffect, useCallback } from 'react'
 import CommentTree from './CommentTree'
 import {
   FirebaseDocumentRef,
@@ -19,17 +19,18 @@ const CommentMain: FC<Props> = ({ postRef }) => {
   const [comments, setComments] = useState<Comment[]>([])
 
   console.log({ comments })
+  // REVIEW: move to context?
+  const fetchComments = useCallback(async () => {
+    const allRawComments = await commentCollectionRef.get()
+    setComments(
+      allRawComments.docs.map(comment =>
+        commentToJSON(comment as FirebaseDocumentSnapshot<RawComment>)
+      )
+    )
+  }, [commentCollectionRef])
 
   useEffect(() => {
-    const getAllComments = async () => {
-      const allRawComments = await commentCollectionRef.get()
-      setComments(
-        allRawComments.docs.map(comment =>
-          commentToJSON(comment as FirebaseDocumentSnapshot<RawComment>)
-        )
-      )
-    }
-    getAllComments()
+    fetchComments()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -37,11 +38,16 @@ const CommentMain: FC<Props> = ({ postRef }) => {
     <div>
       <div>{comments.length}개의 댓글</div>
       <div style={{ margin: '15px 5px' }}>
-        <CommentEditor commentCollectionRef={commentCollectionRef} level={1} />
+        <CommentEditor
+          commentCollectionRef={commentCollectionRef}
+          level={1}
+          refetchCommentData={fetchComments}
+        />
       </div>
       <CommentTree
         comments={comments}
         commentCollectionRef={commentCollectionRef}
+        refetchCommentData={fetchComments}
       />
     </div>
   )

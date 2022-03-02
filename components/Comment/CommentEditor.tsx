@@ -20,13 +20,15 @@ interface Props {
   level: number
   //   createComment?: (content: string, level: number) => void
   editComment?: () => void
+  refetchCommentData: () => Promise<void>
 }
 const CommentEditor: FC<Props> = ({
   commentCollectionRef,
   comment,
   level,
   //   createComment,
-  editComment
+  editComment,
+  refetchCommentData
 }) => {
   // TODO: edit
   comment
@@ -58,7 +60,8 @@ const CommentEditor: FC<Props> = ({
         const newComment: RawComment = {
           commentId,
           username,
-          level,
+          // REVIEW: currently supports up to level 1
+          level: level > 1 ? 2 : 1,
           parentCommentId: level === 1 ? null : comment.commentId, // TODO: sub comments
           content,
           deleted: false,
@@ -76,12 +79,17 @@ const CommentEditor: FC<Props> = ({
 
         await batch.commit()
 
+        // refetch comment list in CommentMain
+        await refetchCommentData()
+
         // TODO: only level 1 -> scroll to bottom
-        window.scroll({
-          top: document.body.offsetHeight,
-          left: 0,
-          behavior: 'smooth'
-        })
+        if (level === 1) {
+          window.scroll({
+            top: document.body.offsetHeight,
+            left: 0,
+            behavior: 'smooth'
+          })
+        }
         setContent('')
         toast.success('댓글이 성공적으로 등록 되었습니다.')
       } catch (err) {
@@ -89,7 +97,7 @@ const CommentEditor: FC<Props> = ({
         toast.error('댓글 등록에 실패하였습니다. 다시 시도해주세요.')
       }
     },
-    [comment, commentCollectionRef, level, username]
+    [comment, commentCollectionRef, level, refetchCommentData, username]
   )
   return (
     <div>
