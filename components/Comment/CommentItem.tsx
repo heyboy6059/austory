@@ -3,22 +3,32 @@ import Button from '@mui/material/Button'
 import dayjs from 'dayjs'
 import { COLOURS, KOR_FULL_DATE_FORMAT } from '../../common/constants'
 import { FlexSpaceBetweenCenter } from '../../common/uiComponents'
-import { Comment, FirebaseCollectionRef } from '../../typing/interfaces'
+import {
+  FirebaseCollectionRef,
+  CommentWithChildren
+} from '../../typing/interfaces'
 import CommentEditor from './CommentEditor'
 
 interface Props {
-  comment: Comment
+  comment: CommentWithChildren
   commentCollectionRef: FirebaseCollectionRef
+  isChild?: boolean
+  isLastChild?: boolean
 }
-const CommentItem: FC<Props> = ({ comment, commentCollectionRef }) => {
+const CommentItem: FC<Props> = ({
+  comment,
+  commentCollectionRef,
+  isChild = false,
+  isLastChild = false
+}) => {
   const [commentEditorOpen, setCommentEditorOpen] = useState(false)
-
   return (
     <div
       style={{
         borderTop: `1px solid ${COLOURS.LINE_GREY}`,
         paddingTop: '12px',
-        margin: '10px 0px'
+        margin: '10px 0px',
+        marginLeft: `${isChild ? '15px' : '0px'}`
       }}
     >
       <FlexSpaceBetweenCenter>
@@ -28,15 +38,19 @@ const CommentItem: FC<Props> = ({ comment, commentCollectionRef }) => {
         </small>
       </FlexSpaceBetweenCenter>
       <div style={{ margin: '8px 0' }}>
-        ({comment.level}){comment.content}
+        ({isChild ? 'Child' : 'Parent'}){comment.content}
       </div>
-      {!commentEditorOpen && (
+      {!commentEditorOpen && (!isChild || (isChild && isLastChild)) && (
         <div>
           <Button
-            style={{ padding: '0px', color: COLOURS.TEXT_GREY }}
+            style={{
+              padding: '0px',
+              marginTop: `${isChild ? '6x' : '0px'}`,
+              color: COLOURS.TEXT_GREY
+            }}
             onClick={() => setCommentEditorOpen(true)}
           >
-            답글 작성
+            {isChild ? '추가 답글 작성' : '답글 작성'}
           </Button>
         </div>
       )}
@@ -46,6 +60,20 @@ const CommentItem: FC<Props> = ({ comment, commentCollectionRef }) => {
           level={comment.level + 1}
           comment={comment}
         />
+      )}
+
+      {comment.childComments?.length ? (
+        comment.childComments.map((childComment, i) => (
+          <CommentItem
+            key={childComment.commentId}
+            comment={childComment}
+            commentCollectionRef={commentCollectionRef}
+            isChild={true}
+            isLastChild={comment.childComments.length === i + 1}
+          />
+        ))
+      ) : (
+        <div></div>
       )}
     </div>
   )

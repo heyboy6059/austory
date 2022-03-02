@@ -71,7 +71,6 @@ const CommentEditor: FC<Props> = ({
         }
 
         batch.set(commentCollectionRef.doc(commentId), newComment)
-
         // TODO: add counts in post / user
         // batchUpdateUsers()
 

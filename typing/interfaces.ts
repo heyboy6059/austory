@@ -127,3 +127,7 @@ export type Comment = Omit<RawComment, 'createdAt' | 'updatedAt'> & {
   createdAt: number
   updatedAt: number | null
 }
+
+export interface CommentWithChildren extends Comment {
+  childComments?: CommentWithChildren[]
+}

@@ -1,40 +1,46 @@
 import { FC, useMemo } from 'react'
-import { Comment, FirebaseCollectionRef } from '../../typing/interfaces'
+import {
+  Comment,
+  FirebaseCollectionRef,
+  CommentWithChildren
+} from '../../typing/interfaces'
 import CommentItem from './CommentItem'
 
-interface CommentWithChildren extends Comment {
-  childComments?: CommentWithChildren[]
-}
 interface Props {
   comments: Comment[]
   commentCollectionRef: FirebaseCollectionRef
 }
 const CommentTree: FC<Props> = ({ comments, commentCollectionRef }) => {
-  // console.log({ comments })
-  // console.log('hit!')
+  const extendedComments: CommentWithChildren[] = useMemo(() => {
+    if (comments.length) {
+      const commentWithChildren = comments.reduce(
+        (acc: CommentWithChildren[], current: Comment) => {
+          // no parentCommentId = level 1
+          if (!current.parentCommentId) {
+            acc.push({ ...current, childComments: [] })
+          }
+          // yes parentCommentId = level 2
+          if (current.parentCommentId) {
+            const parentComment = acc.find(
+              parent => parent.commentId === current.parentCommentId
+            )
+            if (parentComment) {
+              parentComment.childComments.push(current)
+            }
+          }
+          return acc
+        },
+        []
+      )
+      return commentWithChildren
+    }
+  }, [comments])
 
-  // TODO: complete extendedComments with childrenTree
-  // const extendedComments: CommentWithChildren[] = useMemo(() => {
-  //   if (comments.length) {
-  //     const commentWithChildren = comments.reduce(
-  //       (acc: CommentWithChildren[], current: Comment) => {
-  //         // if(acc.find(e => e.))
-  //         acc.push(current)
-  //         return acc
-  //       },
-  //       []
-  //     )
-  //     console.log({ commentWithChildren })
-  //     return comments
-  //   }
-  // }, [comments])
-
-  // console.log({ extendedComments })
   return (
     <div>
-      {!comments.length && <div>댓글이 없습니다.</div>}
-      {comments.length &&
-        comments.map(comment => (
+      {!extendedComments?.length && <div>댓글이 없습니다.</div>}
+      {extendedComments?.length &&
+        extendedComments.map(comment => (
           <CommentItem
             key={comment.commentId}
             comment={comment}
