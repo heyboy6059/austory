@@ -21,6 +21,7 @@ interface Props {
   //   createComment?: (content: string, level: number) => void
   editComment?: () => void
   refetchCommentData: () => Promise<void>
+  viewMode?: boolean
 }
 const CommentEditor: FC<Props> = ({
   commentCollectionRef,
@@ -28,7 +29,8 @@ const CommentEditor: FC<Props> = ({
   level,
   //   createComment,
   editComment,
-  refetchCommentData
+  refetchCommentData,
+  viewMode
 }) => {
   // TODO: edit
   comment
@@ -36,18 +38,21 @@ const CommentEditor: FC<Props> = ({
 
   const { username } = useContext(UserContext)
 
-  const [content, setContent] = useState('')
+  const [content, setContent] = useState(comment?.content || '')
   const [initFocus, setInitFocus] = useState(false)
   const [multiRows, setMultiRows] = useState(1)
 
+  // TODO: doesn't look clean code
+  const [internalViewMode, setInternalViewMode] = useState(false)
+
   // increase textField rows for initial click
   useEffect(() => {
-    if (initFocus) {
+    if (initFocus || !viewMode) {
       setMultiRows(3)
     }
-  }, [initFocus])
+  }, [initFocus, viewMode])
 
-  const createComment = useCallback(
+  const createEditComment = useCallback(
     async (content: string) => {
       try {
         if (!content.length) {
@@ -55,79 +60,116 @@ const CommentEditor: FC<Props> = ({
           return
         }
 
-        const commentId = generateCommentId(username)
-        const batch = firestore.batch()
-        const newComment: RawComment = {
-          commentId,
-          username,
-          // REVIEW: currently supports up to level 1
-          level: level > 1 ? 2 : 1,
-          parentCommentId: level === 1 ? null : comment.commentId, // TODO: sub comments
-          content,
-          deleted: false,
-          adminDeleted: false,
-          adminDeletedReason: null,
-          createdBy: username,
-          createdAt: serverTimestamp() as FirestoreTimestamp,
-          updatedBy: null,
-          updatedAt: null
-        }
-
-        batch.set(commentCollectionRef.doc(commentId), newComment)
-        // TODO: add counts in post / user
-        // batchUpdateUsers()
-
-        await batch.commit()
-
-        // refetch comment list in CommentMain
-        await refetchCommentData()
-
-        // TODO: only level 1 -> scroll to bottom
-        if (level === 1) {
-          window.scroll({
-            top: document.body.offsetHeight,
-            left: 0,
-            behavior: 'smooth'
+        // viewMode is really good value to check?
+        if (!viewMode) {
+          const batch = firestore.batch()
+          batch.update(commentCollectionRef.doc(comment.commentId), {
+            content,
+            updatedBy: username,
+            updatedAt: serverTimestamp() as FirestoreTimestamp
           })
+
+          await batch.commit()
+
+          await refetchCommentData()
+
+          setInternalViewMode(true)
+
+          toast.success('댓글이 성공적으로 수정 되었습니다.')
         }
-        setContent('')
-        toast.success('댓글이 성공적으로 등록 되었습니다.')
+
+        // create new comment
+        if (viewMode) {
+          const commentId = generateCommentId(username)
+          const batch = firestore.batch()
+          const newComment: RawComment = {
+            commentId,
+            username,
+            // REVIEW: currently supports up to level 1
+            level: level > 1 ? 2 : 1,
+            parentCommentId: level === 1 ? null : comment.commentId, // TODO: sub comments
+            content,
+            deleted: false,
+            adminDeleted: false,
+            adminDeletedReason: null,
+            createdBy: username,
+            createdAt: serverTimestamp() as FirestoreTimestamp,
+            updatedBy: null,
+            updatedAt: null
+          }
+
+          batch.set(commentCollectionRef.doc(commentId), newComment)
+          // TODO: add counts in post / user
+          // batchUpdateUsers()
+
+          await batch.commit()
+
+          // refetch comment list in CommentMain
+          await refetchCommentData()
+
+          // TODO: only level 1 -> scroll to bottom
+          if (level === 1) {
+            window.scroll({
+              top: document.body.offsetHeight,
+              left: 0,
+              behavior: 'smooth'
+            })
+          }
+          setContent('')
+          toast.success('댓글이 성공적으로 등록 되었습니다.')
+        }
       } catch (err) {
         console.error(`Error in CommentEditor. ErrorMsg: ${err.message}`)
         toast.error('댓글 등록에 실패하였습니다. 다시 시도해주세요.')
       }
     },
-    [comment, commentCollectionRef, level, refetchCommentData, username]
+    [
+      comment,
+      commentCollectionRef,
+      level,
+      refetchCommentData,
+      username,
+      viewMode
+    ]
   )
   return (
     <div>
-      <TextField
-        id="outlined-multiline-flexible"
-        label="댓글을 입력해주세요"
-        multiline
-        fullWidth
-        rows={multiRows}
-        value={content}
-        onChange={e => setContent(e.target.value)}
-        onFocus={() => !initFocus && setInitFocus(true)}
-      />
-      <FlexSpaceBetweenCenter style={{ margin: '6px' }}>
-        <div>
-          <small>
-            {content.length} / {COMMENT_CONTENT_MAX_COUNT}
-          </small>
-        </div>
-        <div>
-          <Button
-            size="small"
-            color="info"
-            variant="outlined"
-            onClick={() => createComment(content)}
-          >
-            등록
-          </Button>
-        </div>
-      </FlexSpaceBetweenCenter>
+      {
+        // viewMode is coming from parent / internalViewMode sets to true after edit the comment
+        viewMode || internalViewMode ? (
+          <div style={{ margin: '8px 0' }}>{comment.content}</div>
+        ) : (
+          <>
+            <TextField
+              id="outlined-multiline-flexible"
+              label="댓글을 입력해주세요"
+              multiline
+              fullWidth
+              rows={multiRows}
+              value={content}
+              onChange={e => (viewMode ? null : setContent(e.target.value))}
+              onFocus={() => !initFocus && setInitFocus(true)}
+            />
+            <FlexSpaceBetweenCenter style={{ margin: '6px' }}>
+              <div>
+                <small>
+                  {content.length} / {COMMENT_CONTENT_MAX_COUNT}
+                </small>
+              </div>
+              <div>
+                <Button
+                  size="small"
+                  color="info"
+                  variant="outlined"
+                  onClick={() => createEditComment(content)}
+                >
+                  등록
+                </Button>
+              </div>
+            </FlexSpaceBetweenCenter>
+          </>
+        )
+      }
     </div>
   )
 }

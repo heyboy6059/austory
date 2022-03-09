@@ -15,10 +15,9 @@ interface Props {
 const CommentMain: FC<Props> = ({ postRef }) => {
   const commentCollectionRef = postRef.collection('comments')
 
-  console.log('Comment Main')
   const [comments, setComments] = useState<Comment[]>([])
 
-  console.log({ comments })
+  // TODO: edit / remove comment
   // REVIEW: move to context?
   const fetchComments = useCallback(async () => {
     const allRawComments = await commentCollectionRef.get()
