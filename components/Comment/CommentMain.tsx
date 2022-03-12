@@ -44,6 +44,7 @@ const CommentMain: FC<Props> = ({ postRef }) => {
           commentCollectionRef={commentCollectionRef}
           level={1}
           refetchCommentData={fetchComments}
+          createMode={true}
         />
       </div>
       <CommentTree

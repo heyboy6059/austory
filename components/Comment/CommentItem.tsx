@@ -40,7 +40,8 @@ const CommentItem: FC<Props> = ({
   const { post } = useContext(PostContext)
 
   const [commentEditorOpen, setCommentEditorOpen] = useState(false)
-  const noChildComments = useMemo(
+
+  const hasChildComments = useMemo(
     () => comment.childComments?.length,
     [comment]
   )
@@ -83,6 +84,7 @@ const CommentItem: FC<Props> = ({
     }
   }, [comment, commentCollectionRef, post, refetchCommentData, user, username])
 
+  console.log({ commentEditorOpen })
   return (
     <>
       <div
@@ -111,10 +113,8 @@ const CommentItem: FC<Props> = ({
                     <>
                       <Tooltip title="수정" placement="bottom" arrow>
                         <EditIcon
-                          // fontSize="small"
+                          fontSize="small"
                           onClick={() => {
-                            // // router.push(`/post/edit/${post.slug}`)
-                            // alert('hey')
                             setEditMode(true)
                           }}
                           style={{ cursor: 'pointer', color: '#0770bb' }}
@@ -143,30 +143,35 @@ const CommentItem: FC<Props> = ({
               editMode={editMode}
               setEditMode={setEditMode}
             />
-            {!commentEditorOpen && !isChild && !noChildComments && (
-              <div>
-                <Button
-                  style={{
-                    padding: '0px',
-                    color: COLOURS.TEXT_GREY
-                  }}
-                  onClick={() => setCommentEditorOpen(true)}
-                >
-                  {'답글 작성'}
-                </Button>
-              </div>
-            )}
-            {commentEditorOpen && !noChildComments && (
+
+            {
+              // top level comment
+              !commentEditorOpen && !isChild && !hasChildComments && (
+                <div>
+                  <Button
+                    style={{
+                      padding: '0px',
+                      color: COLOURS.TEXT_GREY
+                    }}
+                    onClick={() => setCommentEditorOpen(true)}
+                  >
+                    {'답글 작성'}
+                  </Button>
+                </div>
+              )
+            }
+            {commentEditorOpen && !hasChildComments && (
               <CommentEditor
                 commentCollectionRef={commentCollectionRef}
                 level={comment.level + 1}
                 comment={comment}
                 refetchCommentData={refetchCommentData}
                 createMode={true}
+                createCallback={() => setCommentEditorOpen(false)}
               />
             )}
 
-            {noChildComments ? (
+            {hasChildComments ? (
               <div>
                 {comment.childComments.map(childComment => (
                   <CommentItem
