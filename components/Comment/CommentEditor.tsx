@@ -10,9 +10,11 @@ import {
   RawComment
 } from '../../typing/interfaces'
 import { generateCommentId } from '../../common/idHelper'
-import { firestore, serverTimestamp } from '../../common/firebase'
-import { UserContext } from '../../common/context'
+import { firestore, increment, serverTimestamp } from '../../common/firebase'
+import { PostContext, UserContext } from '../../common/context'
 import toast from 'react-hot-toast'
+import { batchUpdatePosts, batchUpdateUsers } from '../../common/update'
+import { getUidByUsername } from '../../common/get'
 
 interface Props {
   commentCollectionRef: FirebaseCollectionRef
@@ -21,7 +23,11 @@ interface Props {
   //   createComment?: (content: string, level: number) => void
   editComment?: () => void
   refetchCommentData: () => Promise<void>
+  // TODO: mode type = 'view' | 'edit' | 'create'
   viewMode?: boolean
+  editMode?: boolean
+  createMode?: boolean
+  createCallback?: () => void
 }
 const CommentEditor: FC<Props> = ({
   commentCollectionRef,
@@ -30,15 +36,22 @@ const CommentEditor: FC<Props> = ({
   //   createComment,
   editComment,
   refetchCommentData,
-  viewMode
+  viewMode,
+  editMode,
+  createMode,
+  createCallback
 }) => {
   // TODO: edit
   comment
   editComment
 
-  const { username } = useContext(UserContext)
+  const { user, username } = useContext(UserContext)
+  const { post } = useContext(PostContext)
 
-  const [content, setContent] = useState(comment?.content || '')
+  // REVIEW: is this clean?
+  const [content, setContent] = useState(
+    createMode ? '' : comment?.content || ''
+  )
   const [initFocus, setInitFocus] = useState(false)
   const [multiRows, setMultiRows] = useState(1)
 
@@ -52,6 +65,7 @@ const CommentEditor: FC<Props> = ({
     }
   }, [initFocus, viewMode])
 
+  // TODO: refactor this callback function
   const createEditComment = useCallback(
     async (content: string) => {
       try {
@@ -60,8 +74,7 @@ const CommentEditor: FC<Props> = ({
           return
         }
 
-        // viewMode is really good value to check?
-        if (!viewMode) {
+        if (editMode) {
           const batch = firestore.batch()
           batch.update(commentCollectionRef.doc(comment.commentId), {
             content,
@@ -79,7 +92,8 @@ const CommentEditor: FC<Props> = ({
         }
 
         // create new comment
-        if (viewMode) {
+        // REVIEW: is this check clean?
+        if (!editMode || createMode) {
           const commentId = generateCommentId(username)
           const batch = firestore.batch()
           const newComment: RawComment = {
@@ -99,15 +113,32 @@ const CommentEditor: FC<Props> = ({
           }
 
           batch.set(commentCollectionRef.doc(commentId), newComment)
-          // TODO: add counts in post / user
-          // batchUpdateUsers()
+
+          // add count 1 to current user
+          batchUpdateUsers(batch, user.uid, {
+            providedCommentCountTotal: increment(1)
+          })
+
+          const { uid: ownerUserId } = await getUidByUsername(post.username)
+
+          // add count 1 to post owner
+          batchUpdateUsers(batch, ownerUserId, {
+            receivedCommentCountTotal: increment(1)
+          })
+
+          // add count 1 to post
+          batchUpdatePosts(batch, post.slug, username, {
+            commentCount: increment(1)
+          })
 
           await batch.commit()
 
           // refetch comment list in CommentMain
           await refetchCommentData()
 
-          // TODO: only level 1 -> scroll to bottom
+          createCallback && createCallback()
+
+          // only level 1 => moves scroll to bottom
           if (level === 1) {
             window.scroll({
               top: document.body.offsetHeight,
@@ -124,14 +155,19 @@ const CommentEditor: FC<Props> = ({
       }
     },
     [
-      comment,
+      editMode,
+      createMode,
       commentCollectionRef,
-      level,
-      refetchCommentData,
+      comment,
       username,
-      viewMode
+      refetchCommentData,
+      level,
+      user,
+      post,
+      createCallback
     ]
   )
+
   return (
     <div>
       {

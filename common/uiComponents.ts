@@ -1,5 +1,6 @@
 import styled from 'styled-components'
 import Image from 'next/image'
+import { COLOURS } from './constants'
 
 export const FlexCenterDiv = styled.div`
   display: flex;
@@ -44,4 +45,9 @@ export const LogoImage = styled(Image)({
 export const H1 = styled.div`
   font-size: 2rem;
   margin: 10px 0px;
+`
+
+export const GreyText = styled.span`
+  color: ${COLOURS.TEXT_GREY};
+  font-style: italic;
 `

@@ -96,7 +96,8 @@ export type RawPost = {
   isTest: boolean
 }
 
-export type Post = Omit<RawPost, 'createdAt' | 'updatedAt'> & {
+export type Post = Omit<RawPost, 'createdAt' | 'updatedAt' | 'commentCount'> & {
+  commentCount: number | firebase.firestore.FieldValue
   createdAt: number
   updatedAt: number | null
 }

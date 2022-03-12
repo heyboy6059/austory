@@ -34,3 +34,8 @@ export enum FileExt {
 }
 
 export const COMMENT_CONTENT_MAX_COUNT = 300
+
+//FIRESTORE COLLECTION NAMES
+export const FIRESTORE_USERNAMES = 'usernames'
+export const FIRESTORE_POSTS = 'posts'
+export const FIRESTORE_USERS = 'users'

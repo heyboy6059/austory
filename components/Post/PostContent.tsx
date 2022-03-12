@@ -29,7 +29,7 @@ import {
   FlexVerticalCenterDiv,
   H1
 } from '../../common/uiComponents'
-import { UserContext } from '../../common/context'
+import { PostContext, UserContext } from '../../common/context'
 import { firestore, increment, serverTimestamp } from '../../common/firebase'
 // import Linky from "react-linky"
 import Linkify from 'react-linkify'
@@ -239,7 +239,12 @@ const PostContent: FC<PostContentProps> = ({
           <HeartButton postRef={postRef} heartCount={post.heartCount} />
         </AuthCheck> */}
         </div>
-        <CommentMain postRef={postRef} />
+        {/**
+         * POST CONTEXT FOR COMMENTS
+         */}
+        <PostContext.Provider value={{ post }}>
+          <CommentMain postRef={postRef} />
+        </PostContext.Provider>
         {setDeleteAlertOpen && (
           <ConfirmDialog
             open={deleteAlertOpen}
