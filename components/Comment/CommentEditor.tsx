@@ -1,4 +1,12 @@
-import { FC, useState, useEffect, useCallback, useContext } from 'react'
+import {
+  FC,
+  useState,
+  useEffect,
+  useCallback,
+  useContext,
+  Dispatch,
+  SetStateAction
+} from 'react'
 import TextField from '@mui/material/TextField'
 import Button from '@mui/material/Button'
 import { COMMENT_CONTENT_MAX_COUNT } from '../../common/constants'
@@ -13,7 +21,11 @@ import { generateCommentId } from '../../common/idHelper'
 import { firestore, increment, serverTimestamp } from '../../common/firebase'
 import { PostContext, UserContext } from '../../common/context'
 import toast from 'react-hot-toast'
-import { batchUpdatePosts, batchUpdateUsers } from '../../common/update'
+import {
+  batchUpdateComments,
+  batchUpdatePosts,
+  batchUpdateUsers
+} from '../../common/update'
 import { getUidByUsername } from '../../common/get'
 
 interface Props {
@@ -26,6 +38,7 @@ interface Props {
   // TODO: mode type = 'view' | 'edit' | 'create'
   viewMode?: boolean
   editMode?: boolean
+  setEditMode?: Dispatch<SetStateAction<boolean>>
   createMode?: boolean
   createCallback?: () => void
 }
@@ -38,6 +51,7 @@ const CommentEditor: FC<Props> = ({
   refetchCommentData,
   viewMode,
   editMode,
+  setEditMode,
   createMode,
   createCallback
 }) => {
@@ -58,6 +72,13 @@ const CommentEditor: FC<Props> = ({
   // TODO: doesn't look clean code
   const [internalViewMode, setInternalViewMode] = useState(false)
 
+  // TODO: dirty solution?
+  useEffect(() => {
+    if (internalViewMode && editMode) {
+      setInternalViewMode(false)
+    }
+  }, [editMode, internalViewMode])
+
   // increase textField rows for initial click
   useEffect(() => {
     if (initFocus || !viewMode) {
@@ -76,17 +97,23 @@ const CommentEditor: FC<Props> = ({
 
         if (editMode) {
           const batch = firestore.batch()
-          batch.update(commentCollectionRef.doc(comment.commentId), {
-            content,
-            updatedBy: username,
-            updatedAt: serverTimestamp() as FirestoreTimestamp
-          })
+          batchUpdateComments(
+            batch,
+            commentCollectionRef,
+            comment.commentId,
+            username,
+            {
+              content
+            }
+          )
 
           await batch.commit()
 
           await refetchCommentData()
 
+          // TODO: maybe these are dirty state management
           setInternalViewMode(true)
+          setEditMode(false)
 
           toast.success('댓글이 성공적으로 수정 되었습니다.')
         }
@@ -161,6 +188,7 @@ const CommentEditor: FC<Props> = ({
       comment,
       username,
       refetchCommentData,
+      setEditMode,
       level,
       user,
       post,

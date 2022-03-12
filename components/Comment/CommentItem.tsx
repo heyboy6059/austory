@@ -9,15 +9,19 @@ import {
 } from '../../common/uiComponents'
 import {
   FirebaseCollectionRef,
-  CommentWithChildren,
-  FirestoreTimestamp
+  CommentWithChildren
 } from '../../typing/interfaces'
 import CommentEditor from './CommentEditor'
-import { UserContext } from '../../common/context'
+import { PostContext, UserContext } from '../../common/context'
 import EditIcon from '@mui/icons-material/Edit'
 import DeleteIcon from '@mui/icons-material/Delete'
 import Tooltip from '@mui/material/Tooltip'
-import { serverTimestamp } from '../../common/firebase'
+import { firestore } from '../../common/firebase'
+import toast from 'react-hot-toast'
+import {
+  batchUpdateCommentCounts,
+  batchUpdateComments
+} from '../../common/update'
 
 interface Props {
   comment: CommentWithChildren
@@ -32,7 +36,8 @@ const CommentItem: FC<Props> = ({
   refetchCommentData,
   isChild = false
 }) => {
-  const { username, isAdmin } = useContext(UserContext)
+  const { user, username, isAdmin } = useContext(UserContext)
+  const { post } = useContext(PostContext)
 
   const [commentEditorOpen, setCommentEditorOpen] = useState(false)
   const noChildComments = useMemo(
@@ -43,14 +48,40 @@ const CommentItem: FC<Props> = ({
   const [editMode, setEditMode] = useState(false)
 
   const removeComment = useCallback(async () => {
-    await commentCollectionRef.doc(comment.commentId).update({
-      deleted: true,
-      updatedBy: username,
-      updatedAt: serverTimestamp() as FirestoreTimestamp
-    })
+    try {
+      const confirmRes = confirm('이 댓글을 정말로 지우시겠습니까?')
+      // user says NO
+      if (!confirmRes) return
 
-    await refetchCommentData()
-  }, [comment, commentCollectionRef, refetchCommentData, username])
+      const batch = firestore.batch()
+      batchUpdateComments(
+        batch,
+        commentCollectionRef,
+        comment.commentId,
+        username,
+        {
+          deleted: true
+        }
+      )
+
+      await batchUpdateCommentCounts(
+        batch,
+        'remove',
+        user.uid,
+        username,
+        post.username,
+        post.slug
+      )
+
+      await batch.commit()
+
+      await refetchCommentData()
+      toast.success('댓글이 삭제 되었습니다.')
+    } catch (err) {
+      console.error(`Error in removeComment. ErrorMsg: ${err.message}`)
+      toast.error(`댓글 삭제에 실패했습니다. 다시 시도해주세요.`)
+    }
+  }, [comment, commentCollectionRef, post, refetchCommentData, user, username])
 
   return (
     <>
@@ -110,6 +141,7 @@ const CommentItem: FC<Props> = ({
               refetchCommentData={refetchCommentData}
               viewMode={!editMode}
               editMode={editMode}
+              setEditMode={setEditMode}
             />
             {!commentEditorOpen && !isChild && !noChildComments && (
               <div>
