@@ -1,19 +1,13 @@
-import {
-  getUserWithUsername,
-  postToJSON,
-  userToJSON
-} from '../../common/firebase'
+import { getUserWithUsername, userToJSON } from '../../common/firebase'
 import UserProfile from '../../components/UserProfile'
-import PostFeed from '../../components/Post/PostFeed'
 import {
   FirebaseDocumentSnapshot,
-  Post,
   RawUser,
   User
 } from '../../typing/interfaces'
 import { FlexCenterDiv } from '../../common/uiComponents'
-import WarningIcon from '@mui/icons-material/Warning'
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings'
+import { FC } from 'react'
 
 export const getServerSideProps = async ({ query }) => {
   const { username } = query
@@ -49,7 +43,10 @@ export const getServerSideProps = async ({ query }) => {
   }
 }
 
-const UserProfilePage = ({ user }) => {
+interface Props {
+  user: User
+}
+const UserProfilePage: FC<Props> = ({ user }) => {
   const isAdmin = user.isAdmin
   return (
     <main>
@@ -60,11 +57,26 @@ const UserProfilePage = ({ user }) => {
           <AdminPanelSettingsIcon style={{ color: 'orange' }} />
         </FlexCenterDiv>
       )}
-      <h3 style={{ textAlign: 'center' }}>내가 쓴 글 보기</h3>
+
+      {/* <h3 style={{ textAlign: 'center' }}>내가 쓴 글 보기</h3> */}
       <FlexCenterDiv style={{ height: '100%' }}>
         <div style={{ textAlign: 'center' }}>
-          <WarningIcon style={{ color: 'orange' }} fontSize="large" />
-          <div>준비중 입니다.</div>
+          <div style={{ color: 'red' }}>TODO: username 변경하기</div>
+          <div style={{ color: 'red' }}>TODO: 로그아웃</div>
+          {/* <WarningIcon style={{ color: 'orange' }} fontSize="large" /> */}
+          <div>내가 작성한 글 개수</div>
+          <div>{user.myPostCountTotal}</div>
+          <div>내가 작성한 댓글 개수</div>
+          <div>{user.providedCommentCountTotal}</div>
+          <div>내가 누른 하트 개수</div>
+          <div>{user.providedHeartCountTotal}</div>
+          <div>-------</div>
+          <div>내 글에 달린 댓글 총 개수</div>
+          <div>{user.receivedCommentCountTotal}</div>
+          <div>내 글에 달린 하트 총 개수</div>
+          <div>{user.receivedCommentCountTotal}</div>
+          <div>내가 쓴 글 총 조회수</div>
+          <div>{user.receivedViewCountTotal}</div>
         </div>
       </FlexCenterDiv>
       {/* <PostFeed posts={posts} /> */}
