@@ -20,7 +20,10 @@ const CommentMain: FC<Props> = ({ postRef }) => {
   // TODO: edit / remove comment
   // REVIEW: move to context?
   const fetchComments = useCallback(async () => {
-    const allRawComments = await commentCollectionRef.get()
+    const allRawComments = await commentCollectionRef
+      .orderBy('level', 'asc')
+      .orderBy('createdAt', 'desc')
+      .get()
     setComments(
       allRawComments.docs.map(comment =>
         commentToJSON(comment as FirebaseDocumentSnapshot<RawComment>)

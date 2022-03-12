@@ -166,13 +166,13 @@ const CommentEditor: FC<Props> = ({
           createCallback && createCallback()
 
           // only level 1 => moves scroll to bottom
-          if (level === 1) {
-            window.scroll({
-              top: document.body.offsetHeight,
-              left: 0,
-              behavior: 'smooth'
-            })
-          }
+          // if (level === 1) {
+          //   window.scroll({
+          //     top: document.body.offsetHeight,
+          //     left: 0,
+          //     behavior: 'smooth'
+          //   })
+          // }
           setContent('')
           toast.success('댓글이 성공적으로 등록 되었습니다.')
         }
