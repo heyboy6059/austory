@@ -89,3 +89,23 @@ export const batchUpdateCommentCounts = async (
     commentCount: increment(incrementalValue)
   })
 }
+
+/**
+ * Update user provided/receivedViewCountTotal
+ * @param batch
+ * @param currentUserId
+ * @param postOwnerUserId
+ */
+export const batchUpdateViewCounts = (
+  batch: firebase.firestore.WriteBatch,
+  currentUserId: string,
+  postOwnerUserId: string
+) => {
+  batchUpdateUsers(batch, currentUserId, {
+    providedViewCountTotal: increment(1)
+  })
+
+  batchUpdateUsers(batch, postOwnerUserId, {
+    receivedViewCountTotal: increment(1)
+  })
+}

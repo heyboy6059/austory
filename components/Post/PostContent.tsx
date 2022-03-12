@@ -38,7 +38,7 @@ import ConfirmDialog from '../../components/Dialog/ConfirmDialog'
 import toast from 'react-hot-toast'
 import Metatags from '../Metatags'
 import Heart from '../Heart'
-import { batchUpdateUsers } from '../../common/update'
+import { batchUpdateUsers, batchUpdateViewCounts } from '../../common/update'
 import CommentMain from '../Comment/CommentMain'
 
 // import { Editor, EditorState, ContentState } from "draft-js"
@@ -65,12 +65,16 @@ const PostContent: FC<PostContentProps> = ({
   // add viewCount in post
   useEffect(() => {
     const addViewCount = async () => {
-      await postRef.update({
+      const batch = firestore.batch()
+      batch.update(postRef, {
         viewCount: post.viewCount + 1
+        // no updatedBy, updatedAt
       })
+      batchUpdateViewCounts(batch, user.uid, post.uid)
+      await batch.commit()
     }
     addViewCount()
-  }, [postRef, post])
+  }, [postRef, post, user])
 
   const removePost = useCallback(async () => {
     const batch = firestore.batch()
