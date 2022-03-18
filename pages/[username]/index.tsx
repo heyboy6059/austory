@@ -8,6 +8,8 @@ import {
 import { FlexCenterDiv } from '../../common/uiComponents'
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings'
 import { FC } from 'react'
+import Button from '@mui/material/Button'
+import { useRouter } from 'next/router'
 
 export const getServerSideProps = async ({ query }) => {
   const { username } = query
@@ -47,15 +49,28 @@ interface Props {
   user: User
 }
 const UserProfilePage: FC<Props> = ({ user }) => {
+  const router = useRouter()
+
   const isAdmin = user.isAdmin
   return (
     <main>
       <UserProfile user={user} />
       {isAdmin && (
-        <FlexCenterDiv style={{ margin: '15px 0px' }}>
-          <span>관리자</span>
-          <AdminPanelSettingsIcon style={{ color: 'orange' }} />
-        </FlexCenterDiv>
+        <>
+          <FlexCenterDiv style={{ margin: '15px 0px 0px 0px' }}>
+            <span>관리자</span>
+            <AdminPanelSettingsIcon style={{ color: 'orange' }} />
+          </FlexCenterDiv>
+          <FlexCenterDiv>
+            <Button
+              variant="outlined"
+              style={{ margin: '10px 0px' }}
+              onClick={() => router.push('/admin')}
+            >
+              관리자 페이지로 이동
+            </Button>
+          </FlexCenterDiv>
+        </>
       )}
 
       {/* <h3 style={{ textAlign: 'center' }}>내가 쓴 글 보기</h3> */}
