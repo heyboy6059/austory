@@ -5,7 +5,8 @@ export enum COLOURS {
   PRIMARY_WHITE = '#d6d6d6',
   LIGHT_BACKGROUND = 'f5f5f7',
   LINE_GREY = '#D3D3D3',
-  DARK_BLUE = '#10508D'
+  DARK_BLUE = '#10508D',
+  GREEN = '#72CC50'
 }
 
 export const POST_FEED_NUM_LIMIT = 10
@@ -13,6 +14,8 @@ export const POST_FEED_NUM_LIMIT = 10
 export const KOR_MONTH_DAY_FORMAT = 'MM월 DD일 h:mm A'
 
 export const KOR_FULL_DATE_FORMAT = 'YYYY년 MM월 DD일 h:mm A'
+
+export const KOR_DATE_WITHOUT_TIME_FORMAT = 'YYYY년 MM월 DD일'
 
 export const MAX_WIDTH_PX = 700
 
