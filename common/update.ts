@@ -15,7 +15,7 @@ export const batchUpdateUsers = (
   userId: string,
   changes: Partial<User>
 ): void => {
-  const userRef = firestore.collection(FIRESTORE_USERS).doc(userId)
+  const userRef = firestore.collection(FIRESTORE_USERS).doc(userId.trim())
   batch.update(userRef, {
     ...changes,
     updatedAt: serverTimestamp() as FirestoreTimestamp
