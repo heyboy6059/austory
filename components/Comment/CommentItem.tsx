@@ -172,7 +172,14 @@ const CommentItem: FC<Props> = ({
                       padding: '0px',
                       color: COLOURS.TEXT_GREY
                     }}
-                    onClick={() => setCommentEditorOpen(true)}
+                    onClick={() => {
+                      if (!username) {
+                        alert('로그인 후 댓글 작성이 가능 합니다.')
+                        // TODO: open login/sign up modal
+                        return
+                      }
+                      setCommentEditorOpen(true)
+                    }}
                   >
                     {'답글 작성'}
                   </Button>
@@ -208,7 +215,14 @@ const CommentItem: FC<Props> = ({
                       // marginTop: '6px',
                       color: COLOURS.TEXT_GREY
                     }}
-                    onClick={() => setCommentEditorOpen(true)}
+                    onClick={() => {
+                      if (!username) {
+                        alert('로그인 후 댓글 작성이 가능 합니다.')
+                        // TODO: open login/sign up modal
+                        return
+                      }
+                      setCommentEditorOpen(true)
+                    }}
                   >
                     추가 답글 작성
                   </Button>

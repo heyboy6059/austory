@@ -24,6 +24,11 @@ const Heart: FC<Props> = ({ postId, heartCount, username }) => {
 
   const addRemoveHeart = useCallback(
     async (addOrRemove: 'add' | 'remove') => {
+      if (!username) {
+        alert('로그인 후 사용 가능합니다.')
+        // TODO: open login/sign up modal
+        return
+      }
       const incrementValue = addOrRemove === 'add' ? 1 : -1
 
       const batch = firestore.batch()

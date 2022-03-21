@@ -39,6 +39,7 @@ import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings'
 // import MasksIcon from '@mui/icons-material/Masks'
 import Tooltip from '@mui/material/Tooltip'
 import CovidInfoDialog from './CovidInfoDialog'
+import router from 'next/router'
 
 // Top navbar
 export default function Navbar() {
@@ -165,19 +166,26 @@ export default function Navbar() {
                     onClick={() => setCovidInfoOpen(true)}
                   />
                 </Tooltip> */}
-                <Link href="/post/write" passHref>
-                  <a>
-                    <Tooltip title="글쓰기" placement="bottom" arrow>
-                      <DriveFileRenameOutlineIcon
-                        style={{
-                          cursor: 'pointer',
-                          fontSize: '28px',
-                          color: 'rebeccapurple'
-                        }}
-                      />
-                    </Tooltip>
-                  </a>
-                </Link>
+                {/* <Link href="/post/write" passHref> */}
+                {/* <a> */}
+                <Tooltip title="글쓰기" placement="bottom" arrow>
+                  <DriveFileRenameOutlineIcon
+                    onClick={() => {
+                      if (!username) {
+                        alert('로그인 후 글쓰기가 가능합니다.')
+                        return
+                      }
+                      router.push('/post/write')
+                    }}
+                    style={{
+                      cursor: 'pointer',
+                      fontSize: '28px',
+                      color: 'rebeccapurple'
+                    }}
+                  />
+                </Tooltip>
+                {/* </a> */}
+                {/* </Link> */}
 
                 {username ? (
                   // signed in user has username

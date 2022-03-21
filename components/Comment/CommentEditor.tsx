@@ -227,7 +227,14 @@ const CommentEditor: FC<Props> = ({
                   size="small"
                   color="info"
                   variant="outlined"
-                  onClick={() => createEditComment(content)}
+                  onClick={() => {
+                    if (!username) {
+                      alert('로그인 후 댓글 작성이 가능 합니다.')
+                      // TODO: open login/sign up modal
+                      return
+                    }
+                    createEditComment(content)
+                  }}
                 >
                   등록
                 </Button>
