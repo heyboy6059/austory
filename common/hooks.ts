@@ -1,11 +1,16 @@
-import { auth, firestore } from './firebase'
+import { auth, firestore, userToJSON } from './firebase'
 import { useEffect, useState } from 'react'
 import { useAuthState } from 'react-firebase-hooks/auth'
-import { User } from '../typing/interfaces'
+import {
+  FirebaseDocumentSnapshot,
+  RawUser,
+  UserDataContext
+} from '../typing/interfaces'
 
 // Custom hook to read auth record and user profile doc
-export function useUserData() {
-  const [user] = useAuthState(auth)
+export const useUserData = (): UserDataContext => {
+  const [userAuth] = useAuthState(auth)
+  const [user, setUser] = useState(null)
   const [username, setUsername] = useState<string>(null)
   const [isAdmin, setIsAdmin] = useState<boolean>(false)
 
@@ -13,19 +18,25 @@ export function useUserData() {
     // turn off realtime subscription
     let unsubscribe
 
-    if (user) {
-      const ref = firestore.collection('users').doc(user.uid)
+    if (userAuth) {
+      console.log('Initial Auth Update - UserDataContext')
+      const ref = firestore.collection('users').doc(userAuth.uid)
       unsubscribe = ref.onSnapshot(doc => {
-        const userData = doc.data() as User
+        const userData = userToJSON(doc as FirebaseDocumentSnapshot<RawUser>)
         setUsername(userData?.username)
         setIsAdmin(userData?.isAdmin)
+        setUser(userData)
       })
     } else {
+      console.log('No Auth.')
+      // username null means no login
       setUsername(null)
+      setUser(null)
+      setIsAdmin(null)
     }
 
     return unsubscribe
-  }, [user])
+  }, [userAuth])
 
-  return { user, username, isAdmin }
+  return { user, userAuth, username, isAdmin }
 }

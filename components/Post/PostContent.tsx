@@ -61,10 +61,14 @@ const PostContent: FC<PostContentProps> = ({
   )
 
   const [deleteAlertOpen, setDeleteAlertOpen] = useState(false)
+  const [addedViewCount, setAddedViewCount] = useState(false)
 
   // add viewCount in post
   useEffect(() => {
     const addViewCount = async () => {
+      console.log(
+        'Added count 1 to Post.viewCount, (current)User.providedViewCountTotal, (post owner)User.receivedViewCountTotal'
+      )
       const batch = firestore.batch()
       batch.update(postRef, {
         viewCount: post.viewCount + 1
@@ -73,8 +77,11 @@ const PostContent: FC<PostContentProps> = ({
       batchUpdateViewCounts(batch, user.uid, post.uid)
       await batch.commit()
     }
-    addViewCount()
-  }, [postRef, post, user])
+    if (postRef && post && user && !addedViewCount) {
+      addViewCount()
+      setAddedViewCount(true)
+    }
+  }, [postRef, post, user, addedViewCount])
 
   const removePost = useCallback(async () => {
     const batch = firestore.batch()

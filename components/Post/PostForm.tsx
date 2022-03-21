@@ -33,7 +33,6 @@ const PostForm: FC<Props> = ({ editPost }) => {
   const { user, username } = useContext(UserContext)
   const isEditMode = !!editPost
 
-  console.log({ editPost })
   const {
     handleSubmit,
     control,
@@ -61,57 +60,62 @@ const PostForm: FC<Props> = ({ editPost }) => {
   })
 
   const onSubmit = async (data: PostWrite) => {
-    // EDIT
-    if (isEditMode) {
-      const docSlug = editPost.slug
+    try {
+      // EDIT
+      if (isEditMode) {
+        const docSlug = editPost.slug
 
-      const postRef = firestore.collection('posts').doc(docSlug)
-      await postRef.update({
-        ...data,
-        excerpt: generateExcerpt(data.content, 50),
-        updatedAt: serverTimestamp()
-      })
-      toast.success('게시물 업데이트가 완료 되었습니다.')
-    }
-    // CREATE
-    if (!isEditMode) {
-      const docSlug = `${user.email.split('@')[0]}-${dayjs().unix()}`
+        const postRef = firestore.collection('posts').doc(docSlug)
+        await postRef.update({
+          ...data,
+          excerpt: generateExcerpt(data.content, 50),
+          updatedAt: serverTimestamp()
+        })
+        toast.success('게시물 업데이트가 완료 되었습니다.')
+      }
+      // CREATE
+      if (!isEditMode) {
+        const docSlug = `${user.email.split('@')[0]}-${dayjs().unix()}`
 
-      const postRef = firestore.collection('posts').doc(docSlug)
+        const postRef = firestore.collection('posts').doc(docSlug)
 
-      const post: RawPost = {
-        slug: docSlug,
-        uid: auth.currentUser.uid,
-        username,
-        title: data.title,
-        content: data.content,
-        excerpt: generateExcerpt(data.content, 50),
-        deleted: false,
-        heartCount: 0,
-        viewCount: 0,
-        commentCount: 0,
-        images: data.images,
-        categories: [],
-        createdBy: username,
-        createdAt: serverTimestamp() as FirestoreTimestamp,
-        updatedBy: null,
-        updatedAt: null,
-        isTest: data.isTest
+        const post: RawPost = {
+          slug: docSlug,
+          uid: auth.currentUser.uid,
+          username,
+          title: data.title,
+          content: data.content,
+          excerpt: generateExcerpt(data.content, 50),
+          deleted: false,
+          heartCount: 0,
+          viewCount: 0,
+          commentCount: 0,
+          images: data.images,
+          categories: [],
+          createdBy: username,
+          createdAt: serverTimestamp() as FirestoreTimestamp,
+          updatedBy: null,
+          updatedAt: null,
+          isTest: data.isTest
+        }
+
+        const batch = firestore.batch()
+        batch.set(postRef, post)
+
+        batchUpdateUsers(batch, user.uid, {
+          myPostCountTotal: increment(1)
+        })
+
+        await batch.commit()
+
+        toast.success('게시물이 성공적으로 등록 되었습니다.')
       }
 
-      const batch = firestore.batch()
-      batch.set(postRef, post)
-
-      batchUpdateUsers(batch, user.uid, {
-        myPostCountTotal: increment(1)
-      })
-
-      await batch.commit()
-
-      toast.success('게시물이 성공적으로 등록 되었습니다.')
+      router.push('/')
+    } catch (err) {
+      console.error(`Error in PostForm create/edit. ${err.message}`)
+      toast.error('에러가 발생했습니다. 다시 시도해주세요.')
     }
-
-    router.push('/')
   }
 
   return (

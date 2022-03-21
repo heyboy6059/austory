@@ -26,7 +26,8 @@ const Admin: FC = () => {
 
   useEffect(() => {
     if (!userData?.length) {
-      const fetchUserData = async () => {
+      const fetchAllUserData = async () => {
+        console.log('Fetch all user data')
         const usersQuery = firestore
           .collection(FIRESTORE_USERS)
           .orderBy('createdAt', 'desc')
@@ -37,7 +38,7 @@ const Admin: FC = () => {
           )
         )
       }
-      fetchUserData()
+      fetchAllUserData()
     }
   }, [userData])
 

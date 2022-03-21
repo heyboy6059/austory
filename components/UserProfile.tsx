@@ -1,25 +1,24 @@
-import { FC } from 'react'
-import { User } from '../typing/interfaces'
+import { FC, useContext } from 'react'
 import Image from 'next/image'
 import styled from 'styled-components'
+import { UserContext } from '../common/context'
 
+const RoundedImageWrapper = styled.div`
+  width: 50px;
+  margin: auto;
+  img {
+    border-radius: 50px;
+  }
+`
 // UI component for user profile
-const UserProfile: FC<{
-  user: User
-}> = ({ user }) => {
-  const RoundedImageWrapper = styled.div`
-    width: 50px;
-    margin: auto;
-    img {
-      border-radius: 50px;
-    }
-  `
+const UserProfile: FC = () => {
+  const { userAuth, user } = useContext(UserContext)
 
-  return (
+  return user ? (
     <div className="box-center">
       <RoundedImageWrapper>
         <Image
-          src={user.photoURL || '/hacker.png'}
+          src={userAuth?.photoURL || '/hacker.png'}
           alt="유저 사진"
           width={'100%'}
           height={'100%'}
@@ -30,6 +29,8 @@ const UserProfile: FC<{
       </p>
       <h1>{user.username || '등록되지 않은 유저'}</h1>
     </div>
+  ) : (
+    <div>유저를 찾지 못했습니다.</div>
   )
 }
 

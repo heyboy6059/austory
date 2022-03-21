@@ -96,6 +96,7 @@ const CommentEditor: FC<Props> = ({
         }
 
         if (editMode) {
+          console.log('Edit comment')
           const batch = firestore.batch()
           batchUpdateComments(
             batch,
@@ -121,6 +122,7 @@ const CommentEditor: FC<Props> = ({
         // create new comment
         // REVIEW: is this check clean?
         if (!editMode || createMode) {
+          console.log('Create comment')
           const commentId = generateCommentId(username)
           const batch = firestore.batch()
           const newComment: RawComment = {

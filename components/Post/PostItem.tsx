@@ -94,14 +94,16 @@ const PostItem: FC<{
           <div style={{ width: '100px', cursor: 'pointer' }}>
             {post.images?.[0]?.thumbnail100?.url ? (
               <Link href={`/post/${post.slug}`} passHref>
-                <Image
-                  src={post.images[0].thumbnail100?.url}
-                  alt=""
-                  width={'100%'}
-                  height={'100%'}
-                  layout="responsive"
-                  objectFit="contain"
-                />
+                <a>
+                  <Image
+                    src={post.images[0].thumbnail100?.url}
+                    alt=""
+                    width={'100%'}
+                    height={'100%'}
+                    layout="responsive"
+                    objectFit="contain"
+                  />
+                </a>
               </Link>
             ) : (
               ``

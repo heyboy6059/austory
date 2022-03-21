@@ -36,26 +36,26 @@ import Button from '@mui/material/Button'
 // import AccountBoxIcon from "@mui/icons-material/AccountBox"
 import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutline'
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings'
-import MasksIcon from '@mui/icons-material/Masks'
+// import MasksIcon from '@mui/icons-material/Masks'
 import Tooltip from '@mui/material/Tooltip'
 import CovidInfoDialog from './CovidInfoDialog'
 
 // Top navbar
 export default function Navbar() {
-  const { user, username, isAdmin } = useContext(UserContext)
+  const { userAuth, username, isAdmin } = useContext(UserContext)
   const [covidInfoOpen, setCovidInfoOpen] = useState(false)
 
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
+  // const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
 
-  const [openDrawer, setOpenDrawer] = useState(false)
+  // const [openDrawer, setOpenDrawer] = useState(false)
 
-  const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget)
-  }
+  // const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
+  //   setAnchorEl(event.currentTarget)
+  // }
 
-  const handleClose = () => {
-    setAnchorEl(null)
-  }
+  // const handleClose = () => {
+  //   setAnchorEl(null)
+  // }
 
   // const toggleDrawer = useCallback(
   //   (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
@@ -138,12 +138,14 @@ export default function Navbar() {
           >
             <FlexCenterDiv>
               <Link href={`/`} passHref>
-                <LogoImage
-                  src={Logo}
-                  width={100}
-                  height={40}
-                  alt="InKRAU logo png file"
-                />
+                <a>
+                  <LogoImage
+                    src={Logo}
+                    width={100}
+                    height={40}
+                    alt="InKRAU logo png file"
+                  />
+                </a>
               </Link>
             </FlexCenterDiv>
 
@@ -164,39 +166,45 @@ export default function Navbar() {
                   />
                 </Tooltip> */}
                 <Link href="/post/write" passHref>
-                  <Tooltip title="글쓰기" placement="bottom" arrow>
-                    <DriveFileRenameOutlineIcon
-                      style={{
-                        cursor: 'pointer',
-                        fontSize: '28px',
-                        color: 'rebeccapurple'
-                      }}
-                    />
-                  </Tooltip>
+                  <a>
+                    <Tooltip title="글쓰기" placement="bottom" arrow>
+                      <DriveFileRenameOutlineIcon
+                        style={{
+                          cursor: 'pointer',
+                          fontSize: '28px',
+                          color: 'rebeccapurple'
+                        }}
+                      />
+                    </Tooltip>
+                  </a>
                 </Link>
 
                 {username ? (
                   // signed in user has username
                   <Link href={`/${username}`} passHref>
-                    <UserImage
-                      width={30}
-                      height={30}
-                      src={user?.photoURL}
-                      alt="user photo"
-                    />
+                    <a>
+                      <UserImage
+                        width={30}
+                        height={30}
+                        src={userAuth?.photoURL || '/hacker.png'}
+                        alt="user photo"
+                      />
+                    </a>
                   </Link>
                 ) : (
                   <Link href="/enter" passHref>
-                    <Button
-                      size="medium"
-                      color="info"
-                      style={{
-                        color: COLOURS.PRIMARY_SPACE_GREY,
-                        padding: '0px'
-                      }}
-                    >
-                      LOG IN
-                    </Button>
+                    <a>
+                      <Button
+                        size="medium"
+                        color="info"
+                        style={{
+                          color: COLOURS.PRIMARY_SPACE_GREY,
+                          padding: '0px'
+                        }}
+                      >
+                        LOG IN
+                      </Button>
+                    </a>
                   </Link>
                 )}
                 {isAdmin && (

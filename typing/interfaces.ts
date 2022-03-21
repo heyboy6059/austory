@@ -1,4 +1,5 @@
 import firebase from 'firebase/compat/app'
+import { User as FirebaseUserAuth } from '@firebase/auth-types'
 
 export type FirebaseDocumentSnapshot<T = firebase.firestore.DocumentData> =
   firebase.firestore.QueryDocumentSnapshot<T>
@@ -131,4 +132,11 @@ export type Comment = Omit<RawComment, 'createdAt' | 'updatedAt'> & {
 
 export interface CommentWithChildren extends Comment {
   childComments?: CommentWithChildren[]
+}
+
+export interface UserDataContext {
+  userAuth: FirebaseUserAuth
+  user: User
+  username: string
+  isAdmin: boolean
 }

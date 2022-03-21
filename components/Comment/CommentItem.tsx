@@ -84,7 +84,6 @@ const CommentItem: FC<Props> = ({
     }
   }, [comment, commentCollectionRef, post, refetchCommentData, user, username])
 
-  console.log({ commentEditorOpen })
   return (
     <>
       <div
@@ -95,8 +94,28 @@ const CommentItem: FC<Props> = ({
           marginLeft: `${isChild ? '15px' : '0px'}`
         }}
       >
+        {/**
+         * Deleted comment
+         *  - still displays all children
+         *  - don't show add more comments
+         */}
         {comment.deleted ? (
-          <GreyText>삭제된 댓글 입니다.</GreyText>
+          <>
+            <GreyText>삭제된 댓글 입니다.</GreyText>
+            {hasChildComments ? (
+              comment.childComments.map(childComment => (
+                <CommentItem
+                  key={childComment.commentId}
+                  comment={childComment}
+                  commentCollectionRef={commentCollectionRef}
+                  refetchCommentData={refetchCommentData}
+                  isChild={true}
+                />
+              ))
+            ) : (
+              <></>
+            )}
+          </>
         ) : (
           <>
             <FlexSpaceBetweenCenter>

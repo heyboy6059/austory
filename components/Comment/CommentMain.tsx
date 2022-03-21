@@ -17,9 +17,9 @@ const CommentMain: FC<Props> = ({ postRef }) => {
 
   const [comments, setComments] = useState<Comment[]>([])
 
-  // TODO: edit / remove comment
   // REVIEW: move to context?
   const fetchComments = useCallback(async () => {
+    console.log('Fetch all comments')
     const allRawComments = await commentCollectionRef
       .orderBy('level', 'asc')
       .orderBy('createdAt', 'desc')

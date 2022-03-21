@@ -1,5 +1,5 @@
 import debounce from 'lodash.debounce'
-import { useCallback, useContext, useEffect, useMemo, useState } from 'react'
+import { useCallback, useContext, useEffect, useState } from 'react'
 import { UserContext } from '../common/context'
 import {
   auth,
@@ -17,16 +17,17 @@ import { FlexCenterDiv } from '../common/uiComponents'
 import toast from 'react-hot-toast'
 import { useRouter } from 'next/router'
 
-export default function Enter(props) {
-  const { user, username } = useContext(UserContext)
+export default function Enter() {
+  const { userAuth, user, username } = useContext(UserContext)
   const router = useRouter()
 
   // route user to home page if account is already registered
   useEffect(() => {
-    if (user && username) {
+    if (userAuth && username) {
+      console.log('redirecting to Home page')
       router.push('/')
     }
-  }, [router, user, username])
+  }, [router, userAuth, username])
 
   // 1. user signed out <SignInButton />
   // 2. user signed in, but missing username <UsernameForm />
@@ -71,38 +72,39 @@ function SignInButton() {
 }
 
 // Sign out button
-function SignOutButton() {
-  return <button onClick={() => auth.signOut()}>Sign Out</button>
-}
+// function SignOutButton() {
+//   return <button onClick={() => auth.signOut()}>Sign Out</button>
+// }
 
 function UsernameForm() {
   const router = useRouter()
 
   const [inkrauUsername, setInkrauUsername] = useState('')
+  // TODO: implement marketingEmail
   const [isMarketingEmail, setIsMarketingEmail] = useState(false)
 
   const [isNotValid, setIsNotValid] = useState(false)
   const [isExistInDB, setIsExistInDB] = useState(false)
-  const [loading, setLoading] = useState(false)
+  // const [loading, setLoading] = useState(false)
 
-  const { user, username } = useContext(UserContext)
+  const { userAuth, user, username } = useContext(UserContext)
 
   const onSubmit = async e => {
     e.preventDefault()
 
     try {
       // Create refs for both documents
-      const userDoc = firestore.doc(`users/${user.uid}`)
+      const userDoc = firestore.doc(`users/${userAuth.uid}`)
       const usernameDoc = firestore.doc(`usernames/${inkrauUsername}`)
 
       // Commit both docs together as a batch write
       const batch = firestore.batch()
       batch.set(userDoc, {
-        uid: user.uid,
+        uid: userAuth.uid,
         username: inkrauUsername,
-        photoURL: user.photoURL,
-        displayName: user.displayName,
-        email: user.email,
+        photoURL: userAuth.photoURL,
+        displayName: userAuth.displayName,
+        email: userAuth.email,
         providedHeartCountTotal: 0,
         receivedHeartCountTotal: 0,
         myPostCountTotal: 0,
@@ -119,7 +121,7 @@ function UsernameForm() {
         disabledAt: null
       } as RawUser)
       batch.set(usernameDoc, {
-        uid: user.uid
+        uid: userAuth.uid
       })
 
       await batch.commit()
@@ -159,11 +161,11 @@ function UsernameForm() {
   const checkUsername = useCallback(
     debounce(async username => {
       if (username.length > 3) {
+        console.log('checkUsername...')
         const ref = firestore.doc(`usernames/${username}`)
         const { exists } = await ref.get()
-        console.log('Firestore read executed!')
         setIsExistInDB(exists)
-        setLoading(false)
+        // setLoading(false)
       }
     }, 500),
     []

@@ -1,7 +1,7 @@
-import { getUserWithUsername, postToJSON } from "../../common/firebase"
-import UserProfile from "../../components/UserProfile"
-import PostFeed from "../../components/Post/PostFeed"
-import { Post, RawUser } from "../../typing/interfaces"
+import { getUserWithUsername, postToJSON } from '../../common/firebase'
+import UserProfile from '../../components/UserProfile'
+import PostFeed from '../../components/Post/PostFeed'
+import { RawUser } from '../../typing/interfaces'
 
 export const getServerSideProps = async ({ query }) => {
   const { username } = query
@@ -11,7 +11,7 @@ export const getServerSideProps = async ({ query }) => {
   // If no user, short circuit to 404 page
   if (!userDoc) {
     return {
-      notFound: true,
+      notFound: true
     }
   }
 
@@ -23,24 +23,23 @@ export const getServerSideProps = async ({ query }) => {
     // REVIEW: is it okay to cast?
     user = userDoc.data() as RawUser
     const postsQuery = userDoc.ref
-      .collection("posts")
-      .where("published", "==", true)
-      .orderBy("createdAt", "desc")
+      .collection('posts')
+      .where('published', '==', true)
+      .orderBy('createdAt', 'desc')
       .limit(5)
 
-    console.log("hit!!!!")
     posts = (await postsQuery.get()).docs.map(postToJSON)
   }
 
   return {
-    props: { user, posts },
+    props: { user, posts }
   }
 }
 
 const UserProfilePage = ({ user, posts }) => {
   return (
     <main>
-      <UserProfile user={user} />
+      <UserProfile />
       <PostFeed posts={posts} />
     </main>
   )
