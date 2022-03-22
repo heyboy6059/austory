@@ -3,6 +3,7 @@ import { useCallback, useContext, useEffect, useState } from 'react'
 import { UserContext } from '../common/context'
 import {
   auth,
+  facebookAuthProvider,
   firestore,
   googleAuthProvider,
   serverTimestamp
@@ -63,11 +64,19 @@ function SignInButton() {
   const signInWithGoogle = async () => {
     await auth.signInWithPopup(googleAuthProvider)
   }
+  const signInWithFacebook = async () => {
+    await auth.signInWithPopup(facebookAuthProvider)
+  }
 
   return (
-    <button className="btn-google" onClick={signInWithGoogle}>
-      <img src={'/google.png'} /> Google 로그인
-    </button>
+    <>
+      <button className="btn-google" onClick={signInWithGoogle}>
+        <img src={'/google.png'} /> Google 로그인
+      </button>
+      <button className="btn-google" onClick={signInWithFacebook}>
+        Facebook 로그인
+      </button>
+    </>
   )
 }
 
