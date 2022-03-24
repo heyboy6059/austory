@@ -3,27 +3,38 @@ import { Post } from '../../typing/interfaces'
 import PostItem from './PostItem'
 import Box from '@mui/material/Box'
 import { UserContext } from '../../common/context'
+import InfiniteScroll from 'react-infinite-scroller'
+import Loader from '../Loader'
 
 // TODO: posts interface
 const PostFeed: FC<{
   posts: Post[]
+  loadMore: () => Promise<void>
+  hasMore: boolean
   ownerUser?: boolean
-}> = ({ posts, ownerUser }): JSX.Element => {
+}> = ({ posts, loadMore, hasMore, ownerUser }): JSX.Element => {
   const { isAdmin } = useContext(UserContext)
   return (
     <Box>
-      {posts
-        ? isAdmin
-          ? posts.map(post => (
-              <PostItem post={post} key={post.slug} ownerUser={ownerUser} />
-            ))
-          : // filter test posts out for non admin users
-            posts
-              .filter(p => !p.isTest)
-              .map(post => (
+      <InfiniteScroll
+        pageStart={0}
+        loadMore={loadMore}
+        hasMore={hasMore}
+        loader={<Loader show={true} key={0} />}
+      >
+        {posts
+          ? isAdmin
+            ? posts.map(post => (
                 <PostItem post={post} key={post.slug} ownerUser={ownerUser} />
               ))
-        : null}
+            : // filter test posts out for non admin users
+              posts
+                .filter(p => !p.isTest)
+                .map(post => (
+                  <PostItem post={post} key={post.slug} ownerUser={ownerUser} />
+                ))
+          : null}
+      </InfiniteScroll>
     </Box>
   )
 }

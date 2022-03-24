@@ -1,9 +1,6 @@
 import { useState } from 'react'
 import PostFeed from '../components/Post/PostFeed'
-import Loader from '../components/Loader'
 import { firestore, fromMillis, postToJSON } from '../common/firebase'
-
-import Button from '@mui/material/Button'
 
 import { COLOURS, POST_FEED_NUM_LIMIT } from '../common/constants'
 import { FlexCenterDiv } from '../common/uiComponents'
@@ -29,12 +26,12 @@ export const getServerSideProps = async context => {
 
 const Home = props => {
   const [posts, setPosts] = useState(props.posts)
-  const [loading, setLoading] = useState(false)
+  // const [loading, setLoading] = useState(false)
 
   const [postsEnd, setPostsEnd] = useState(false)
 
   const getMorePosts = async () => {
-    setLoading(true)
+    // setLoading(true)
     const last = posts[posts.length - 1]
 
     const cursor =
@@ -52,7 +49,7 @@ const Home = props => {
     const newPosts = (await query.get()).docs.map(postToJSON)
 
     setPosts(posts.concat(newPosts))
-    setLoading(false)
+    // setLoading(false)
 
     if (newPosts.length < POST_FEED_NUM_LIMIT) {
       setPostsEnd(true)
@@ -64,16 +61,16 @@ const Home = props => {
       <Head>
         <title>inKRAU 인크라우</title>
       </Head>
-      <PostFeed posts={posts} />
+      <PostFeed posts={posts} loadMore={getMorePosts} hasMore={!postsEnd} />
 
       <FlexCenterDiv style={{ marginBottom: '10px' }}>
-        {!loading && !postsEnd && (
+        {/* {!loading && !postsEnd && (
           <Button onClick={getMorePosts}>Load more</Button>
-        )}
+        )} */}
         {postsEnd && '더 이상 읽을 글이 없습니다.'}
       </FlexCenterDiv>
 
-      <Loader show={loading} />
+      {/* <Loader show={loading} /> */}
       <ScrollToTop showUnder={300} style={{ bottom: 25, right: 15 }}>
         <span>
           <ArrowCircleUpIcon
