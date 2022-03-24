@@ -66,10 +66,11 @@ function SignInButton() {
   }
   const signInWithFacebook = async () => {
     try {
+      facebookAuthProvider.addScope('email')
       const authRes = await auth.signInWithPopup(facebookAuthProvider)
-      console.log({authRes})
+      console.log({ authRes })
       const user = authRes.user
-      console.log({user})
+      console.log({ user })
       console.log('END')
     } catch (err) {
       console.error(`ERROR!!!!! ${err.message}`)
