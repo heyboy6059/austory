@@ -40,7 +40,7 @@ const UserProfilePage = ({ user, posts }) => {
   return (
     <main>
       <UserProfile />
-      <PostFeed posts={posts} />
+      {/* <PostFeed posts={posts} /> */}
     </main>
   )
 }
