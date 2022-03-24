@@ -17,6 +17,8 @@ import { FirestoreTimestamp, RawUser } from '../typing/interfaces'
 import { FlexCenterDiv } from '../common/uiComponents'
 import toast from 'react-hot-toast'
 import { useRouter } from 'next/router'
+import Stack from '@mui/material/Stack'
+import Image from 'next/image'
 
 export default function Enter() {
   const { userAuth, user, username } = useContext(UserContext)
@@ -61,34 +63,72 @@ export default function Enter() {
 
 // Sign in with Google button
 function SignInButton() {
-  const signInWithGoogle = async () => {
-    await auth.signInWithPopup(googleAuthProvider)
-  }
-  const signInWithFacebook = async () => {
+  const signInWithPopup = async (provider: 'Google' | 'Facebook' | 'Apple') => {
     try {
-      facebookAuthProvider.addScope('email')
-      // const authRes =
-      await auth.signInWithPopup(facebookAuthProvider).then(result => {
-        console.log('here!')
-        console.log({ result })
-      })
-      // console.log({ authRes })
-      // const user = authRes.user
-      // console.log({ user })
-      console.log('END')
+      const authProvider =
+        provider === 'Google'
+          ? googleAuthProvider
+          : provider === 'Facebook' && facebookAuthProvider
+      // : new Error('Provider not found.')
+
+      const authRes = await auth.signInWithPopup(authProvider)
+      console.log({ authRes })
+      console.log(`Successfully signed in with ${provider} popup.`)
     } catch (err) {
-      console.error(`ERROR!!!!! ${err.message}`)
+      console.error(`Error in signInWithPopup. ${err.message}`)
+      if (
+        !err.message.includes(
+          'The popup has been closed by the user before finalizing the operation.'
+        )
+      ) {
+        toast.error('로그인에 실패했습니다. 다시 시도해주세요.')
+      }
     }
   }
 
   return (
     <>
-      <button className="btn-google" onClick={signInWithGoogle}>
-        <img src={'/google.png'} /> Google 로그인
-      </button>
-      <button className="btn-google" onClick={signInWithFacebook}>
-        Facebook 로그인
-      </button>
+      <Stack spacing={2}>
+        <FlexCenterDiv
+          style={{
+            gap: '5px',
+            backgroundColor: 'white',
+            width: '250px',
+            height: '60px',
+            cursor: 'pointer'
+          }}
+          onClick={() => signInWithPopup('Google')}
+        >
+          <Image src={'/google.png'} width={30} height={30} />
+          Google 로그인
+        </FlexCenterDiv>
+        <FlexCenterDiv
+          style={{
+            gap: '5px',
+            backgroundColor: 'white',
+            width: '250px',
+            height: '60px',
+            cursor: 'pointer'
+          }}
+          onClick={() => signInWithPopup('Facebook')}
+        >
+          <Image src={'/facebook.png'} width={30} height={30} />
+          Facebook 로그인
+        </FlexCenterDiv>
+        <FlexCenterDiv
+          style={{
+            gap: '5px',
+            backgroundColor: 'white',
+            width: '250px',
+            height: '60px',
+            cursor: 'pointer'
+          }}
+          onClick={() => alert('준비중 입니다.')}
+        >
+          <Image src={'/apple.png'} width={30} height={30} />
+          Apple 로그인
+        </FlexCenterDiv>
+      </Stack>
     </>
   )
 }
