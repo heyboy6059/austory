@@ -65,7 +65,15 @@ function SignInButton() {
     await auth.signInWithPopup(googleAuthProvider)
   }
   const signInWithFacebook = async () => {
-    await auth.signInWithPopup(facebookAuthProvider)
+    try {
+      const authRes = await auth.signInWithPopup(facebookAuthProvider)
+      console.log({authRes})
+      const user = authRes.user
+      console.log({user})
+      console.log('END')
+    } catch (err) {
+      console.error(`ERROR!!!!! ${err.message}`)
+    }
   }
 
   return (
