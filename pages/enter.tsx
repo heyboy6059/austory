@@ -19,6 +19,7 @@ import toast from 'react-hot-toast'
 import { useRouter } from 'next/router'
 import Stack from '@mui/material/Stack'
 import Image from 'next/image'
+import { NotificationMethod } from '../typing/enums'
 
 export default function Enter() {
   const { userAuth, user, username } = useContext(UserContext)
@@ -142,7 +143,6 @@ function UsernameForm() {
   const router = useRouter()
 
   const [inkrauUsername, setInkrauUsername] = useState('')
-  // TODO: implement marketingEmail
   const [isMarketingEmail, setIsMarketingEmail] = useState(false)
 
   const [isNotValid, setIsNotValid] = useState(false)
@@ -177,6 +177,7 @@ function UsernameForm() {
         disabled: false,
         isAdmin: false,
         isMarketingEmail,
+        notificationMethod: NotificationMethod.EMAIL,
         role: 'Base',
         createdAt: serverTimestamp() as FirestoreTimestamp,
         updatedAt: null,
@@ -260,7 +261,7 @@ function UsernameForm() {
             fullWidth
             margin="normal"
             disabled={true}
-            value={user.email}
+            value={userAuth.email}
           />
           <TextField
             required={true}
@@ -276,12 +277,12 @@ function UsernameForm() {
           {inkrauUsername?.length < 2 && inkrauUsername !== user.displayName && (
             // display it inkrauUsername is not equals to displayName
             <Chip
-              label={`기존 이메일 프로필 사용. ${user.displayName}`}
+              label={`기존 이메일 프로필 사용. ${userAuth.displayName}`}
               variant="outlined"
               color="success"
               size="small"
               onClick={() => {
-                setInkrauUsername(user.displayName)
+                setInkrauUsername(userAuth.displayName)
                 setIsNotValid(false)
               }}
             />
@@ -295,7 +296,13 @@ function UsernameForm() {
 
           <div style={{ margin: '20px 0' }}>
             <FormControlLabel
-              control={<Checkbox />}
+              control={
+                <Checkbox
+                  onChange={e => {
+                    setIsMarketingEmail(e.target.checked)
+                  }}
+                />
+              }
               label={
                 <span style={{ fontSize: '0.8rem' }}>
                   인크라우가 제공하는 알림, 호주 소식, 정보 등을 이메일로 받아

@@ -1,5 +1,6 @@
 import firebase from 'firebase/compat/app'
 import { User as FirebaseUserAuth } from '@firebase/auth-types'
+import { NotificationMethod } from './enums'
 
 export type FirebaseDocumentSnapshot<T = firebase.firestore.DocumentData> =
   firebase.firestore.QueryDocumentSnapshot<T>
@@ -30,6 +31,8 @@ export type RawUser = {
   disabled: boolean
   isAdmin: boolean
   isMarketingEmail: boolean
+  //
+  notificationMethod: NotificationMethod
   role: Role
   createdAt: FirestoreTimestamp
   updatedAt: FirestoreTimestamp | null
