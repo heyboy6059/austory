@@ -63,9 +63,9 @@ const PostForm: FC<Props> = ({ editPost }) => {
     try {
       // EDIT
       if (isEditMode) {
-        const docSlug = editPost.slug
+        const postId = editPost.postId
 
-        const postRef = firestore.collection('posts').doc(docSlug)
+        const postRef = firestore.collection('posts').doc(postId)
         await postRef.update({
           ...data,
           excerpt: generateExcerpt(data.content, 50),
@@ -75,12 +75,12 @@ const PostForm: FC<Props> = ({ editPost }) => {
       }
       // CREATE
       if (!isEditMode) {
-        const docSlug = `${user.email.split('@')[0]}-${dayjs().unix()}`
+        const postId = `${user.email.split('@')[0]}-${dayjs().unix()}`
 
-        const postRef = firestore.collection('posts').doc(docSlug)
+        const postRef = firestore.collection('posts').doc(postId)
 
         const post: RawPost = {
-          slug: docSlug,
+          postId,
           uid: auth.currentUser.uid,
           username,
           title: data.title,

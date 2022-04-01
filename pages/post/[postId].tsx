@@ -77,7 +77,9 @@ import {
 // }
 
 export const getServerSideProps = async context => {
-  const query = firestore.collection('posts').doc(context.params.slug as string)
+  const query = firestore
+    .collection('posts')
+    .doc(context.params.postId as string)
 
   const queryDoc = await query.get()
 

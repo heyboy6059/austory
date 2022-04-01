@@ -46,7 +46,7 @@ function CreateNewPost() {
   const [title, setTitle] = useState('')
 
   // Ensure slug is URL safe
-  const slug = encodeURI(kebabCase(title))
+  const postId = encodeURI(kebabCase(title))
 
   // Validate length
   const isValid = title.length > 3 && title.length < 100
@@ -59,12 +59,12 @@ function CreateNewPost() {
       .collection('users')
       .doc(uid)
       .collection('posts')
-      .doc(slug)
+      .doc(postId)
 
     // Tip: give all fields a default value here
     const data = {
       title,
-      slug,
+      postId,
       uid,
       username,
       published: false,
@@ -79,7 +79,7 @@ function CreateNewPost() {
     toast.success('Post created!')
 
     // Imperative navigation after doc is set
-    router.push(`/dashboard/${slug}`)
+    router.push(`/dashboard/${postId}`)
   }
 
   return (
@@ -91,7 +91,7 @@ function CreateNewPost() {
         className={styles.input}
       />
       <p>
-        <strong>Slug:</strong> {slug}
+        <strong>Slug:</strong> {postId}
       </p>
       <button type="submit" disabled={!isValid} className="btn-green">
         Create New Post

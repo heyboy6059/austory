@@ -156,7 +156,7 @@ const CommentEditor: FC<Props> = ({
           })
 
           // add count 1 to post
-          batchUpdatePosts(batch, post.slug, username, {
+          batchUpdatePosts(batch, post.postId, username, {
             commentCount: increment(1)
           })
 

@@ -1,16 +1,16 @@
-import { FC } from "react"
-import { firestore, postToJSON } from "../../../common/firebase"
-import PostForm from "../../../components/Post/PostForm"
+import { FC } from 'react'
+import { firestore, postToJSON } from '../../../common/firebase'
+import PostForm from '../../../components/Post/PostForm'
 import {
   FirebaseDocumentSnapshot,
   Post,
-  RawPost,
-} from "../../../typing/interfaces"
+  RawPost
+} from '../../../typing/interfaces'
 
 export const getServerSideProps = async ({ query }) => {
-  const { slug } = query
+  const { postId } = query
 
-  const docRef = firestore.collection("posts").doc(slug)
+  const docRef = firestore.collection('posts').doc(postId)
   const docSnapshot = await docRef.get()
   const post: Post = postToJSON(
     docSnapshot as FirebaseDocumentSnapshot<RawPost>
@@ -18,8 +18,8 @@ export const getServerSideProps = async ({ query }) => {
 
   return {
     props: {
-      post,
-    },
+      post
+    }
   }
 }
 

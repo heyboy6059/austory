@@ -52,7 +52,7 @@ const PostContent: FC<PostContentProps> = ({
   post
   // postRef
 }) => {
-  const postRef = firestore.collection('posts').doc(post.slug)
+  const postRef = firestore.collection('posts').doc(post.postId)
   const { user, username, isAdmin } = useContext(UserContext)
   const router = useRouter()
   const isPostOwner = useMemo(
@@ -143,7 +143,7 @@ const PostContent: FC<PostContentProps> = ({
                   <EditIcon
                     // fontSize="small"
                     onClick={() => {
-                      router.push(`/post/edit/${post.slug}`)
+                      router.push(`/post/edit/${post.postId}`)
                     }}
                     style={{ cursor: 'pointer', color: '#0770bb' }}
                   />
@@ -237,7 +237,7 @@ const PostContent: FC<PostContentProps> = ({
           }}
         >
           <Heart
-            postId={post.slug}
+            postId={post.postId}
             heartCount={post.heartCount}
             username={username}
           />

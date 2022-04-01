@@ -62,7 +62,7 @@ const CommentMain: FC<Props> = ({ postRef }) => {
         updatedBy: user.uid
       }
 
-      await updatePost(post.slug, changes)
+      await updatePost(post.postId, changes)
     },
     [post, user]
   )

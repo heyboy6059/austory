@@ -30,13 +30,17 @@ const PostFeed: FC<{
         {posts
           ? isAdmin
             ? posts.map(post => (
-                <PostItem post={post} key={post.slug} ownerUser={ownerUser} />
+                <PostItem post={post} key={post.postId} ownerUser={ownerUser} />
               ))
             : // filter test posts out for non admin users
               posts
                 .filter(p => !p.isTest)
                 .map(post => (
-                  <PostItem post={post} key={post.slug} ownerUser={ownerUser} />
+                  <PostItem
+                    post={post}
+                    key={post.postId}
+                    ownerUser={ownerUser}
+                  />
                 ))
           : null}
       </InfiniteScroll>

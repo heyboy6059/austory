@@ -1,25 +1,25 @@
-import styles from "../../styles/Post.module.css"
-import PostContent from "../../components/Post/PostContent"
+import styles from '../../styles/Post.module.css'
+import PostContent from '../../components/Post/PostContent'
 import {
   firestore,
   getUserWithUsername,
   postToJSON,
-  tempPostToJSON,
-} from "../../common/firebase"
-import { useDocumentData } from "react-firebase-hooks/firestore"
-import AuthCheck from "../../components/AuthCheck"
-import HeartButton from "../../components/HeartButton"
-import Link from "next/link"
+  tempPostToJSON
+} from '../../common/firebase'
+import { useDocumentData } from 'react-firebase-hooks/firestore'
+import AuthCheck from '../../components/AuthCheck'
+import HeartButton from '../../components/HeartButton'
+import Link from 'next/link'
 
 export async function getStaticProps({ params }) {
-  const { username, slug } = params
+  const { username, postId } = params
   const userDoc = await getUserWithUsername(username)
 
   let post
   let path
 
   if (userDoc) {
-    const postRef = userDoc.ref.collection("posts").doc(slug)
+    const postRef = userDoc.ref.collection('posts').doc(postId)
     post = tempPostToJSON(await postRef.get())
 
     path = postRef.path
@@ -27,18 +27,18 @@ export async function getStaticProps({ params }) {
 
   return {
     props: { post, path },
-    revalidate: 5000,
+    revalidate: 5000
   }
 }
 
 export async function getStaticPaths() {
   // Improve my using Admin SDK to select empty docs
-  const snapshot = await firestore.collectionGroup("posts").get()
+  const snapshot = await firestore.collectionGroup('posts').get()
 
-  const paths = snapshot.docs.map((doc) => {
-    const { slug, username } = doc.data()
+  const paths = snapshot.docs.map(doc => {
+    const { postId, username } = doc.data()
     return {
-      params: { username, slug },
+      params: { username, postId }
     }
   })
 
@@ -48,7 +48,7 @@ export async function getStaticPaths() {
     //   { params: { username, slug }}
     // ],
     paths,
-    fallback: "blocking",
+    fallback: 'blocking'
   }
 }
 

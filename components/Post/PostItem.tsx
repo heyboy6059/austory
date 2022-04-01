@@ -53,7 +53,7 @@ const PostItem: FC<{
             }}
           >
             <div style={{ display: 'flex', alignItems: 'center' }}>
-              <Link href={`/post/${post.slug}`} passHref>
+              <Link href={`/post/${post.postId}`} passHref>
                 <Typography
                   style={{
                     fontSize: '20px',
@@ -74,7 +74,7 @@ const PostItem: FC<{
                 cursor: 'pointer'
               }}
             >
-              <Link href={`/post/${post.slug}`} passHref>
+              <Link href={`/post/${post.postId}`} passHref>
                 <Typography>
                   {post.excerpt ? `${post.excerpt}` : post.content}
                 </Typography>
@@ -82,7 +82,7 @@ const PostItem: FC<{
 
               {ownerUser && (
                 <>
-                  <Link href={`/dashboard/${post.slug}`} passHref>
+                  <Link href={`/dashboard/${post.postId}`} passHref>
                     <h3>
                       <button className="btn-blue">Edit</button>
                     </h3>
@@ -93,7 +93,7 @@ const PostItem: FC<{
           </GridDiv>
           <div style={{ width: '100px', cursor: 'pointer' }}>
             {post.images?.[0]?.thumbnail100?.url ? (
-              <Link href={`/post/${post.slug}`} passHref>
+              <Link href={`/post/${post.postId}`} passHref>
                 <a>
                   <Image
                     src={post.images[0].thumbnail100?.url}

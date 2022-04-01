@@ -75,7 +75,7 @@ export const batchUpdateComments = (
  * @param currentUserId or uid
  * @param currentUsername
  * @param postUsername
- * @param postId or post.slug
+ * @param postId
  */
 export const batchUpdateCommentCounts = async (
   batch: firebase.firestore.WriteBatch,

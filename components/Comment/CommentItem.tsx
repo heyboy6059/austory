@@ -71,7 +71,7 @@ const CommentItem: FC<Props> = ({
         user.uid,
         username,
         post.username,
-        post.slug
+        post.postId
       )
 
       await batch.commit()

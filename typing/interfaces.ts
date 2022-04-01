@@ -76,7 +76,7 @@ export type Image = {
 }
 
 export type RawPost = {
-  slug: string // email(before @) + unix timestamp = documentId
+  postId: string // email(before @) + unix timestamp = documentId
   uid: string // userId
   username: string
   title: string
