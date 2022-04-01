@@ -15,7 +15,7 @@ const UserProfile: FC = () => {
   const { userAuth, user } = useContext(UserContext)
 
   return user ? (
-    <div className="box-center">
+    <div style={{ textAlign: 'center' }}>
       <RoundedImageWrapper>
         <Image
           src={userAuth?.photoURL || '/hacker.png'}
@@ -27,7 +27,7 @@ const UserProfile: FC = () => {
       <p>
         <i>{user.email}</i>
       </p>
-      <h1>{user.username || '등록되지 않은 유저'}</h1>
+      <h2>{user.username || '등록되지 않은 유저'}</h2>
     </div>
   ) : (
     <div>유저를 찾지 못했습니다.</div>

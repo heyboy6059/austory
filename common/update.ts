@@ -10,6 +10,13 @@ import { FIRESTORE_POSTS, FIRESTORE_USERS } from './constants'
 import { firestore, increment, serverTimestamp } from './firebase'
 import { getUidByUsername } from './get'
 
+export const updateUser = async (userId: string, changes: Partial<User>) => {
+  const userRef = firestore.collection(FIRESTORE_USERS).doc(userId.trim())
+  await userRef.update({
+    ...changes,
+    updatedAt: serverTimestamp() as FirestoreTimestamp
+  })
+}
 export const batchUpdateUsers = (
   batch: firebase.firestore.WriteBatch,
   userId: string,
