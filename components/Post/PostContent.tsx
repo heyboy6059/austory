@@ -228,7 +228,14 @@ const PostContent: FC<PostContentProps> = ({
             <div style={{ whiteSpace: 'break-spaces' }}>{post?.content}</div>
           </Linkify>
         </div>
-        <div style={{ width: '40px', margin: 'auto', marginTop: '10px' }}>
+        <div
+          style={{
+            width: '40px',
+            margin: 'auto',
+            marginTop: '10px',
+            marginBottom: '10px'
+          }}
+        >
           <Heart
             postId={post.slug}
             heartCount={post.heartCount}
