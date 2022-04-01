@@ -92,6 +92,7 @@ const PostForm: FC<Props> = ({ editPost }) => {
           commentCount: 0,
           images: data.images,
           categories: [],
+          notificationIncludedUids: [],
           createdBy: username,
           createdAt: serverTimestamp() as FirestoreTimestamp,
           updatedBy: null,

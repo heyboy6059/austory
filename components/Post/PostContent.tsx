@@ -212,20 +212,22 @@ const PostContent: FC<PostContentProps> = ({
         {/* <Linky>
         <div style={{ whiteSpace: "break-spaces" }}>{post?.content}</div>
       </Linky> */}
-        <Linkify
-          componentDecorator={(decoratedHref, decoratedText, key) => (
-            <a
-              target="blank"
-              href={decoratedHref}
-              key={key}
-              style={{ color: '#00008B' }}
-            >
-              {decoratedText}
-            </a>
-          )}
-        >
-          <div style={{ whiteSpace: 'break-spaces' }}>{post?.content}</div>
-        </Linkify>
+        <div style={{ margin: '25px 0px' }}>
+          <Linkify
+            componentDecorator={(decoratedHref, decoratedText, key) => (
+              <a
+                target="blank"
+                href={decoratedHref}
+                key={key}
+                style={{ color: '#00008B' }}
+              >
+                {decoratedText}
+              </a>
+            )}
+          >
+            <div style={{ whiteSpace: 'break-spaces' }}>{post?.content}</div>
+          </Linkify>
+        </div>
         <div style={{ width: '40px', margin: 'auto', marginTop: '10px' }}>
           <Heart
             postId={post.slug}

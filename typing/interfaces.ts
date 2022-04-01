@@ -92,6 +92,8 @@ export type RawPost = {
   //
   categories: string[]
   //
+  notificationIncludedUids: string[]
+  //
   createdBy: string
   createdAt: FirestoreTimestamp
   updatedBy: string | null

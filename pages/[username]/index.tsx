@@ -87,7 +87,7 @@ const UserProfilePage: FC = () => {
           <FlexCenterDiv style={{ height: '100%' }}>
             <div style={{ textAlign: 'center' }}>
               <div style={{ color: 'red' }}>TODO: username 변경하기</div>
-              <div style={{ color: 'red' }}>TODO: 로그아웃</div>
+              <div style={{ color: 'red' }}>TODO: 댓글 알림 기능 변경하기</div>
               {/* <WarningIcon style={{ color: 'orange' }} fontSize="large" /> */}
               <div>내가 작성한 글 개수</div>
               <div>{user.myPostCountTotal}</div>

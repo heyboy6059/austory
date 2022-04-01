@@ -22,6 +22,14 @@ export const batchUpdateUsers = (
   })
 }
 
+export const updatePost = async (postId: string, changes: Partial<Post>) => {
+  const postRef = firestore.collection(FIRESTORE_POSTS).doc(postId)
+  await postRef.update({
+    ...changes,
+    updatedAt: serverTimestamp() as FirestoreTimestamp
+  })
+}
+
 export const batchUpdatePosts = (
   batch: firebase.firestore.WriteBatch,
   postId: string,
@@ -98,12 +106,15 @@ export const batchUpdateCommentCounts = async (
  */
 export const batchUpdateViewCounts = (
   batch: firebase.firestore.WriteBatch,
-  currentUserId: string,
+  currentUserId: string | null,
   postOwnerUserId: string
 ) => {
-  batchUpdateUsers(batch, currentUserId, {
-    providedViewCountTotal: increment(1)
-  })
+  // no currentUserId = no logged in user = no need to update providedViewCountTotal
+  if (currentUserId) {
+    batchUpdateUsers(batch, currentUserId, {
+      providedViewCountTotal: increment(1)
+    })
+  }
 
   batchUpdateUsers(batch, postOwnerUserId, {
     receivedViewCountTotal: increment(1)
