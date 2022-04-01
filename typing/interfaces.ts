@@ -145,3 +145,10 @@ export interface UserDataContext {
   username: string
   isAdmin: boolean
 }
+
+export interface RawHeart {
+  postId: string
+  uid: string
+  value: number
+  createdAt: FirestoreTimestamp
+}

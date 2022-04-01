@@ -8,7 +8,7 @@ import { FlexCenterDiv } from '../common/uiComponents'
 import { batchUpdateUsers } from '../common/update'
 import { UserContext } from '../common/context'
 import toast from 'react-hot-toast'
-
+import { RawHeart } from '../typing/interfaces'
 interface Props {
   postId: string
   heartCount: number
@@ -19,7 +19,7 @@ const Heart: FC<Props> = ({ postId, heartCount, username }) => {
   const { user } = useContext(UserContext)
   const heartRef = firestore
     .collection('hearts')
-    .doc(`${getHeartDocumentId(postId, username)}`)
+    .doc(`${getHeartDocumentId(postId, user.uid)}`)
   const [heartDoc] = useDocument(heartRef)
   const [localHeartCount, setLocalHeartCount] = useState(heartCount)
 
@@ -40,11 +40,11 @@ const Heart: FC<Props> = ({ postId, heartCount, username }) => {
         batch.update(postRef, { heartCount: increment(incrementValue) })
         if (addOrRemove === 'add') {
           batch.set(heartRef, {
-            username,
+            uid: user.uid,
             postId,
             createdAt: serverTimestamp(),
             value: 1
-          })
+          } as RawHeart)
         }
         // remove
         else {
