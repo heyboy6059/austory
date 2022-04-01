@@ -4,7 +4,8 @@ import PostItem from './PostItem'
 import Box from '@mui/material/Box'
 import { UserContext } from '../../common/context'
 import InfiniteScroll from 'react-infinite-scroller'
-import Loader from '../Loader'
+import { FlexCenterDiv } from '../../common/uiComponents'
+import CircularProgress from '@mui/material/CircularProgress'
 
 // TODO: posts interface
 const PostFeed: FC<{
@@ -20,7 +21,11 @@ const PostFeed: FC<{
         pageStart={0}
         loadMore={loadMore}
         hasMore={hasMore}
-        loader={<Loader show={true} key={0} />}
+        loader={
+          <FlexCenterDiv>
+            <CircularProgress />
+          </FlexCenterDiv>
+        }
       >
         {posts
           ? isAdmin
