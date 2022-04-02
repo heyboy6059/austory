@@ -11,11 +11,11 @@ export enum COLOURS {
 
 export const POST_FEED_NUM_LIMIT = 10
 
-export const KOR_MONTH_DAY_FORMAT = 'MM월 DD일 h:mm A'
+export const KOR_MONTH_DAY_FORMAT = 'M월 D일 h:mm A'
 
-export const KOR_FULL_DATE_FORMAT = 'YYYY년 MM월 DD일 h:mm A'
+export const KOR_FULL_DATE_FORMAT = 'YYYY년 M월 D일 h:mm A'
 
-export const KOR_DATE_WITHOUT_TIME_FORMAT = 'YYYY년 MM월 DD일'
+export const KOR_DATE_WITHOUT_TIME_FORMAT = 'YYYY년 M월 D일'
 
 export const MAX_WIDTH_PX = 700
 
