@@ -74,7 +74,7 @@ const PostContent: FC<PostContentProps> = ({
         viewCount: post.viewCount + 1
         // no updatedBy, updatedAt
       })
-      batchUpdateViewCounts(batch, user.uid, post.uid)
+      batchUpdateViewCounts(batch, user?.uid, post.uid)
       await batch.commit()
     }
     if (postRef && post && user && !addedViewCount) {

@@ -17,7 +17,7 @@ interface Props {
 const Heart: FC<Props> = ({ postId, heartCount, username }) => {
   // REVIEW: better way to have user?
   const { user } = useContext(UserContext)
-  const heartId = `${generateHeartDocumentId(postId, user.uid)}`
+  const heartId = `${generateHeartDocumentId(postId, user?.uid)}`
   const heartRef = firestore.collection('hearts').doc(heartId)
   const [heartDoc] = useDocument(heartRef)
   const [localHeartCount, setLocalHeartCount] = useState(heartCount)
