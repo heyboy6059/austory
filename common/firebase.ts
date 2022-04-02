@@ -2,7 +2,7 @@ import firebase from 'firebase/compat/app'
 import 'firebase/compat/auth'
 import 'firebase/compat/firestore'
 import 'firebase/compat/storage'
-import { getAnalytics } from 'firebase/analytics'
+// import { getAnalytics } from 'firebase/analytics'
 import {
   FirebaseDocumentSnapshot,
   Post,
@@ -24,9 +24,10 @@ const firebaseConfig = {
 }
 
 if (!firebase.apps.length) {
-  const app = firebase.initializeApp(firebaseConfig)
-  const analytics = getAnalytics(app)
-  console.log({ analytics })
+  // const app =
+  firebase.initializeApp(firebaseConfig)
+  // const analytics = getAnalytics(app)
+  // console.log({ analytics })
 }
 
 export const auth = firebase.auth()
