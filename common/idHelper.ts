@@ -2,3 +2,11 @@ import dayjs from 'dayjs'
 
 export const generateCommentId = (username: string) =>
   `${username}_${dayjs().unix()}`
+
+export const generateHeartDocumentId = (postId: string, uid: string) => {
+  return `heart-${postId}-${uid}`
+}
+
+export const generatePostDocumentId = (email: string) => {
+  return `post-${email.slice(0, 3)}${dayjs().unix()}`
+}

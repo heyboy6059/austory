@@ -147,6 +147,7 @@ export interface UserDataContext {
 }
 
 export interface RawHeart {
+  heartId: string
   postId: string
   uid: string
   value: number

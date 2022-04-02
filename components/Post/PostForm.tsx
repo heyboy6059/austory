@@ -14,7 +14,6 @@ import {
 } from '../../common/firebase'
 import { useRouter } from 'next/router'
 import { useForm, Controller } from 'react-hook-form'
-import dayjs from 'dayjs'
 import { generateExcerpt } from '../../common/functions'
 import toast from 'react-hot-toast'
 import TextField from '@mui/material/TextField'
@@ -24,6 +23,7 @@ import Button from '@mui/material/Button'
 import FormControlLabel from '@mui/material/FormControlLabel'
 import Checkbox from '@mui/material/Checkbox'
 import { batchUpdateUsers } from '../../common/update'
+import { generatePostDocumentId } from '../../common/idHelper'
 
 interface Props {
   editPost?: Post
@@ -75,7 +75,7 @@ const PostForm: FC<Props> = ({ editPost }) => {
       }
       // CREATE
       if (!isEditMode) {
-        const postId = `${user.email.split('@')[0]}-${dayjs().unix()}`
+        const postId = generatePostDocumentId(user.email)
 
         const postRef = firestore.collection('posts').doc(postId)
 

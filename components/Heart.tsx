@@ -1,6 +1,6 @@
 import { FC, useCallback, useContext, useState } from 'react'
 import { firestore, increment, serverTimestamp } from '../common/firebase'
-import { getHeartDocumentId } from '../common/helper'
+import { generateHeartDocumentId } from '../common/idHelper'
 import { useDocument } from 'react-firebase-hooks/firestore'
 import FavoriteIcon from '@mui/icons-material/Favorite'
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder'
@@ -17,9 +17,8 @@ interface Props {
 const Heart: FC<Props> = ({ postId, heartCount, username }) => {
   // REVIEW: better way to have user?
   const { user } = useContext(UserContext)
-  const heartRef = firestore
-    .collection('hearts')
-    .doc(`${getHeartDocumentId(postId, user.uid)}`)
+  const heartId = `${generateHeartDocumentId(postId, user.uid)}`
+  const heartRef = firestore.collection('hearts').doc(heartId)
   const [heartDoc] = useDocument(heartRef)
   const [localHeartCount, setLocalHeartCount] = useState(heartCount)
 
@@ -40,6 +39,7 @@ const Heart: FC<Props> = ({ postId, heartCount, username }) => {
         batch.update(postRef, { heartCount: increment(incrementValue) })
         if (addOrRemove === 'add') {
           batch.set(heartRef, {
+            heartId,
             uid: user.uid,
             postId,
             createdAt: serverTimestamp(),
@@ -69,7 +69,7 @@ const Heart: FC<Props> = ({ postId, heartCount, username }) => {
         toast.error(`에러가 발생했습니다. 다시 시도해주세요.`)
       }
     },
-    [heartRef, postId, user, username]
+    [heartId, heartRef, postId, user, username]
   )
 
   return heartDoc?.exists ? (
