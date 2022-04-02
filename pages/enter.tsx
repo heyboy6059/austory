@@ -184,7 +184,8 @@ function UsernameForm() {
         disabledAt: null
       } as RawUser)
       batch.set(usernameDoc, {
-        uid: userAuth.uid
+        uid: userAuth.uid,
+        username: inkrauUsername
       })
 
       await batch.commit()
