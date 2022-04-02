@@ -22,7 +22,7 @@ const PostFeed: FC<{
         loadMore={loadMore}
         hasMore={hasMore}
         loader={
-          <FlexCenterDiv>
+          <FlexCenterDiv key={0}>
             <CircularProgress />
           </FlexCenterDiv>
         }
