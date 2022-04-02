@@ -40,6 +40,7 @@ import Metatags from '../Metatags'
 import Heart from '../Heart'
 import { batchUpdateUsers, batchUpdateViewCounts } from '../../common/update'
 import CommentMain from '../Comment/CommentMain'
+import Typography from '@mui/material/Typography'
 
 // import { Editor, EditorState, ContentState } from "draft-js"
 
@@ -225,7 +226,10 @@ const PostContent: FC<PostContentProps> = ({
               </a>
             )}
           >
-            <div style={{ whiteSpace: 'break-spaces' }}>{post?.content}</div>
+            <div style={{ whiteSpace: 'break-spaces' }}>
+              {' '}
+              <Typography>{post?.content}</Typography>
+            </div>
           </Linkify>
         </div>
         <div
