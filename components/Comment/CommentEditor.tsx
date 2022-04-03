@@ -102,7 +102,7 @@ const CommentEditor: FC<Props> = ({
             batch,
             commentCollectionRef,
             comment.commentId,
-            username,
+            user.uid,
             {
               content
             }
@@ -123,7 +123,7 @@ const CommentEditor: FC<Props> = ({
         // REVIEW: is this check clean?
         if (!editMode || createMode) {
           console.log('Create comment')
-          const commentId = generateCommentId(username)
+          const commentId = generateCommentId(user.email)
           const batch = firestore.batch()
           const newComment: RawComment = {
             commentId,
@@ -135,7 +135,7 @@ const CommentEditor: FC<Props> = ({
             deleted: false,
             adminDeleted: false,
             adminDeletedReason: null,
-            createdBy: username,
+            createdBy: user.uid,
             createdAt: serverTimestamp() as FirestoreTimestamp,
             updatedBy: null,
             updatedAt: null
@@ -156,7 +156,7 @@ const CommentEditor: FC<Props> = ({
           })
 
           // add count 1 to post
-          batchUpdatePosts(batch, post.postId, username, {
+          batchUpdatePosts(batch, post.postId, user.uid, {
             commentCount: increment(1)
           })
 

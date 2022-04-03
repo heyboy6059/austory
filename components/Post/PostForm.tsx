@@ -24,13 +24,14 @@ import FormControlLabel from '@mui/material/FormControlLabel'
 import Checkbox from '@mui/material/Checkbox'
 import { batchUpdateUsers } from '../../common/update'
 import { generatePostDocumentId } from '../../common/idHelper'
+import Stack from '@mui/material/Stack'
 
 interface Props {
   editPost?: Post
 }
 const PostForm: FC<Props> = ({ editPost }) => {
   const router = useRouter()
-  const { user, username } = useContext(UserContext)
+  const { isAdmin, user, username } = useContext(UserContext)
   const isEditMode = !!editPost
 
   const {
@@ -69,6 +70,7 @@ const PostForm: FC<Props> = ({ editPost }) => {
         await postRef.update({
           ...data,
           excerpt: generateExcerpt(data.content, 50),
+          updatedBy: user.uid,
           updatedAt: serverTimestamp()
         })
         toast.success('게시물 업데이트가 완료 되었습니다.')
@@ -93,7 +95,7 @@ const PostForm: FC<Props> = ({ editPost }) => {
           images: data.images,
           categories: [],
           notificationIncludedUids: [],
-          createdBy: username,
+          createdBy: user.uid,
           createdAt: serverTimestamp() as FirestoreTimestamp,
           updatedBy: null,
           updatedAt: null,
@@ -132,39 +134,43 @@ const PostForm: FC<Props> = ({ editPost }) => {
         {/**
          * REVIEW: react-hook-form & mui checkbox doesn't work with default value
          */}
-        <FormControlLabel
-          label={`테스트 게시물 (관리자 전용) - ${watch().isTest}`}
-          control={
-            <Controller
-              name="isTest"
-              control={control}
-              render={({ field }) => <Checkbox {...field} />}
-            />
-          }
-        />
-        <Controller
-          name="title"
-          control={control}
-          rules={{ required: true }}
-          render={({ field }) => (
-            <TextField label="Title" variant="outlined" {...field} fullWidth />
-          )}
-        />
-        <Controller
-          name="content"
-          control={control}
-          rules={{ required: true }}
-          render={({ field }) => (
-            <TextField
-              label="Content"
-              variant="outlined"
-              {...field}
-              multiline
-              rows={15}
-              fullWidth
-            />
-          )}
-        />
+        {isAdmin && (
+          <FormControlLabel
+            label={`테스트 게시물 (관리자 전용) - ${watch().isTest}`}
+            control={
+              <Controller
+                name="isTest"
+                control={control}
+                render={({ field }) => <Checkbox {...field} />}
+              />
+            }
+          />
+        )}
+        <Stack spacing={2} style={{ marginTop: '15px' }}>
+          <Controller
+            name="title"
+            control={control}
+            rules={{ required: true, maxLength: 30 }}
+            render={({ field }) => (
+              <TextField label="제목" variant="outlined" {...field} fullWidth />
+            )}
+          />
+          <Controller
+            name="content"
+            control={control}
+            rules={{ required: true }}
+            render={({ field }) => (
+              <TextField
+                label="내용"
+                variant="outlined"
+                {...field}
+                multiline
+                rows={15}
+                fullWidth
+              />
+            )}
+          />
+        </Stack>
         <ImageUploader
           setValue={setValue}
           editThumbnailImgUrl={

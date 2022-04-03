@@ -59,7 +59,7 @@ const CommentItem: FC<Props> = ({
         batch,
         commentCollectionRef,
         comment.commentId,
-        username,
+        user.uid,
         {
           deleted: true
         }
@@ -69,7 +69,6 @@ const CommentItem: FC<Props> = ({
         batch,
         'remove',
         user.uid,
-        username,
         post.username,
         post.postId
       )
@@ -82,7 +81,7 @@ const CommentItem: FC<Props> = ({
       console.error(`Error in removeComment. ErrorMsg: ${err.message}`)
       toast.error(`댓글 삭제에 실패했습니다. 다시 시도해주세요.`)
     }
-  }, [comment, commentCollectionRef, post, refetchCommentData, user, username])
+  }, [comment, commentCollectionRef, post, refetchCommentData, user])
 
   return (
     <>
@@ -128,7 +127,7 @@ const CommentItem: FC<Props> = ({
 
                 {
                   // edit/delete button for admin user OR owner of the comment
-                  isAdmin || username === comment.createdBy ? (
+                  isAdmin || user?.uid === comment.createdBy ? (
                     <>
                       <Tooltip title="수정" placement="bottom" arrow>
                         <EditIcon

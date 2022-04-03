@@ -81,7 +81,6 @@ export const batchUpdateCommentCounts = async (
   batch: firebase.firestore.WriteBatch,
   type: 'add' | 'remove',
   currentUserId: string,
-  currentUsername: string,
   postUsername: string,
   postId: string
 ) => {
@@ -100,7 +99,7 @@ export const batchUpdateCommentCounts = async (
   })
 
   // add count 1 to post
-  batchUpdatePosts(batch, postId, currentUsername, {
+  batchUpdatePosts(batch, postId, currentUserId, {
     commentCount: increment(incrementalValue)
   })
 }

@@ -57,8 +57,8 @@ const PostContent: FC<PostContentProps> = ({
   const { user, username, isAdmin } = useContext(UserContext)
   const router = useRouter()
   const isPostOwner = useMemo(
-    () => username === post.username,
-    [post, username]
+    () => user && user.uid === post.createdBy,
+    [post, user]
   )
 
   const [deleteAlertOpen, setDeleteAlertOpen] = useState(false)
@@ -88,7 +88,7 @@ const PostContent: FC<PostContentProps> = ({
     const batch = firestore.batch()
     batch.update(postRef, {
       deleted: true,
-      updatedBy: username,
+      updatedBy: user.uid,
       updatedAt: serverTimestamp() as FirestoreTimestamp
     })
 
@@ -98,7 +98,7 @@ const PostContent: FC<PostContentProps> = ({
     await batch.commit()
     toast.success('게시물을 성공적으로 삭제했습니다.')
     router.push('/')
-  }, [postRef, router, user, username])
+  }, [postRef, router, user])
   // const [editorState, setEditorState] = useState(
   //   EditorState.createWithContent(
   //     ContentState.createFromBlockArray("<h1>HAHAHOHO</h1>")
