@@ -17,7 +17,7 @@ export const KOR_FULL_DATE_FORMAT = 'YYYY년 M월 D일 h:mm A'
 
 export const KOR_DATE_WITHOUT_TIME_FORMAT = 'YYYY년 M월 D일'
 
-export const MAX_WIDTH_PX = 700
+export const MAX_WIDTH_PX = 600
 
 export const RESIZE_IMAGE_EXT = 'jpeg'
 

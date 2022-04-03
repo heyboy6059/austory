@@ -2,7 +2,7 @@ import { useContext, useState } from 'react'
 import Link from 'next/link'
 // import Image from "next/image"
 import { UserContext } from '../common/context'
-import { COLOURS } from '../common/constants'
+import { COLOURS, MAX_WIDTH_PX } from '../common/constants'
 import {
   UserImage,
   LogoImage,
@@ -115,7 +115,10 @@ export default function Navbar() {
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static" style={{ backgroundColor: 'white' }}>
-        <Toolbar variant="dense">
+        <Toolbar
+          variant="dense"
+          style={{ display: 'flex', justifyContent: 'center' }}
+        >
           {/* <IconButton
             size="large"
             edge="start"
@@ -134,7 +137,7 @@ export default function Navbar() {
             style={{
               // display: "flex",
               // justifyContent: "space-between",
-              width: '100%'
+              width: `${MAX_WIDTH_PX}px`
             }}
           >
             <FlexCenterDiv>

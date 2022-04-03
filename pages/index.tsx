@@ -57,7 +57,7 @@ const Home = props => {
   }
 
   return (
-    <div>
+    <div style={{ marginTop: '10px' }}>
       <Head>
         <title>inKRAU 인크라우</title>
       </Head>

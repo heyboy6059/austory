@@ -1,7 +1,7 @@
 import dayjs from 'dayjs'
 
-export const generateCommentId = (username: string) =>
-  `${username}_${dayjs().unix()}`
+export const generateCommentId = (email: string) =>
+  `comment-${email.slice(0, 3)}${dayjs().unix()}`
 
 export const generateHeartDocumentId = (postId: string, uid: string) => {
   return `heart-${postId}-${uid}`
