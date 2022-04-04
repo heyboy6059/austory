@@ -70,8 +70,8 @@ export type ImageDetails = {
 }
 
 export type Image = {
-  thumbnail100: ImageDetails
-  thumbnail300: ImageDetails
+  thumbnail200: ImageDetails
+  thumbnail600: ImageDetails
   original: ImageDetails
 }
 
@@ -113,7 +113,7 @@ export type PostWrite = Pick<
   'title' | 'content' | 'images' | 'categories' | 'isTest'
 >
 
-export type ImgType = 'thumbnail100' | 'thumbnail300' | 'original'
+export type ImgType = 'thumbnail200' | 'thumbnail600' | 'original'
 
 export type RawComment = {
   commentId: string

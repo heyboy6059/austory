@@ -1,16 +1,20 @@
-import { auth, storage, STATE_CHANGED } from "../common/firebase"
-import { ImageDetails, ImgType } from "../typing/interfaces"
 import {
-  IMAGE_THUMBNAIL100_PREFIX,
+  auth,
+  storage
+  // STATE_CHANGED
+} from '../common/firebase'
+import { ImageDetails, ImgType } from '../typing/interfaces'
+import {
+  IMAGE_THUMBNAIL200_PREFIX,
   IMAGE_ORIGINAL_PREFIX,
-  RESIZE_THUMBNAIL300_MAX_WIDTH_HEIGHT,
+  RESIZE_THUMBNAIL600_MAX_WIDTH_HEIGHT,
   RESIZE_ORIGINAL_MAX_WIDTH_HEIGHT,
   RESIZE_IMAGE_EXT,
-  RESIZE_THUMBNAIL100_MAX_WIDTH_HEIGHT,
-  IMAGE_THUMBNAIL300_PREFIX,
-} from "./constants"
-import Resizer from "react-image-file-resizer"
-import { extractFilenameExtension } from "./functions"
+  RESIZE_THUMBNAIL200_MAX_WIDTH_HEIGHT,
+  IMAGE_THUMBNAIL600_PREFIX
+} from './constants'
+import Resizer from 'react-image-file-resizer'
+import { extractFilenameExtension } from './functions'
 
 export const uploadImageToStorage = async (
   type: ImgType,
@@ -19,10 +23,10 @@ export const uploadImageToStorage = async (
   ext: string
 ): Promise<{ imgUrl: string; savedName: string }> => {
   const savedName = `${
-    type === "thumbnail100"
-      ? IMAGE_THUMBNAIL100_PREFIX
-      : type === "thumbnail300"
-      ? IMAGE_THUMBNAIL300_PREFIX
+    type === 'thumbnail200'
+      ? IMAGE_THUMBNAIL200_PREFIX
+      : type === 'thumbnail600'
+      ? IMAGE_THUMBNAIL600_PREFIX
       : IMAGE_ORIGINAL_PREFIX
   }${name}_${Date.now()}.${ext}`
 
@@ -49,17 +53,17 @@ export const resizeImageJpeg = async (
   name: string
 ): Promise<ImageDetails> => {
   const maxWidthHeight =
-    type === "thumbnail100"
-      ? RESIZE_THUMBNAIL100_MAX_WIDTH_HEIGHT
-      : type === "thumbnail300"
-      ? RESIZE_THUMBNAIL300_MAX_WIDTH_HEIGHT
+    type === 'thumbnail200'
+      ? RESIZE_THUMBNAIL200_MAX_WIDTH_HEIGHT
+      : type === 'thumbnail600'
+      ? RESIZE_THUMBNAIL600_MAX_WIDTH_HEIGHT
       : RESIZE_ORIGINAL_MAX_WIDTH_HEIGHT
 
-  let url = ""
-  let savedImgName = ""
+  let url = ''
+  let savedImgName = ''
   let size = null
 
-  await new Promise<void>((resolve) => {
+  await new Promise<void>(resolve => {
     Resizer.imageFileResizer(
       file,
       maxWidthHeight,
@@ -67,7 +71,7 @@ export const resizeImageJpeg = async (
       RESIZE_IMAGE_EXT,
       90,
       0,
-      async (uri) => {
+      async uri => {
         // get resized blob
         const imgBlob = await (await fetch(uri as string)).blob()
 
@@ -84,10 +88,10 @@ export const resizeImageJpeg = async (
         size = imgBlob.size
         savedImgName = savedName
 
-        console.log("SUCCESSFULLY GENERATED THUMBNAIL IMAGE")
+        console.log('SUCCESSFULLY GENERATED THUMBNAIL IMAGE')
         resolve()
       },
-      "base64"
+      'base64'
     )
   })
 
@@ -97,6 +101,6 @@ export const resizeImageJpeg = async (
     url,
     name: filename,
     ext: extension,
-    size,
+    size
   }
 }

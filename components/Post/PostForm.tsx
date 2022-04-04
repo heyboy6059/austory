@@ -175,7 +175,7 @@ const PostForm: FC<Props> = ({ editPost }) => {
           setValue={setValue}
           editThumbnailImgUrl={
             // REVIEW: this only supports single thumbnail url
-            isEditMode ? editPost?.images?.[0]?.thumbnail300?.url || '' : null
+            isEditMode ? editPost?.images?.[0]?.thumbnail600?.url || '' : null
           }
         />
         <FlexCenterDiv>

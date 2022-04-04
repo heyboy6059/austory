@@ -41,9 +41,12 @@ const PostItem: FC<{
         <GridDiv
           style={{
             // thumbnailImage? give 100px space
-            gridTemplateColumns: post.images?.[0]?.thumbnail100?.url
-              ? '1fr 100px'
-              : '1fr',
+            gridTemplateColumns:
+              // TEMP fallback to thumbnail100
+              post.images?.[0]?.thumbnail200?.url ||
+              post.images?.[0]?.['thumbnail100']?.url
+                ? '1fr 100px'
+                : '1fr',
             gap: '4px'
           }}
         >
@@ -92,22 +95,29 @@ const PostItem: FC<{
             </EllipsisDiv>
           </GridDiv>
           <div style={{ width: '100px', cursor: 'pointer' }}>
-            {post.images?.[0]?.thumbnail100?.url ? (
-              <Link href={`/post/${post.postId}`} passHref>
-                <a>
-                  <Image
-                    src={post.images[0].thumbnail100?.url}
-                    alt=""
-                    width={'100%'}
-                    height={'100%'}
-                    layout="responsive"
-                    objectFit="contain"
-                  />
-                </a>
-              </Link>
-            ) : (
-              ``
-            )}
+            {
+              // TEMP: fallback to thumbnail600
+              post.images?.[0]?.thumbnail200?.url ||
+              post.images?.[0]?.['thumbnail100']?.url ? (
+                <Link href={`/post/${post.postId}`} passHref>
+                  <a>
+                    <Image
+                      src={
+                        post.images?.[0]?.thumbnail200?.url ||
+                        post.images?.[0]?.['thumbnail100']?.url
+                      }
+                      alt="thumbnail image"
+                      width={'100%'}
+                      height={'100%'}
+                      layout="responsive"
+                      objectFit="cover"
+                    />
+                  </a>
+                </Link>
+              ) : (
+                ``
+              )
+            }
           </div>
         </GridDiv>
         <FlexSpaceBetween

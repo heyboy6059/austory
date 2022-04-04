@@ -26,8 +26,8 @@ const ImageUploader: FC<Props> = ({ setValue, editThumbnailImgUrl }) => {
   const uploadFile = async e => {
     setUploading(true)
 
-    let thumbnail100ImageDetails: ImageDetails = null
-    let thumbnail300ImageDetails: ImageDetails = null
+    let thumbnail200ImageDetails: ImageDetails = null
+    let thumbnail600ImageDetails: ImageDetails = null
     let originalImageDetails: ImageDetails = null
 
     // Get the file
@@ -38,20 +38,20 @@ const ImageUploader: FC<Props> = ({ setValue, editThumbnailImgUrl }) => {
       const { filename: name, extension } = extractFilenameExtension(file.name)
 
       try {
-        // Resize for thumbnail300
-        thumbnail300ImageDetails = await resizeImageJpeg(
+        // Resize for thumbnail600
+        thumbnail600ImageDetails = await resizeImageJpeg(
           file,
-          'thumbnail300',
+          'thumbnail600',
           name
         )
 
         // update thumbnail url to be shown in UI before storing original image
-        setThumbnailImgUrl(thumbnail300ImageDetails.url)
+        setThumbnailImgUrl(thumbnail600ImageDetails.url)
 
-        // Resize for thumbnail100
-        thumbnail100ImageDetails = await resizeImageJpeg(
+        // Resize for thumbnail200
+        thumbnail200ImageDetails = await resizeImageJpeg(
           file,
-          'thumbnail100',
+          'thumbnail200',
           name
         )
 
@@ -81,8 +81,8 @@ const ImageUploader: FC<Props> = ({ setValue, editThumbnailImgUrl }) => {
 
         setValue('images', [
           {
-            thumbnail100: thumbnail100ImageDetails,
-            thumbnail300: thumbnail300ImageDetails,
+            thumbnail200: thumbnail200ImageDetails,
+            thumbnail600: thumbnail600ImageDetails,
             original: originalImageDetails
           }
         ])

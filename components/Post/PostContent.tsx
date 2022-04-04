@@ -16,7 +16,7 @@ import {
 } from '../../typing/interfaces'
 import dayjs from 'dayjs'
 import { KOR_FULL_DATE_FORMAT } from '../../common/constants'
-import Image from 'next/image'
+import NextImage from 'next/image'
 import AccountBoxIcon from '@mui/icons-material/AccountBox'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 import VisibilityIcon from '@mui/icons-material/Visibility'
@@ -63,7 +63,12 @@ const PostContent: FC<PostContentProps> = ({
 
   const [deleteAlertOpen, setDeleteAlertOpen] = useState(false)
   const [addedViewCount, setAddedViewCount] = useState(false)
-
+  const [mainImage, setMainImage] = useState<{
+    originalUrl: string
+    url: string
+    width: number
+    height: number
+  }>(null)
   // add viewCount in post
   useEffect(() => {
     const addViewCount = async () => {
@@ -83,6 +88,31 @@ const PostContent: FC<PostContentProps> = ({
       setAddedViewCount(true)
     }
   }, [postRef, post, user, addedViewCount])
+
+  useEffect(() => {
+    // TEMP fallback to original
+    const imgUrl =
+      post.images?.[0]?.thumbnail600?.url || post.images?.[0]?.original?.url
+    if (imgUrl) {
+      let width: number
+      let height: number
+      const img = new Image()
+      img.src = imgUrl
+      img.onload = function (event) {
+        const loadedImage = event.currentTarget as HTMLImageElement
+        width = loadedImage.width
+        height = loadedImage.height
+        console.log('image height: ' + height)
+        console.log('image width: ' + width)
+        setMainImage({
+          originalUrl: post.images?.[0]?.original?.url,
+          url: imgUrl,
+          width,
+          height
+        })
+      }
+    }
+  }, [post])
 
   const removePost = useCallback(async () => {
     const batch = firestore.batch()
@@ -184,25 +214,26 @@ const PostContent: FC<PostContentProps> = ({
           </FlexVerticalCenterDiv>
           {/* </FlexCenterDiv> */}
         </span>
-        {post.images?.[0]?.thumbnail300?.url ? (
+        {mainImage?.url ? (
           <div
             style={{
-              width: '300px',
+              width: '550px',
               margin: 'auto',
               marginTop: '15px',
-              marginBottom: '15px'
+              marginBottom: '15px',
+              cursor: 'pointer'
             }}
           >
-            <Image
-              src={post.images[0].thumbnail300.url}
-              alt=""
-              width={'100%'}
-              height={'70%'}
+            <NextImage
+              src={mainImage.url}
+              alt="main image"
+              width={`${mainImage.width}px`}
+              height={`${mainImage.height}px`}
               layout="responsive"
               objectFit="contain"
               onClick={() => {
                 // open original image in a new tab
-                window.open(post.images[0].original.url, '_blank').focus()
+                window.open(mainImage.originalUrl, '_blank').focus()
               }}
               priority={true}
             />
