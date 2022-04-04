@@ -204,6 +204,7 @@ const PostContent: FC<PostContentProps> = ({
                 // open original image in a new tab
                 window.open(post.images[0].original.url, '_blank').focus()
               }}
+              priority={true}
             />
           </div>
         ) : (
