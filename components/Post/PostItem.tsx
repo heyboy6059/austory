@@ -34,7 +34,8 @@ const PostItem: FC<{
       elevation={0}
       style={{
         marginBottom: '5px',
-        border: post.isTest ? '2px solid dodgerblue' : 'none'
+        border: post.isTest ? '2px solid dodgerblue' : 'none',
+        borderRadius: '12px'
       }}
     >
       <div style={{ padding: '12px' }}>
