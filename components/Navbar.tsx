@@ -11,7 +11,7 @@ import {
   FlexCenterDiv
 } from '../common/uiComponents'
 
-import Logo from '../public/inKRAU_New_Logo.png'
+import Logo from '../public/inKRAU_New_Logo_200_80.png'
 
 /**
  * Material UI
@@ -148,6 +148,7 @@ export default function Navbar() {
                     width={100}
                     height={40}
                     alt="InKRAU logo png file"
+                    priority={true}
                   />
                 </a>
               </Link>
