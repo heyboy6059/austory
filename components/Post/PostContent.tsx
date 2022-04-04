@@ -217,7 +217,7 @@ const PostContent: FC<PostContentProps> = ({
         {mainImage?.url ? (
           <div
             style={{
-              width: '550px',
+              width: '100%',
               margin: 'auto',
               marginTop: '15px',
               marginBottom: '15px',
