@@ -15,6 +15,7 @@ import { NotificationMethod } from '../../typing/enums'
 import Stack from '@mui/material/Stack'
 import { updateUser } from '../../common/update'
 import { GENERIC_KOREAN_ERROR_MESSAGE } from '../../common/constants'
+import CircularProgress from '@mui/material/CircularProgress'
 
 // export const getServerSideProps = async ({ query }) => {
 //   const { username } = query
@@ -190,7 +191,9 @@ const UserProfilePage: FC = () => {
           {/* <PostFeed posts={posts} /> */}
         </>
       ) : (
-        <>유저를 찾을수가 없습니다.</>
+        <FlexCenterDiv>
+          <CircularProgress />
+        </FlexCenterDiv>
       )}
     </main>
   )
