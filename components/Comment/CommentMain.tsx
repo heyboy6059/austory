@@ -28,9 +28,14 @@ const CommentMain: FC<Props> = ({ postRef }) => {
 
   const [comments, setComments] = useState<Comment[]>([])
 
-  const [newCommentNotification, setNewCommentNotification] = useState(
-    user ? post.notificationIncludedUids.includes(user.uid) || false : false
-  )
+  const [newCommentNotification, setNewCommentNotification] = useState(false)
+
+  useEffect(() => {
+    if (user && post && post.notificationIncludedUids.includes(user.uid)) {
+      console.log(`set newCommentNotification to true`)
+      setNewCommentNotification(true)
+    }
+  }, [post, user])
 
   // REVIEW: move to context?
   const fetchComments = useCallback(async () => {
@@ -56,7 +61,12 @@ const CommentMain: FC<Props> = ({ postRef }) => {
       const changes: Partial<Post> = {
         notificationIncludedUids: checked
           ? // add current uid into the list
-            [...post.notificationIncludedUids, user.uid]
+            // TEMP: deduplicate same ids - due to state issue
+            [
+              ...Array.from(
+                new Set([...post.notificationIncludedUids, user.uid])
+              )
+            ]
           : // exclude current uid from the list
             post.notificationIncludedUids.filter(uid => uid !== user.uid),
         updatedBy: user.uid
