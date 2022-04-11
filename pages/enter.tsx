@@ -143,7 +143,7 @@ function UsernameForm() {
   const router = useRouter()
 
   const [inkrauUsername, setInkrauUsername] = useState('')
-  const [isMarketingEmail, setIsMarketingEmail] = useState(false)
+  const [isMarketingEmail, setIsMarketingEmail] = useState(true)
 
   const [isNotValid, setIsNotValid] = useState(false)
   const [isExistInDB, setIsExistInDB] = useState(false)
@@ -163,7 +163,7 @@ function UsernameForm() {
       const batch = firestore.batch()
       batch.set(userDoc, {
         uid: userAuth.uid,
-        username: inkrauUsername,
+        username: inkrauUsername.trim(),
         photoURL: userAuth.photoURL,
         displayName: userAuth.displayName,
         email: userAuth.email,
@@ -244,7 +244,7 @@ function UsernameForm() {
     if (!inkrauUsername || inkrauUsername.length < 3) {
       return '한글과 영문 모두 사용 가능합니다.'
     }
-    if (isExistInDB) return '이미 존재하는 활동명 입니다.'
+    if (isExistInDB) return '이미 존재하는 닉네임 입니다.'
     if (isNotValid) {
       return '한글, 영문, 숫자 조합으로 최대 20자 까지 가능합니다.'
     }
@@ -266,7 +266,7 @@ function UsernameForm() {
           />
           <TextField
             required={true}
-            label="활동명"
+            label="닉네임"
             size="small"
             fullWidth
             margin="normal"
