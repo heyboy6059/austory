@@ -89,7 +89,12 @@ function SignInButton() {
 
   return (
     <>
-      <Stack spacing={2}>
+      <Stack
+        spacing={2}
+        style={{
+          alignItems: 'center'
+        }}
+      >
         <FlexCenterDiv
           style={{
             gap: '5px',
@@ -208,7 +213,7 @@ function UsernameForm() {
     const val = e.target.value.toLowerCase()
 
     // Korean, English, number only regex
-    const reg = /^[ㄱ-ㅎ|가-힣|a-z|A-Z|0-9|]+$/
+    const reg = /^[ㄱ-ㅎ|가-힣|a-z|A-Z|0-9|\s]+$/
 
     if (reg.test(val) && val.length < 20) {
       setIsNotValid(false)
