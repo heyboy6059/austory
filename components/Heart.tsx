@@ -2,13 +2,13 @@ import { FC, useCallback, useContext, useState } from 'react'
 import { firestore, increment, serverTimestamp } from '../common/firebase'
 import { generateHeartDocumentId } from '../common/idHelper'
 import { useDocument } from 'react-firebase-hooks/firestore'
-import FavoriteIcon from '@mui/icons-material/Favorite'
-import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder'
 import { FlexCenterDiv } from '../common/uiComponents'
 import { batchUpdateUsers } from '../common/update'
 import { UserContext } from '../common/context'
 import toast from 'react-hot-toast'
 import { RawHeart } from '../typing/interfaces'
+import { COLOURS } from '../common/constants'
+import { AiOutlineHeart, AiFillHeart } from 'react-icons/ai'
 interface Props {
   postId: string
   heartCount: number
@@ -77,16 +77,16 @@ const Heart: FC<Props> = ({ postId, heartCount, username }) => {
       style={{ cursor: 'pointer' }}
       onClick={() => addRemoveHeart('remove')}
     >
-      <FavoriteIcon fontSize="medium" />{' '}
-      <span style={{ fontSize: '18px' }}>{localHeartCount}</span>
+      <AiFillHeart style={{ fontSize: '25px', color: COLOURS.HEART_RED }} />{' '}
+      <span style={{ fontSize: '20px' }}>{localHeartCount}</span>
     </FlexCenterDiv>
   ) : (
     <FlexCenterDiv
       style={{ cursor: 'pointer' }}
       onClick={() => addRemoveHeart('add')}
     >
-      <FavoriteBorderIcon fontSize="medium" />{' '}
-      <span style={{ fontSize: '18px' }}>{localHeartCount}</span>
+      <AiOutlineHeart style={{ fontSize: '25px' }} />{' '}
+      <span style={{ fontSize: '20px' }}>{localHeartCount}</span>
     </FlexCenterDiv>
   )
 }

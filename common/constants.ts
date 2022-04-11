@@ -6,7 +6,9 @@ export enum COLOURS {
   LIGHT_BACKGROUND = 'f5f5f7',
   LINE_GREY = '#D3D3D3',
   DARK_BLUE = '#10508D',
-  GREEN = '#72CC50'
+  GREEN = '#72CC50',
+  BRIGHT_GREEN = '#8bc34a',
+  HEART_RED = '#f44336'
 }
 
 export const POST_FEED_NUM_LIMIT = 10

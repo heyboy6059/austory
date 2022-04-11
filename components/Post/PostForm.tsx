@@ -69,7 +69,7 @@ const PostForm: FC<Props> = ({ editPost }) => {
         const postRef = firestore.collection('posts').doc(postId)
         await postRef.update({
           ...data,
-          excerpt: generateExcerpt(data.content, 50),
+          excerpt: generateExcerpt(data.content, 80),
           updatedBy: user.uid,
           updatedAt: serverTimestamp()
         })
@@ -87,7 +87,7 @@ const PostForm: FC<Props> = ({ editPost }) => {
           username,
           title: data.title,
           content: data.content,
-          excerpt: generateExcerpt(data.content, 50),
+          excerpt: generateExcerpt(data.content, 80),
           deleted: false,
           heartCount: 0,
           viewCount: 0,
@@ -150,7 +150,7 @@ const PostForm: FC<Props> = ({ editPost }) => {
           <Controller
             name="title"
             control={control}
-            rules={{ required: true, maxLength: 30 }}
+            rules={{ required: true }}
             render={({ field }) => (
               <TextField label="제목" variant="outlined" {...field} fullWidth />
             )}

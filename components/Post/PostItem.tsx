@@ -13,12 +13,11 @@ import {
   EllipsisDiv
 } from '../../common/uiComponents'
 
-import FavoriteIcon from '@mui/icons-material/Favorite'
-import CommentIcon from '@mui/icons-material/Comment'
 import Typography from '@mui/material/Typography'
 import { KOR_MONTH_DAY_FORMAT } from '../../common/constants'
 import AccountBoxIcon from '@mui/icons-material/AccountBox'
 import Chip from '@mui/material/Chip'
+import { FcLike, FcSms } from 'react-icons/fc'
 
 const PostItem: FC<{
   post: Post
@@ -124,7 +123,7 @@ const PostItem: FC<{
         <FlexSpaceBetween
           style={{
             alignItems: 'center',
-            margin: '15px 0 5px 0'
+            margin: '10px 0 5px 0'
           }}
         >
           <div
@@ -138,7 +137,7 @@ const PostItem: FC<{
           >
             {/* <Link href={`/${post.username}`} passHref> */}
             <FlexCenterDiv style={{ gap: '2px', alignItems: 'center' }}>
-              <AccountBoxIcon style={{ fontSize: '16px' }} />
+              <AccountBoxIcon style={{ fontSize: '16px', marginTop: '4px' }} />
               <div>{post.username}</div>
             </FlexCenterDiv>
             {/* </Link> */}
@@ -152,10 +151,12 @@ const PostItem: FC<{
             }}
           >
             <FlexVerticalCenterDiv>
-              <FavoriteIcon fontSize="small" /> {post.heartCount}
+              <FcLike fontSize={18} style={{ marginRight: '1px' }} />
+              {post.heartCount}
             </FlexVerticalCenterDiv>
             <FlexVerticalCenterDiv>
-              <CommentIcon fontSize="small" /> {post.commentCount || 0}
+              <FcSms fontSize={18} style={{ marginTop: '1px' }} />
+              {post.commentCount || 0}
             </FlexVerticalCenterDiv>
           </FlexCenterDiv>
         </FlexSpaceBetween>
