@@ -26,8 +26,8 @@ import { useRouter } from 'next/router'
 import {
   FlexCenterDiv,
   FlexSpaceBetween,
-  FlexVerticalCenterDiv,
-  H1
+  FlexVerticalCenterDiv
+  // H2
 } from '../../common/uiComponents'
 import { PostContext, UserContext } from '../../common/context'
 import { firestore, increment, serverTimestamp } from '../../common/firebase'
@@ -41,6 +41,7 @@ import Heart from '../Heart'
 import { batchUpdateUsers, batchUpdateViewCounts } from '../../common/update'
 import CommentMain from '../Comment/CommentMain'
 import Typography from '@mui/material/Typography'
+import { AiOutlineLink } from 'react-icons/ai'
 
 // import { Editor, EditorState, ContentState } from "draft-js"
 
@@ -168,6 +169,16 @@ const PostContent: FC<PostContentProps> = ({
           </Tooltip>
 
           <FlexCenterDiv style={{ gap: '5px' }}>
+            <Tooltip title="링크 복사" placement="bottom" arrow>
+              <AiOutlineLink
+                fontSize={20}
+                style={{ cursor: 'pointer' }}
+                onClick={() => {
+                  navigator.clipboard.writeText(window.location.href)
+                  toast.success('게시물 링크를 복사했습니다.')
+                }}
+              />
+            </Tooltip>
             {(isPostOwner || isAdmin) && (
               <>
                 <Tooltip title="수정" placement="bottom" arrow>
@@ -196,7 +207,7 @@ const PostContent: FC<PostContentProps> = ({
             )}
           </FlexCenterDiv>
         </FlexSpaceBetween>
-        <H1>{post?.title}</H1>
+        <h2>{post?.title}</h2>
         <span className="text-sm">
           {/* Written by{" "}
         <Link href={`/${post.username}/`}>
