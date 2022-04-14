@@ -9,7 +9,6 @@ import {
   FlexVerticalCenterDiv,
   FlexCenterDiv,
   GridDiv,
-  FlexSpaceBetween,
   EllipsisDiv
 } from '../../common/uiComponents'
 
@@ -17,7 +16,7 @@ import Typography from '@mui/material/Typography'
 import { KOR_MONTH_DAY_FORMAT } from '../../common/constants'
 import AccountBoxIcon from '@mui/icons-material/AccountBox'
 import Chip from '@mui/material/Chip'
-import { FcLike, FcSms } from 'react-icons/fc'
+import { AiOutlineHeart, AiOutlineComment } from 'react-icons/ai'
 
 const PostItem: FC<{
   post: Post
@@ -120,8 +119,9 @@ const PostItem: FC<{
             }
           </div>
         </GridDiv>
-        <FlexSpaceBetween
+        <GridDiv
           style={{
+            gridTemplateColumns: '1fr 10px 100px',
             alignItems: 'center',
             margin: '10px 0 5px 0'
           }}
@@ -144,22 +144,45 @@ const PostItem: FC<{
             <span>|</span>
             <span>{dayjs(post.createdAt).format(KOR_MONTH_DAY_FORMAT)}</span>
           </div>
+          <div></div>
           <FlexCenterDiv
             style={{
-              gap: '6px',
-              justifyContent: 'right'
+              gap: '6px'
+              // justifyContent: 'right'
             }}
           >
             <FlexVerticalCenterDiv>
-              <FcLike fontSize={18} style={{ marginRight: '1px' }} />
+              {/* <FcLike
+                fontSize={18}
+                style={{ marginRight: '1px' }}
+              /> */}
+              <AiOutlineHeart
+                fontSize={18}
+                style={{
+                  marginRight: '1px',
+                  marginTop: '1px',
+                  color: '#8c519d'
+                }}
+              />
               {post.heartCount}
             </FlexVerticalCenterDiv>
             <FlexVerticalCenterDiv>
-              <FcSms fontSize={18} style={{ marginTop: '1px' }} />
+              {/* <FcSms
+                fontSize={18}
+                style={{ marginTop: '1px'}}
+              /> */}
+              <AiOutlineComment
+                fontSize={18}
+                style={{
+                  marginRight: '1px',
+                  marginTop: '1px',
+                  color: '#834799'
+                }}
+              />
               {post.commentCount || 0}
             </FlexVerticalCenterDiv>
           </FlexCenterDiv>
-        </FlexSpaceBetween>
+        </GridDiv>
       </div>
     </Paper>
   )
