@@ -58,9 +58,12 @@ const PostItem: FC<{
               <Link href={`/post/${post.postId}`} passHref>
                 <Typography
                   style={{
-                    fontSize: '20px',
+                    fontSize: '18px',
                     margin: '2px 0',
-                    wordWrap: 'break-word',
+                    display: '-webkit-box',
+                    WebkitLineClamp: 2,
+                    WebkitBoxOrient: 'vertical',
+                    overflow: 'hidden',
                     fontWeight: 'bold',
                     lineHeight: '1.2',
                     cursor: 'pointer'
@@ -77,7 +80,14 @@ const PostItem: FC<{
               }}
             >
               <Link href={`/post/${post.postId}`} passHref>
-                <Typography>
+                <Typography
+                  style={{
+                    display: '-webkit-box',
+                    WebkitLineClamp: 2,
+                    WebkitBoxOrient: 'vertical',
+                    overflow: 'hidden'
+                  }}
+                >
                   {post.excerpt ? `${post.excerpt}` : post.content}
                 </Typography>
               </Link>

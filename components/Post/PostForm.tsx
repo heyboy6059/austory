@@ -69,7 +69,7 @@ const PostForm: FC<Props> = ({ editPost }) => {
         const postRef = firestore.collection('posts').doc(postId)
         await postRef.update({
           ...data,
-          excerpt: generateExcerpt(data.content, 80),
+          excerpt: generateExcerpt(data.content, 150),
           updatedBy: user.uid,
           updatedAt: serverTimestamp()
         })
@@ -87,7 +87,7 @@ const PostForm: FC<Props> = ({ editPost }) => {
           username,
           title: data.title,
           content: data.content,
-          excerpt: generateExcerpt(data.content, 80),
+          excerpt: generateExcerpt(data.content, 150),
           deleted: false,
           heartCount: 0,
           viewCount: 0,
