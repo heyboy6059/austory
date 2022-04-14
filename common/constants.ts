@@ -8,7 +8,8 @@ export enum COLOURS {
   DARK_BLUE = '#10508D',
   GREEN = '#72CC50',
   BRIGHT_GREEN = '#8bc34a',
-  HEART_RED = '#f44336'
+  HEART_RED = '#f44336',
+  LIGHT_PURPLE = '#8c519d'
 }
 
 export const POST_FEED_NUM_LIMIT = 10

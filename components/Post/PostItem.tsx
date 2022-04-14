@@ -13,7 +13,7 @@ import {
 } from '../../common/uiComponents'
 
 import Typography from '@mui/material/Typography'
-import { KOR_MONTH_DAY_FORMAT } from '../../common/constants'
+import { COLOURS, KOR_MONTH_DAY_FORMAT } from '../../common/constants'
 import AccountBoxIcon from '@mui/icons-material/AccountBox'
 import Chip from '@mui/material/Chip'
 import { AiOutlineHeart, AiOutlineComment } from 'react-icons/ai'
@@ -171,7 +171,7 @@ const PostItem: FC<{
                 style={{
                   marginRight: '1px',
                   marginTop: '1px',
-                  color: '#8c519d'
+                  color: COLOURS.LIGHT_PURPLE
                 }}
               />
               {post.heartCount}
@@ -186,7 +186,7 @@ const PostItem: FC<{
                 style={{
                   marginRight: '1px',
                   marginTop: '1px',
-                  color: '#834799'
+                  color: COLOURS.LIGHT_PURPLE
                 }}
               />
               {post.commentCount || 0}
