@@ -1,6 +1,5 @@
-import { useContext, useState } from 'react'
+import { useContext, useState, useCallback } from 'react'
 import Link from 'next/link'
-// import Image from "next/image"
 import { UserContext } from '../common/context'
 import { COLOURS, MAX_WIDTH_PX } from '../common/constants'
 import {
@@ -19,24 +18,22 @@ import Logo from '../public/inKRAU_New_Logo_200_80.png'
 import AppBar from '@mui/material/AppBar'
 import Box from '@mui/material/Box'
 import Toolbar from '@mui/material/Toolbar'
-// import IconButton from "@mui/material/IconButton"
+import IconButton from '@mui/material/IconButton'
 import Button from '@mui/material/Button'
-// import MenuIcon from "@mui/icons-material/Menu"
-// import SwipeableDrawer from "@mui/material/SwipeableDrawer"
-// import ListItem from "@mui/material/ListItem"
-// import ListItemIcon from "@mui/material/ListItemIcon"
-// import ListItemText from "@mui/material/ListItemText"
-// import List from "@mui/material/List"
-// import Divider from "@mui/material/Divider"
-// import InboxIcon from "@mui/icons-material/MoveToInbox"
-// import MailIcon from "@mui/icons-material/Mail"
-// import DashboardIcon from "@mui/icons-material/Dashboard"
-// import CardGiftcardIcon from "@mui/icons-material/CardGiftcard"
-// import QueryStatsIcon from "@mui/icons-material/QueryStats"
-// import AccountBoxIcon from "@mui/icons-material/AccountBox"
+import MenuIcon from '@mui/icons-material/Menu'
+import SwipeableDrawer from '@mui/material/SwipeableDrawer'
+import ListItem from '@mui/material/ListItem'
+import ListItemIcon from '@mui/material/ListItemIcon'
+import ListItemText from '@mui/material/ListItemText'
+import List from '@mui/material/List'
+import Divider from '@mui/material/Divider'
+import QuizIcon from '@mui/icons-material/Quiz'
+import LogoutIcon from '@mui/icons-material/Logout'
+import FavoriteIcon from '@mui/icons-material/Favorite'
+import QueryStatsIcon from '@mui/icons-material/QueryStats'
+import AccountBoxIcon from '@mui/icons-material/AccountBox'
 import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutline'
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings'
-// import MasksIcon from '@mui/icons-material/Masks'
 import Tooltip from '@mui/material/Tooltip'
 import CovidInfoDialog from './CovidInfoDialog'
 import router from 'next/router'
@@ -48,7 +45,7 @@ export default function Navbar() {
 
   // const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
 
-  // const [openDrawer, setOpenDrawer] = useState(false)
+  const [openDrawer, setOpenDrawer] = useState(false)
 
   // const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
   //   setAnchorEl(event.currentTarget)
@@ -58,59 +55,68 @@ export default function Navbar() {
   //   setAnchorEl(null)
   // }
 
-  // const toggleDrawer = useCallback(
-  //   (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
-  //     if (
-  //       event &&
-  //       event.type === "keydown" &&
-  //       ((event as React.KeyboardEvent).key === "Tab" ||
-  //         (event as React.KeyboardEvent).key === "Shift")
-  //     ) {
-  //       return
-  //     }
+  const toggleDrawer = useCallback(
+    (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
+      if (
+        event &&
+        event.type === 'keydown' &&
+        ((event as React.KeyboardEvent).key === 'Tab' ||
+          (event as React.KeyboardEvent).key === 'Shift')
+      ) {
+        return
+      }
 
-  //     setOpenDrawer(open)
-  //   },
-  //   []
-  // )
+      setOpenDrawer(open)
+    },
+    []
+  )
 
-  // const list = () => (
-  //   <Box
-  //     role="presentation"
-  //     onClick={toggleDrawer(false)}
-  //     onKeyDown={toggleDrawer(false)}
-  //   >
-  //     <List>
-  //       <ListItem button key={"Dashboard"}>
-  //         <ListItemIcon>
-  //           <DashboardIcon />
-  //         </ListItemIcon>
-  //         <ListItemText primary={"Dashboard"} />
-  //       </ListItem>
-  //       <ListItem button key={"Deals"}>
-  //         <ListItemIcon>
-  //           <CardGiftcardIcon />
-  //         </ListItemIcon>
-  //         <ListItemText primary={"Deals"} />
-  //       </ListItem>
-  //       <ListItem button key={"Data Central"}>
-  //         <ListItemIcon>
-  //           <QueryStatsIcon />
-  //         </ListItemIcon>
-  //         <ListItemText primary={"Data Central"} />
-  //       </ListItem>
-  //     </List>
-  //     <Divider />
-  //     <List>
-  //       <ListItem button key={"Account"}>
-  //         <ListItemIcon>
-  //           <AccountBoxIcon />
-  //         </ListItemIcon>
-  //         <ListItemText primary={"Account"} />
-  //       </ListItem>
-  //     </List>
-  //   </Box>
-  // )
+  const list = () => (
+    <Box
+      role="presentation"
+      onClick={toggleDrawer(false)}
+      onKeyDown={toggleDrawer(false)}
+    >
+      <List>
+        <ListItem button key={'Account'}>
+          <ListItemIcon>
+            <AccountBoxIcon />
+          </ListItemIcon>
+          {/* <ListItemIcon>
+            <DashboardIcon />
+          </ListItemIcon> */}
+          <ListItemText primary={'내 계정'} />
+        </ListItem>
+        <ListItem button key={'HeartPosts'}>
+          <ListItemIcon>
+            <FavoriteIcon />
+          </ListItemIcon>
+          <ListItemText primary={'하트 누른 게시물'} />
+        </ListItem>
+        <ListItem button key={'Stats'}>
+          <ListItemIcon>
+            <QueryStatsIcon />
+          </ListItemIcon>
+          <ListItemText primary={'나의 활동'} />
+        </ListItem>
+      </List>
+      <Divider />
+      <List>
+        <ListItem button key={'Request'}>
+          <ListItemIcon>
+            <QuizIcon />
+          </ListItemIcon>
+          <ListItemText primary={'문의'} />
+        </ListItem>
+        <ListItem button key={'LogOut'}>
+          <ListItemIcon>
+            <LogoutIcon />
+          </ListItemIcon>
+          <ListItemText primary={'로그아웃'} />
+        </ListItem>
+      </List>
+    </Box>
+  )
 
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -119,20 +125,6 @@ export default function Navbar() {
           variant="dense"
           style={{ display: 'flex', justifyContent: 'center' }}
         >
-          {/* <IconButton
-            size="large"
-            edge="start"
-            aria-label="menu"
-            sx={{
-              mr: 2,
-              svg: {
-                color: COLOURS.PRIMARY_WHITE,
-              },
-            }}
-            onClick={toggleDrawer(true)}
-          >
-            <MenuIcon />
-          </IconButton> */}
           <FlexSpaceBetween
             style={{
               // display: "flex",
@@ -228,19 +220,35 @@ export default function Navbar() {
                     <AdminPanelSettingsIcon style={{ color: 'orange' }} />
                   </Tooltip>
                 )}
+                <IconButton
+                  size="large"
+                  edge="start"
+                  aria-label="menu"
+                  sx={{
+                    svg: {
+                      color: COLOURS.LIGHT_PURPLE
+                    }
+                  }}
+                  style={{
+                    paddingRight: '0'
+                  }}
+                  onClick={toggleDrawer(true)}
+                >
+                  <MenuIcon />
+                </IconButton>
               </FlexVerticalCenterDiv>
             </FlexVerticalCenterDiv>
           </FlexSpaceBetween>
         </Toolbar>
       </AppBar>
-      {/* <SwipeableDrawer
-        anchor="left"
+      <SwipeableDrawer
+        anchor="right"
         open={openDrawer}
         onClose={toggleDrawer(false)}
         onOpen={toggleDrawer(true)}
       >
         {list()}
-      </SwipeableDrawer> */}
+      </SwipeableDrawer>
       {covidInfoOpen && (
         <CovidInfoDialog open={covidInfoOpen} setOpen={setCovidInfoOpen} />
       )}
