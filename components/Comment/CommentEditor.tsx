@@ -213,12 +213,26 @@ const CommentEditor: FC<Props> = ({
               fullWidth
               rows={multiRows}
               value={content}
-              onChange={e => (viewMode ? null : setContent(e.target.value))}
+              onChange={e => {
+                const value = e.target.value
+                // no more length than max count
+                if (value && value.length > COMMENT_CONTENT_MAX_COUNT) {
+                  return null
+                }
+                return viewMode ? null : setContent(value)
+              }}
               onFocus={() => !initFocus && setInitFocus(true)}
             />
             <FlexSpaceBetweenCenter style={{ margin: '6px' }}>
               <div>
-                <small>
+                <small
+                  style={{
+                    color:
+                      content.length > COMMENT_CONTENT_MAX_COUNT - 1
+                        ? 'red'
+                        : 'black'
+                  }}
+                >
                   {content.length} / {COMMENT_CONTENT_MAX_COUNT}
                 </small>
               </div>

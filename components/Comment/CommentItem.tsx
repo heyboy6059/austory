@@ -152,15 +152,17 @@ const CommentItem: FC<Props> = ({
                 }
               </FlexVerticalCenterDiv>
             </FlexSpaceBetweenCenter>
-            <CommentEditor
-              commentCollectionRef={commentCollectionRef}
-              comment={comment}
-              level={comment.level}
-              refetchCommentData={refetchCommentData}
-              viewMode={!editMode}
-              editMode={editMode}
-              setEditMode={setEditMode}
-            />
+            <div style={{ marginTop: '15px' }}>
+              <CommentEditor
+                commentCollectionRef={commentCollectionRef}
+                comment={comment}
+                level={comment.level}
+                refetchCommentData={refetchCommentData}
+                viewMode={!editMode}
+                editMode={editMode}
+                setEditMode={setEditMode}
+              />
+            </div>
 
             {
               // top level comment
@@ -230,14 +232,16 @@ const CommentItem: FC<Props> = ({
                 {
                   // comment reply
                   commentEditorOpen && (
-                    <CommentEditor
-                      commentCollectionRef={commentCollectionRef}
-                      level={comment.level + 1}
-                      comment={comment}
-                      refetchCommentData={refetchCommentData}
-                      createMode={true}
-                      createCallback={() => setCommentEditorOpen(false)}
-                    />
+                    <div style={{ marginTop: '15px' }}>
+                      <CommentEditor
+                        commentCollectionRef={commentCollectionRef}
+                        level={comment.level + 1}
+                        comment={comment}
+                        refetchCommentData={refetchCommentData}
+                        createMode={true}
+                        createCallback={() => setCommentEditorOpen(false)}
+                      />
+                    </div>
                   )
                 }
               </div>

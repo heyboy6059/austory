@@ -311,7 +311,7 @@ function UsernameForm() {
               }
               label={
                 <span style={{ fontSize: '0.8rem' }}>
-                  인크라우가 제공하는 알림, 호주 소식, 정보 등을 이메일로 받아
+                  인크라우가 제공하는 호주 소식, 정보 등을 이메일로 받아
                   보시겠습니까?
                 </span>
               }
