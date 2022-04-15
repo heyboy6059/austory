@@ -27,7 +27,7 @@ import ListItemIcon from '@mui/material/ListItemIcon'
 import ListItemText from '@mui/material/ListItemText'
 import List from '@mui/material/List'
 import Divider from '@mui/material/Divider'
-import QuizIcon from '@mui/icons-material/Quiz'
+// import QuizIcon from '@mui/icons-material/Quiz'
 import LogoutIcon from '@mui/icons-material/Logout'
 import FavoriteIcon from '@mui/icons-material/Favorite'
 import QueryStatsIcon from '@mui/icons-material/QueryStats'
@@ -37,10 +37,12 @@ import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings'
 import Tooltip from '@mui/material/Tooltip'
 import CovidInfoDialog from './CovidInfoDialog'
 import router from 'next/router'
+import { auth } from '../common/firebase'
+import toast from 'react-hot-toast'
 
 // Top navbar
 export default function Navbar() {
-  const { userAuth, username, isAdmin } = useContext(UserContext)
+  const { userAuth, username, isAdmin, user } = useContext(UserContext)
   const [covidInfoOpen, setCovidInfoOpen] = useState(false)
 
   // const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
@@ -78,22 +80,31 @@ export default function Navbar() {
       onKeyDown={toggleDrawer(false)}
     >
       <List>
-        <ListItem button key={'Account'}>
+        <ListItem
+          button
+          key={'Account'}
+          onClick={() => router.push(`/${username}`)}
+        >
           <ListItemIcon>
             <AccountBoxIcon />
           </ListItemIcon>
-          {/* <ListItemIcon>
-            <DashboardIcon />
-          </ListItemIcon> */}
           <ListItemText primary={'내 계정'} />
         </ListItem>
-        <ListItem button key={'HeartPosts'}>
+        <ListItem
+          button
+          key={'HeartPosts'}
+          onClick={() => router.push(`/user/heartPosts`)}
+        >
           <ListItemIcon>
             <FavoriteIcon />
           </ListItemIcon>
           <ListItemText primary={'하트 누른 게시물'} />
         </ListItem>
-        <ListItem button key={'Stats'}>
+        <ListItem
+          button
+          key={'Stats'}
+          onClick={() => router.push(`/user/stats`)}
+        >
           <ListItemIcon>
             <QueryStatsIcon />
           </ListItemIcon>
@@ -102,19 +113,44 @@ export default function Navbar() {
       </List>
       <Divider />
       <List>
-        <ListItem button key={'Request'}>
+        {/* <ListItem button key={'Request'}>
           <ListItemIcon>
             <QuizIcon />
           </ListItemIcon>
           <ListItemText primary={'문의'} />
-        </ListItem>
-        <ListItem button key={'LogOut'}>
+        </ListItem> */}
+        <ListItem
+          button
+          key={'LogOut'}
+          onClick={async () => {
+            await auth.signOut()
+            router.push('/')
+            toast.success(`로그아웃 되었습니다.`)
+          }}
+        >
           <ListItemIcon>
             <LogoutIcon />
           </ListItemIcon>
           <ListItemText primary={'로그아웃'} />
         </ListItem>
       </List>
+      {isAdmin && (
+        <>
+          <Divider />
+          <List>
+            <ListItem
+              button
+              key={'Admin'}
+              onClick={() => router.push('/admin')}
+            >
+              <ListItemIcon>
+                <AdminPanelSettingsIcon style={{ color: 'orange' }} />
+              </ListItemIcon>
+              <ListItemText primary={'관리자 페이지'} />
+            </ListItem>
+          </List>
+        </>
+      )}
     </Box>
   )
 
@@ -220,22 +256,24 @@ export default function Navbar() {
                     <AdminPanelSettingsIcon style={{ color: 'orange' }} />
                   </Tooltip>
                 )}
-                <IconButton
-                  size="large"
-                  edge="start"
-                  aria-label="menu"
-                  sx={{
-                    svg: {
-                      color: COLOURS.LIGHT_PURPLE
-                    }
-                  }}
-                  style={{
-                    paddingRight: '0'
-                  }}
-                  onClick={toggleDrawer(true)}
-                >
-                  <MenuIcon />
-                </IconButton>
+                {user && (
+                  <IconButton
+                    size="large"
+                    edge="start"
+                    aria-label="menu"
+                    sx={{
+                      svg: {
+                        color: COLOURS.LIGHT_PURPLE
+                      }
+                    }}
+                    style={{
+                      paddingRight: '0'
+                    }}
+                    onClick={toggleDrawer(true)}
+                  >
+                    <MenuIcon />
+                  </IconButton>
+                )}
               </FlexVerticalCenterDiv>
             </FlexVerticalCenterDiv>
           </FlexSpaceBetween>
