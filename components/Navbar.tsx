@@ -3,7 +3,6 @@ import Link from 'next/link'
 import { UserContext } from '../common/context'
 import { COLOURS, MAX_WIDTH_PX } from '../common/constants'
 import {
-  UserImage,
   LogoImage,
   FlexVerticalCenterDiv,
   FlexSpaceBetween,
@@ -42,7 +41,7 @@ import toast from 'react-hot-toast'
 
 // Top navbar
 export default function Navbar() {
-  const { userAuth, username, isAdmin, user } = useContext(UserContext)
+  const { username, isAdmin, user } = useContext(UserContext)
   const [covidInfoOpen, setCovidInfoOpen] = useState(false)
 
   // const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
@@ -200,37 +199,32 @@ export default function Navbar() {
                 </Tooltip> */}
                 {/* <Link href="/post/write" passHref> */}
                 {/* <a> */}
-                <Tooltip title="글쓰기" placement="bottom" arrow>
-                  <DriveFileRenameOutlineIcon
-                    onClick={() => {
-                      if (!username) {
-                        alert('로그인 후 글쓰기가 가능합니다.')
-                        return
-                      }
-                      router.push('/post/write')
-                    }}
-                    style={{
-                      cursor: 'pointer',
-                      fontSize: '28px',
-                      color: 'rebeccapurple'
-                    }}
-                  />
-                </Tooltip>
+
                 {/* </a> */}
                 {/* </Link> */}
 
                 {username ? (
                   // signed in user has username
-                  <Link href={`/${username}`} passHref>
-                    <a>
-                      <UserImage
-                        width={30}
-                        height={30}
-                        src={userAuth?.photoURL || '/hacker.png'}
-                        alt="user photo"
-                      />
-                    </a>
-                  </Link>
+                  // <Link href={`/${username}`} passHref>
+                  //   <a>
+                  //     <UserImage
+                  //       width={30}
+                  //       height={30}
+                  //       src={userAuth?.photoURL || '/hacker.png'}
+                  //       alt="user photo"
+                  //     />
+                  //   </a>
+                  // </Link>
+                  <FlexVerticalCenterDiv
+                    style={{
+                      color: COLOURS.SECONDARY_SPACE_GREY,
+                      fontSize: '13px',
+                      maxWidth: '125px'
+                    }}
+                  >
+                    <AccountBoxIcon fontSize="small" />
+                    {username}
+                  </FlexVerticalCenterDiv>
                 ) : (
                   <Link href="/enter" passHref>
                     <a>
@@ -247,6 +241,22 @@ export default function Navbar() {
                     </a>
                   </Link>
                 )}
+                <Tooltip title="글쓰기" placement="bottom" arrow>
+                  <DriveFileRenameOutlineIcon
+                    onClick={() => {
+                      if (!username) {
+                        alert('로그인 후 글쓰기가 가능합니다.')
+                        return
+                      }
+                      router.push('/post/write')
+                    }}
+                    style={{
+                      cursor: 'pointer',
+                      fontSize: '28px',
+                      color: 'rebeccapurple'
+                    }}
+                  />
+                </Tooltip>
                 {isAdmin && (
                   <Tooltip
                     title="관리자로 로그인 되었습니다."
