@@ -25,7 +25,6 @@ import Checkbox from '@mui/material/Checkbox'
 import { batchUpdateUsers } from '../../common/update'
 import { generatePostDocumentId } from '../../common/idHelper'
 import Stack from '@mui/material/Stack'
-import { COLOURS } from '../../common/constants'
 
 interface Props {
   editPost?: Post
@@ -183,10 +182,10 @@ const PostForm: FC<Props> = ({ editPost }) => {
           <Button
             variant="outlined"
             type="submit"
-            style={{
-              color: COLOURS.LIGHT_PURPLE,
-              borderColor: COLOURS.LIGHT_PURPLE
-            }}
+            // style={{
+            //   color: COLOURS.LIGHT_PURPLE,
+            //   borderColor: COLOURS.LIGHT_PURPLE
+            // }}
           >
             완료
           </Button>
