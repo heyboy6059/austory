@@ -174,7 +174,9 @@ const PostItem: FC<{
                   color: COLOURS.LIGHT_PURPLE
                 }}
               />
-              {post.heartCount}
+              <span style={{ color: COLOURS.SECONDARY_SPACE_GREY }}>
+                {post.heartCount}
+              </span>
             </FlexVerticalCenterDiv>
             <FlexVerticalCenterDiv>
               {/* <FcSms
@@ -189,7 +191,9 @@ const PostItem: FC<{
                   color: COLOURS.LIGHT_PURPLE
                 }}
               />
-              {post.commentCount || 0}
+              <span style={{ color: COLOURS.SECONDARY_SPACE_GREY }}>
+                {post.commentCount || 0}
+              </span>
             </FlexVerticalCenterDiv>
           </FlexCenterDiv>
         </GridDiv>
