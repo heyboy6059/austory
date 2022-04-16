@@ -1,7 +1,11 @@
 import { useContext, useState, useCallback } from 'react'
 import Link from 'next/link'
 import { UserContext } from '../common/context'
-import { COLOURS, MAX_WIDTH_PX } from '../common/constants'
+import {
+  COLOURS,
+  MAX_WIDTH_PX,
+  REQUEST_GOOGLE_FORM_URL
+} from '../common/constants'
 import {
   LogoImage,
   FlexVerticalCenterDiv,
@@ -26,7 +30,7 @@ import ListItemIcon from '@mui/material/ListItemIcon'
 import ListItemText from '@mui/material/ListItemText'
 import List from '@mui/material/List'
 import Divider from '@mui/material/Divider'
-// import QuizIcon from '@mui/icons-material/Quiz'
+import QuizIcon from '@mui/icons-material/Quiz'
 import LogoutIcon from '@mui/icons-material/Logout'
 import FavoriteIcon from '@mui/icons-material/Favorite'
 import QueryStatsIcon from '@mui/icons-material/QueryStats'
@@ -112,12 +116,16 @@ export default function Navbar() {
       </List>
       <Divider />
       <List>
-        {/* <ListItem button key={'Request'}>
+        <ListItem
+          button
+          key={'Request'}
+          onClick={() => window.open(REQUEST_GOOGLE_FORM_URL, '_blank').focus()}
+        >
           <ListItemIcon>
             <QuizIcon />
           </ListItemIcon>
           <ListItemText primary={'문의'} />
-        </ListItem> */}
+        </ListItem>
         <ListItem
           button
           key={'LogOut'}

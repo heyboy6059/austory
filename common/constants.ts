@@ -49,3 +49,6 @@ export const FIRESTORE_COMMENTS = 'comments'
 
 export const GENERIC_KOREAN_ERROR_MESSAGE =
   '에러가 발생했습니다. 다시 시도해주세요.'
+
+// URLs
+export const REQUEST_GOOGLE_FORM_URL = 'https://forms.gle/fxLmKtN1RrYen7LH6'
