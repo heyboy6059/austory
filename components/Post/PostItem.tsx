@@ -1,4 +1,4 @@
-import { FC } from 'react'
+import { FC, useContext } from 'react'
 import dayjs from 'dayjs'
 import Link from 'next/link'
 import Image from 'next/image'
@@ -16,7 +16,8 @@ import Typography from '@mui/material/Typography'
 import { COLOURS, KOR_MONTH_DAY_FORMAT } from '../../common/constants'
 import AccountBoxIcon from '@mui/icons-material/AccountBox'
 import Chip from '@mui/material/Chip'
-import { AiOutlineHeart, AiOutlineComment } from 'react-icons/ai'
+import { AiOutlineHeart, AiOutlineComment, AiOutlineEye } from 'react-icons/ai'
+import { UserContext } from '../../common/context'
 
 const PostItem: FC<{
   post: Post
@@ -26,6 +27,7 @@ const PostItem: FC<{
   // const wordCount = post?.content.trim().split(/\s+/g).length
   // const minutesToRead = (wordCount / 100 + 1).toFixed(0)
 
+  const { isAdmin } = useContext(UserContext)
   // TODO: div clean up
   return (
     <Paper
@@ -195,6 +197,24 @@ const PostItem: FC<{
                 {post.commentCount || 0}
               </span>
             </FlexVerticalCenterDiv>
+            {/**
+             * Count is visible only for Admin users
+             */}
+            {isAdmin && (
+              <FlexVerticalCenterDiv>
+                <AiOutlineEye
+                  fontSize={18}
+                  style={{
+                    marginRight: '1px',
+                    marginTop: '1px',
+                    color: COLOURS.PRIMARY_SPACE_GREY
+                  }}
+                />
+                <span style={{ color: COLOURS.SECONDARY_SPACE_GREY }}>
+                  {post.viewCount || 0}
+                </span>
+              </FlexVerticalCenterDiv>
+            )}
           </FlexCenterDiv>
         </GridDiv>
       </div>
