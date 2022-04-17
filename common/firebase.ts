@@ -26,10 +26,7 @@ const firebaseConfig = {
 }
 
 if (!firebase.apps.length) {
-  // const app =
   firebase.initializeApp(firebaseConfig)
-  // const analytics = getAnalytics(app)
-  // console.log({ analytics })
 }
 
 if (typeof window !== 'undefined') {
