@@ -121,7 +121,7 @@ const CommentItem: FC<Props> = ({
               <div style={{ fontWeight: 'bold' }}>{comment.username}</div>
 
               <FlexVerticalCenterDiv>
-                <small style={{ color: COLOURS.TEXT_GREY }}>
+                <small style={{ color: COLOURS.TEXT_GREY, marginRight: '2px' }}>
                   {dayjs(comment.createdAt).format(KOR_FULL_DATE_FORMAT)}
                 </small>
 
@@ -135,13 +135,19 @@ const CommentItem: FC<Props> = ({
                           onClick={() => {
                             setEditMode(true)
                           }}
-                          style={{ cursor: 'pointer', color: '#0770bb' }}
+                          style={{
+                            cursor: 'pointer',
+                            color: COLOURS.DARK_BLUE
+                          }}
                         />
                       </Tooltip>
                       <Tooltip title="삭제" placement="bottom" arrow>
                         <DeleteIcon
                           fontSize="small"
-                          style={{ color: '#ff0000', cursor: 'pointer' }}
+                          style={{
+                            color: COLOURS.CANCEL_RED,
+                            cursor: 'pointer'
+                          }}
                           onClick={() => removeComment()}
                         />
                       </Tooltip>

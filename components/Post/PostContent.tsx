@@ -15,7 +15,7 @@ import {
   FirestoreTimestamp
 } from '../../typing/interfaces'
 import dayjs from 'dayjs'
-import { KOR_FULL_DATE_FORMAT } from '../../common/constants'
+import { COLOURS, KOR_FULL_DATE_FORMAT } from '../../common/constants'
 import NextImage from 'next/image'
 import AccountBoxIcon from '@mui/icons-material/AccountBox'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'
@@ -187,13 +187,16 @@ const PostContent: FC<PostContentProps> = ({
                     onClick={() => {
                       router.push(`/post/edit/${post.postId}`)
                     }}
-                    style={{ cursor: 'pointer', color: '#0770bb' }}
+                    style={{
+                      cursor: 'pointer',
+                      color: COLOURS.DARK_BLUE
+                    }}
                   />
                 </Tooltip>
                 <Tooltip title="삭제" placement="bottom" arrow>
                   <DeleteIcon
                     fontSize="small"
-                    style={{ color: '#ff0000', cursor: 'pointer' }}
+                    style={{ color: COLOURS.CANCEL_RED, cursor: 'pointer' }}
                     onClick={() => setDeleteAlertOpen(true)}
                   />
                 </Tooltip>
@@ -201,7 +204,10 @@ const PostContent: FC<PostContentProps> = ({
             )}
             {isAdmin && (
               <FlexCenterDiv style={{ gap: '2px', fontSize: '14px' }}>
-                <VisibilityIcon fontSize="small" style={{ color: 'gray' }} />
+                <VisibilityIcon
+                  fontSize="small"
+                  style={{ color: COLOURS.PRIMARY_SPACE_GREY }}
+                />
                 <span>{post.viewCount}</span>
               </FlexCenterDiv>
             )}
