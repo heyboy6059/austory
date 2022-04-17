@@ -1,7 +1,8 @@
 import { FC, useState } from 'react'
 import {
   ORIGINAL_IMAGE_UPLOAD_MAX_THRESHOLD,
-  FileExt
+  FileExt,
+  COLOURS
 } from '../common/constants'
 import Image from 'next/image'
 import { UseFormSetValue } from 'react-hook-form/dist/types/form'
@@ -11,6 +12,9 @@ import toast from 'react-hot-toast'
 import { extractFilenameExtension } from '../common/functions'
 import ImageIcon from '@mui/icons-material/Image'
 import CircularProgress from '@mui/material/CircularProgress'
+import CancelIcon from '@mui/icons-material/Cancel'
+import Tooltip from '@mui/material/Tooltip'
+
 interface Props {
   setValue: UseFormSetValue<PostWrite>
   editThumbnailImgUrl?: string
@@ -103,7 +107,7 @@ const ImageUploader: FC<Props> = ({ setValue, editThumbnailImgUrl }) => {
 
   return (
     <div>
-      <div>
+      <div style={{ display: 'flex', alignItems: 'center' }}>
         <label
           style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}
         >
@@ -111,7 +115,7 @@ const ImageUploader: FC<Props> = ({ setValue, editThumbnailImgUrl }) => {
             <CircularProgress size={16} />
           ) : (
             <>
-              <ImageIcon /> 이미지
+              <ImageIcon /> <span>이미지</span>
             </>
           )}
           <input
@@ -121,6 +125,24 @@ const ImageUploader: FC<Props> = ({ setValue, editThumbnailImgUrl }) => {
             disabled={uploading}
           />
         </label>
+        {!uploading && thumbnailImgUrl && (
+          <Tooltip title="삭제" placement="bottom" arrow>
+            <CancelIcon
+              fontSize="small"
+              style={{
+                color: COLOURS.CANCEL_RED,
+                margin: '0 6px',
+                cursor: 'pointer'
+              }}
+              onClick={() => {
+                // remove from main value object
+                setValue('images', [])
+                // remove in thumbnailImgUrl
+                setThumbnailImgUrl('')
+              }}
+            />
+          </Tooltip>
+        )}
       </div>
       {thumbnailImgUrl ? (
         <div style={{ width: '300px', margin: 'auto' }}>

@@ -9,6 +9,7 @@ export enum COLOURS {
   GREEN = '#72CC50',
   BRIGHT_GREEN = '#8bc34a',
   HEART_RED = '#f44336',
+  CANCEL_RED = '#E3242B',
   LIGHT_PURPLE = '#8c519d'
 }
 
