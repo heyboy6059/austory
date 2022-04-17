@@ -117,7 +117,7 @@ const ImageUploader: FC<Props> = ({ setValue, editThumbnailImgUrl }) => {
           <input
             type="file"
             onChange={uploadFile}
-            accept="image/x-png,image/gif,image/jpeg"
+            accept=".jpg, .jpeg, .png, .gif"
             disabled={uploading}
           />
         </label>
