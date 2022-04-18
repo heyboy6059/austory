@@ -118,7 +118,13 @@ const CommentItem: FC<Props> = ({
         ) : (
           <>
             <FlexSpaceBetweenCenter>
-              <div style={{ fontWeight: 'bold' }}>{comment.username}</div>
+              {/**
+               * coverUsername is for admin purpose only
+               * - temporarily cover the username
+               */}
+              <div style={{ fontWeight: 'bold' }}>
+                {comment.coverUsername || comment.username}
+              </div>
 
               <FlexVerticalCenterDiv>
                 <small style={{ color: COLOURS.TEXT_GREY, marginRight: '2px' }}>

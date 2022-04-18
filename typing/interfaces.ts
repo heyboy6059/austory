@@ -31,7 +31,6 @@ export type RawUser = {
   disabled: boolean
   isAdmin: boolean
   isMarketingEmail: boolean
-  //
   notificationMethod: NotificationMethod
   role: Role
   createdAt: FirestoreTimestamp
@@ -79,6 +78,7 @@ export type RawPost = {
   postId: string // email(before @) + unix timestamp = documentId
   uid: string // userId
   username: string
+  coverUsername: string // only for admin purpose
   title: string
   deleted: boolean
   heartCount: number // need another approach?
@@ -110,7 +110,7 @@ export type Post = Omit<RawPost, 'createdAt' | 'updatedAt' | 'commentCount'> & {
 
 export type PostWrite = Pick<
   Post,
-  'title' | 'content' | 'images' | 'categories' | 'isTest'
+  'title' | 'content' | 'images' | 'categories' | 'isTest' | 'coverUsername'
 >
 
 export type ImgType = 'thumbnail200' | 'thumbnail600' | 'original'
@@ -118,6 +118,7 @@ export type ImgType = 'thumbnail200' | 'thumbnail600' | 'original'
 export type RawComment = {
   commentId: string
   username: string
+  coverUsername: string // only for admin purpose
   level: number
   parentCommentId: string | null
   content: string

@@ -33,6 +33,12 @@ export const EllipsisDiv = styled.div`
   text-overflow: ellipsis;
 `
 
+export const EllipsisSpan = styled.span`
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+`
+
 export const UserImage = styled(Image)({
   cursor: 'pointer',
   borderRadius: '50%'

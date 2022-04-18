@@ -9,7 +9,8 @@ import {
   FlexVerticalCenterDiv,
   FlexCenterDiv,
   GridDiv,
-  EllipsisDiv
+  EllipsisDiv,
+  EllipsisSpan
 } from '../../common/uiComponents'
 
 import Typography from '@mui/material/Typography'
@@ -150,11 +151,17 @@ const PostItem: FC<{
             {/* <Link href={`/${post.username}`} passHref> */}
             <FlexCenterDiv style={{ gap: '2px', alignItems: 'center' }}>
               <AccountBoxIcon style={{ fontSize: '16px', marginTop: '4px' }} />
-              <div>{post.username}</div>
+              {/**
+               * coverUsername is for admin purpose only
+               * - temporarily cover the username
+               */}
+              <div>{post.coverUsername || post.username}</div>
             </FlexCenterDiv>
             {/* </Link> */}
             <span>|</span>
-            <span>{dayjs(post.createdAt).format(KOR_MONTH_DAY_FORMAT)}</span>
+            <EllipsisSpan>
+              {dayjs(post.createdAt).format(KOR_MONTH_DAY_FORMAT)}
+            </EllipsisSpan>
           </div>
           <div></div>
           <FlexCenterDiv

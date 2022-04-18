@@ -224,7 +224,11 @@ const PostContent: FC<PostContentProps> = ({
           <FlexVerticalCenterDiv style={{ gap: '8px', margin: '5px 0' }}>
             <div style={{ display: 'flex' }}>
               <AccountBoxIcon style={{ fontSize: '16px' }} />
-              <div>{post.username}</div>
+              {/**
+               * coverUsername is for admin purpose only
+               * - temporarily cover the username
+               */}
+              <div>{post.coverUsername || post.username}</div>
             </div>
             <div>|</div>
             <div>{dayjs(post.createdAt).format(KOR_FULL_DATE_FORMAT)}</div>

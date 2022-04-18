@@ -48,7 +48,8 @@ const PostForm: FC<Props> = ({ editPost }) => {
           images: editPost.images,
           categories: editPost.categories,
           content: editPost.content,
-          isTest: editPost.isTest
+          isTest: editPost.isTest,
+          coverUsername: editPost.coverUsername
         }
       : // CREATE
         {
@@ -84,6 +85,7 @@ const PostForm: FC<Props> = ({ editPost }) => {
         const post: RawPost = {
           postId,
           uid: auth.currentUser.uid,
+          coverUsername: data.coverUsername,
           username,
           title: data.title,
           content: data.content,
@@ -135,16 +137,42 @@ const PostForm: FC<Props> = ({ editPost }) => {
          * REVIEW: react-hook-form & mui checkbox doesn't work with default value
          */}
         {isAdmin && (
-          <FormControlLabel
-            label={`테스트 게시물 (관리자 전용) - ${watch().isTest}`}
-            control={
-              <Controller
-                name="isTest"
-                control={control}
-                render={({ field }) => <Checkbox {...field} />}
-              />
-            }
-          />
+          <>
+            <FormControlLabel
+              label={`테스트 게시물 (관리자 전용) - ${watch().isTest}`}
+              control={
+                <Controller
+                  name="isTest"
+                  control={control}
+                  render={({ field }) => <Checkbox {...field} />}
+                />
+              }
+            />
+            {/* <FormControlLabel
+              label={`커버 닉네임 (관리자 전용)`}
+              control={
+                <Controller
+                  name="coverUsername"
+                  control={control}
+                  render={({ field }) => <Checkbox {...field} />}
+                />
+              }
+            /> */}
+            <Controller
+              name="coverUsername"
+              control={control}
+              rules={{ required: false }}
+              render={({ field }) => (
+                <TextField
+                  label="커버 닉네임(관리자 전용)"
+                  variant="outlined"
+                  {...field}
+                  fullWidth
+                  helperText="기존 유저들의 닉네임을 피해서 사용하세요. 빈칸으로 두면 원래대로 현재 유저의 닉네임이 사용 됩니다."
+                />
+              )}
+            />
+          </>
         )}
         <Stack spacing={2} style={{ marginTop: '15px' }}>
           <Controller
