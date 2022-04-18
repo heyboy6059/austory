@@ -59,12 +59,15 @@ const CommentEditor: FC<Props> = ({
   comment
   editComment
 
-  const { user, username } = useContext(UserContext)
+  const { user, username, isAdmin } = useContext(UserContext)
   const { post } = useContext(PostContext)
 
   // REVIEW: is this clean?
   const [content, setContent] = useState(
     createMode ? '' : comment?.content || ''
+  )
+  const [coverUsername, setCoverUsername] = useState(
+    createMode ? '' : comment?.coverUsername || ''
   )
   const [initFocus, setInitFocus] = useState(false)
   const [multiRows, setMultiRows] = useState(1)
@@ -88,7 +91,7 @@ const CommentEditor: FC<Props> = ({
 
   // TODO: refactor this callback function
   const createEditComment = useCallback(
-    async (content: string) => {
+    async (content: string, coverUsername: string) => {
       try {
         if (!content.length) {
           alert('댓글 입력후 등록을 눌러주세요.')
@@ -104,7 +107,8 @@ const CommentEditor: FC<Props> = ({
             comment.commentId,
             user.uid,
             {
-              content
+              content,
+              coverUsername // only for admin purpose
             }
           )
 
@@ -132,6 +136,7 @@ const CommentEditor: FC<Props> = ({
             level: level > 1 ? 2 : 1,
             parentCommentId: level === 1 ? null : comment.commentId, // TODO: sub comments
             content,
+            coverUsername, // only for admin purpose
             deleted: false,
             adminDeleted: false,
             adminDeletedReason: null,
@@ -176,6 +181,7 @@ const CommentEditor: FC<Props> = ({
           //   })
           // }
           setContent('')
+          setCoverUsername('')
           toast.success('댓글이 성공적으로 등록 되었습니다.')
         }
       } catch (err) {
@@ -203,7 +209,7 @@ const CommentEditor: FC<Props> = ({
       {
         // viewMode is coming from parent / internalViewMode sets to true after edit the comment
         viewMode || internalViewMode ? (
-          <div style={{ margin: '8px 0' }}>{comment.content}</div>
+          <div style={{ margin: '10px 0' }}>{comment.content}</div>
         ) : (
           <>
             <TextField
@@ -247,13 +253,28 @@ const CommentEditor: FC<Props> = ({
                       // TODO: open login/sign up modal
                       return
                     }
-                    createEditComment(content)
+                    createEditComment(content, coverUsername)
                   }}
                 >
                   등록
                 </Button>
               </div>
             </FlexSpaceBetweenCenter>
+            {isAdmin && (
+              <div>
+                <TextField
+                  id="cover-username-text-field"
+                  label="커버 닉네임 (관리자 전용)"
+                  fullWidth
+                  value={coverUsername}
+                  onChange={e => {
+                    const value = e.target.value
+                    return viewMode ? null : setCoverUsername(value)
+                  }}
+                  helperText="기존 유저들의 닉네임을 피해서 사용하세요. 빈칸으로 두면 원래대로 현재 유저의 닉네임이 사용 됩니다."
+                />
+              </div>
+            )}
           </>
         )
       }
