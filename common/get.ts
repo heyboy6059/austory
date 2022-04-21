@@ -1,5 +1,6 @@
-import { FIRESTORE_USERNAMES } from './constants'
-import { firestore } from './firebase'
+import { Category } from '../typing/interfaces'
+import { FIRESTORE_CATEGORIES, FIRESTORE_USERNAMES } from './constants'
+import { categoryToJSON, firestore } from './firebase'
 
 export const getUidByUsername = async (
   username: string
@@ -12,4 +13,9 @@ export const getUidByUsername = async (
     )
   }
   return { uid: userRes.uid }
+}
+
+export const getAllCategories = async (): Promise<Category[]> => {
+  const querySnapshot = await firestore.collection(FIRESTORE_CATEGORIES).get()
+  return querySnapshot.docs.map(categoryToJSON)
 }

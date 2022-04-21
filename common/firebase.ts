@@ -12,7 +12,9 @@ import {
   Comment,
   RawPost,
   RawUser,
-  User
+  User,
+  RawCategory,
+  Category
 } from '../typing/interfaces'
 
 const firebaseConfig = {
@@ -112,4 +114,13 @@ export const commentToJSON = (
   }
 }
 
+export const categoryToJSON = (
+  category: FirebaseDocumentSnapshot<RawCategory>
+): Category => {
+  const categoryData = category.data()
+  return {
+    ...categoryData,
+    createdAt: categoryData?.createdAt?.toMillis() || 0
+  }
+}
 // TODO: generalize all dataToJSON functions

@@ -154,3 +154,13 @@ export interface RawHeart {
   value: number
   createdAt: FirestoreTimestamp
 }
+
+export interface RawCategory {
+  categoryId: string
+  name: string
+  createdAt: FirestoreTimestamp
+}
+
+export type Category = Omit<RawCategory, 'createdAt'> & {
+  createdAt: number
+}

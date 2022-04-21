@@ -47,6 +47,7 @@ export const FIRESTORE_USERNAMES = 'usernames'
 export const FIRESTORE_POSTS = 'posts'
 export const FIRESTORE_USERS = 'users'
 export const FIRESTORE_COMMENTS = 'comments'
+export const FIRESTORE_CATEGORIES = 'categories'
 
 export const GENERIC_KOREAN_ERROR_MESSAGE =
   '에러가 발생했습니다. 다시 시도해주세요.'
