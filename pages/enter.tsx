@@ -2,6 +2,7 @@ import debounce from 'lodash.debounce'
 import { useCallback, useContext, useEffect, useState } from 'react'
 import { UserContext } from '../common/context'
 import {
+  appleAuthProvider,
   auth,
   facebookAuthProvider,
   firestore,
@@ -69,7 +70,9 @@ function SignInButton() {
       const authProvider =
         provider === 'Google'
           ? googleAuthProvider
-          : provider === 'Facebook' && facebookAuthProvider
+          : provider === 'Facebook'
+          ? facebookAuthProvider
+          : provider === 'Apple' && appleAuthProvider
       // : new Error('Provider not found.')
 
       const authRes = await auth.signInWithPopup(authProvider)
@@ -129,7 +132,7 @@ function SignInButton() {
             height: '60px',
             cursor: 'pointer'
           }}
-          onClick={() => alert('준비중 입니다.')}
+          onClick={() => signInWithPopup('Apple')}
         >
           <Image src={'/apple.png'} width={30} height={30} />
           Apple 로그인

@@ -45,6 +45,7 @@ export const fromMillis = firebase.firestore.Timestamp.fromMillis
 // auth providers
 export const googleAuthProvider = new firebase.auth.GoogleAuthProvider()
 export const facebookAuthProvider = new firebase.auth.FacebookAuthProvider()
+export const appleAuthProvider = new firebase.auth.OAuthProvider('apple.com')
 
 export const serverTimestamp = firebase.firestore.FieldValue.serverTimestamp
 
