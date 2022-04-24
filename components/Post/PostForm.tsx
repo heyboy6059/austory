@@ -1,5 +1,6 @@
-import { FC, useContext } from 'react'
+import { FC, useContext, useState, useEffect, useMemo } from 'react'
 import {
+  Category,
   FirestoreTimestamp,
   Post,
   PostWrite,
@@ -22,9 +23,23 @@ import { FlexCenterDiv } from '../../common/uiComponents'
 import Button from '@mui/material/Button'
 import FormControlLabel from '@mui/material/FormControlLabel'
 import Checkbox from '@mui/material/Checkbox'
-import { batchUpdateUsers } from '../../common/update'
+import {
+  batchUpdateCategoryCounts,
+  batchUpdateUsers
+} from '../../common/update'
 import { generatePostDocumentId } from '../../common/idHelper'
 import Stack from '@mui/material/Stack'
+import {
+  HorizontalScrollContainer,
+  HorizontalScrollItem
+} from 'react-simple-horizontal-scroller'
+import Box from '@mui/material/Box'
+import { getAllCategories } from '../../common/get'
+import { Chip, Skeleton } from '@mui/material'
+
+type ExtendedCategory = Category & {
+  selected: boolean
+}
 
 interface Props {
   editPost?: Post
@@ -33,6 +48,43 @@ const PostForm: FC<Props> = ({ editPost }) => {
   const router = useRouter()
   const { isAdmin, user, username } = useContext(UserContext)
   const isEditMode = !!editPost
+  const [categories, setCategories] = useState<ExtendedCategory[]>([])
+  const [categoryLoading, setCategoryLoading] = useState(false)
+
+  // getAllCategories + pre select categories from editPost
+  useEffect(() => {
+    setCategoryLoading(true)
+    getAllCategories()
+      .then(categories => {
+        console.log('getAllCategories...')
+        // EDIT
+        if (isEditMode) {
+          // selected true from categories in edit post
+          setCategories(
+            categories.map(c => {
+              const match = editPost.categories.find(
+                editCat => editCat.categoryId === c.categoryId
+              )
+              return { ...c, selected: match ? true : false }
+            })
+          )
+        }
+        // CREATE
+        else {
+          setCategories(categories.map(c => ({ ...c, selected: false })))
+        }
+        setCategoryLoading(false)
+      })
+      .catch(err => {
+        console.error(`Error in getAllCategories. ERROR: ${err}`)
+        setCategoryLoading(false)
+      })
+  }, [editPost, isEditMode])
+
+  const noCategorySelect = useMemo(
+    () => categories.every(c => !c.selected),
+    [categories]
+  )
 
   const {
     handleSubmit,
@@ -63,17 +115,58 @@ const PostForm: FC<Props> = ({ editPost }) => {
 
   const onSubmit = async (data: PostWrite) => {
     try {
+      const selectedCategories = categories.filter(e => e.selected)
+
       // EDIT
       if (isEditMode) {
+        const batch = firestore.batch()
+
         const postId = editPost.postId
 
         const postRef = firestore.collection('posts').doc(postId)
-        await postRef.update({
+
+        batch.update(postRef, {
           ...data,
+          categories: selectedCategories.map(category => ({
+            categoryId: category.categoryId,
+            name: category.name
+          })),
           excerpt: generateExcerpt(data.content, 150),
           updatedBy: user.uid,
           updatedAt: serverTimestamp()
         })
+
+        // increase counts for newly selected categories
+        const newlySelectedCategories = categories.filter(
+          c =>
+            c.selected &&
+            !editPost.categories.find(cat => cat.categoryId === c.categoryId)
+        )
+        if (newlySelectedCategories.length) {
+          batchUpdateCategoryCounts(batch, newlySelectedCategories, user.uid, {
+            postCount: increment(1)
+          })
+        }
+
+        // decrease counts for newly unselected categories
+        const newlyUnselectedCategories = categories.filter(
+          c =>
+            !c.selected &&
+            editPost.categories.find(cat => cat.categoryId === c.categoryId)
+        )
+        if (newlyUnselectedCategories.length) {
+          batchUpdateCategoryCounts(
+            batch,
+            newlyUnselectedCategories,
+            user.uid,
+            {
+              postCount: increment(-1)
+            }
+          )
+        }
+
+        await batch.commit()
+
         toast.success('게시물 업데이트가 완료 되었습니다.')
       }
       // CREATE
@@ -85,7 +178,7 @@ const PostForm: FC<Props> = ({ editPost }) => {
         const post: RawPost = {
           postId,
           uid: auth.currentUser.uid,
-          coverUsername: data.coverUsername,
+          coverUsername: data.coverUsername || '',
           username,
           title: data.title,
           content: data.content,
@@ -95,7 +188,10 @@ const PostForm: FC<Props> = ({ editPost }) => {
           viewCount: 0,
           commentCount: 0,
           images: data.images,
-          categories: [],
+          categories: selectedCategories.map(category => ({
+            categoryId: category.categoryId,
+            name: category.name
+          })),
           notificationIncludedUids: [],
           createdBy: user.uid,
           createdAt: serverTimestamp() as FirestoreTimestamp,
@@ -110,6 +206,13 @@ const PostForm: FC<Props> = ({ editPost }) => {
         batchUpdateUsers(batch, user.uid, {
           myPostCountTotal: increment(1)
         })
+
+        // add category counts
+        if (selectedCategories.length) {
+          batchUpdateCategoryCounts(batch, selectedCategories, user.uid, {
+            postCount: increment(1)
+          })
+        }
 
         await batch.commit()
 
@@ -129,9 +232,32 @@ const PostForm: FC<Props> = ({ editPost }) => {
         padding: '10px'
       }}
     >
+      {/**
+       * DEV ONLY - easy category creation
+       */}
+      {/* <button
+        onClick={async () => {
+          const tempObj: RawCategory = {
+            categoryId: 'category-wa',
+            name: 'WA',
+            postCount: 0,
+            sort: 1300,
+            adminOnly: false,
+            disabled: false,
+            createdAt: serverTimestamp() as FirestoreTimestamp
+          }
+          await firestore
+            .collection('categories')
+            .doc(tempObj.categoryId)
+            .set(tempObj)
+          console.log('done')
+        }}
+      >
+        CREATE (DEV ONLY)
+      </button> */}
       <form
         onSubmit={handleSubmit(onSubmit)}
-        style={{ display: 'grid', gap: '10px' }}
+        style={{ display: 'grid', gap: '10px', width: '100%' }}
       >
         {/**
          * REVIEW: react-hook-form & mui checkbox doesn't work with default value
@@ -174,7 +300,72 @@ const PostForm: FC<Props> = ({ editPost }) => {
             />
           </>
         )}
-        <Stack spacing={2} style={{ marginTop: '15px' }}>
+        <Stack spacing={2} style={{ marginTop: '5px' }} sx={{ width: '100%' }}>
+          {categoryLoading ? (
+            <Skeleton width="100%" height={32} />
+          ) : (
+            <Box
+              style={{
+                width: '100%',
+                display: 'grid',
+                gridTemplateColumns: '60px 1fr'
+              }}
+            >
+              <Chip
+                label={'없음'}
+                color="info"
+                variant={noCategorySelect ? 'filled' : 'outlined'}
+                onClick={() =>
+                  // all selected false
+                  setCategories(prev =>
+                    prev.map(cat => ({ ...cat, selected: false }))
+                  )
+                }
+              />
+
+              {/* <FlexCenterDiv></FlexCenterDiv> */}
+              <HorizontalScrollContainer>
+                {categories.map(category => {
+                  return (
+                    <HorizontalScrollItem
+                      id={category.categoryId}
+                      key={category.categoryId}
+                      // toggle selected
+                      onClick={() => {
+                        const selectedList = categories.filter(
+                          cat => cat.selected
+                        )
+                        // no more than 3 categories
+                        if (selectedList.length > 2) {
+                          const matched = selectedList.find(
+                            c => c.categoryId === category.categoryId
+                          )
+                          // enable toggle only when making true -> false
+                          if (!matched || (matched && !matched.selected)) {
+                            return
+                          }
+                        }
+                        return setCategories(prev =>
+                          prev.map(cat =>
+                            cat.categoryId === category.categoryId
+                              ? { ...cat, selected: !cat.selected }
+                              : cat
+                          )
+                        )
+                      }}
+                    >
+                      <Chip
+                        label={category.name}
+                        style={{ margin: '0 5px', cursor: 'pointer' }}
+                        variant={category.selected ? 'filled' : 'outlined'}
+                        color="primary"
+                      />
+                    </HorizontalScrollItem>
+                  )
+                })}
+              </HorizontalScrollContainer>
+            </Box>
+          )}
           <Controller
             name="title"
             control={control}

@@ -90,7 +90,7 @@ export type RawPost = {
   images: Image[]
   excerpt: string
   //
-  categories: string[]
+  categories: CategoryOption[]
   //
   notificationIncludedUids: string[]
   //
@@ -158,9 +158,23 @@ export interface RawHeart {
 export interface RawCategory {
   categoryId: string
   name: string
+  postCount: number
+  sort: number
+  adminOnly: boolean
+  disabled: boolean
   createdAt: FirestoreTimestamp
+  updatedBy: string | null
+  updatedAt: FirestoreTimestamp | null
 }
 
-export type Category = Omit<RawCategory, 'createdAt'> & {
+export type Category = Omit<
+  RawCategory,
+  'postCount' | 'createdAt' | 'updatedAt'
+> & {
+  postCount: number | firebase.firestore.FieldValue
   createdAt: number
+  updatedBy: string | null
+  updatedAt: number | null
 }
+
+export type CategoryOption = Pick<RawCategory, 'categoryId' | 'name'>

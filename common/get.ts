@@ -16,6 +16,10 @@ export const getUidByUsername = async (
 }
 
 export const getAllCategories = async (): Promise<Category[]> => {
-  const querySnapshot = await firestore.collection(FIRESTORE_CATEGORIES).get()
+  const querySnapshot = await firestore
+    .collection(FIRESTORE_CATEGORIES)
+    .where('disabled', '==', false)
+    .orderBy('sort')
+    .get()
   return querySnapshot.docs.map(categoryToJSON)
 }

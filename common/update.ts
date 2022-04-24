@@ -4,9 +4,14 @@ import {
   Post,
   User,
   Comment,
-  FirebaseCollectionRef
+  FirebaseCollectionRef,
+  Category
 } from '../typing/interfaces'
-import { FIRESTORE_POSTS, FIRESTORE_USERS } from './constants'
+import {
+  FIRESTORE_CATEGORIES,
+  FIRESTORE_POSTS,
+  FIRESTORE_USERS
+} from './constants'
 import { firestore, increment, serverTimestamp } from './firebase'
 import { getUidByUsername } from './get'
 
@@ -124,5 +129,23 @@ export const batchUpdateViewCounts = (
 
   batchUpdateUsers(batch, postOwnerUserId, {
     receivedViewCountTotal: increment(1)
+  })
+}
+
+export const batchUpdateCategoryCounts = (
+  batch: firebase.firestore.WriteBatch,
+  categories: Category[],
+  updatedBy: string,
+  changes: Partial<Category>
+) => {
+  categories.map(category => {
+    const categoryRef = firestore
+      .collection(FIRESTORE_CATEGORIES)
+      .doc(category.categoryId)
+    batch.update(categoryRef, {
+      ...changes,
+      updatedBy,
+      updatedAt: serverTimestamp() as FirestoreTimestamp
+    })
   })
 }
