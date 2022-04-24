@@ -38,7 +38,11 @@ import ConfirmDialog from '../../components/Dialog/ConfirmDialog'
 import toast from 'react-hot-toast'
 import Metatags from '../Metatags'
 import Heart from '../Heart'
-import { batchUpdateUsers, batchUpdateViewCounts } from '../../common/update'
+import {
+  batchUpdateCategoryCounts,
+  batchUpdateUsers,
+  batchUpdateViewCounts
+} from '../../common/update'
 import CommentMain from '../Comment/CommentMain'
 import Typography from '@mui/material/Typography'
 import { AiOutlineLink } from 'react-icons/ai'
@@ -126,10 +130,18 @@ const PostContent: FC<PostContentProps> = ({
     batchUpdateUsers(batch, user.uid, {
       myPostCountTotal: increment(-1)
     })
+
+    const selectedCategories = post.categories
+    if (selectedCategories.length) {
+      batchUpdateCategoryCounts(batch, selectedCategories, user.uid, {
+        postCount: increment(-1)
+      })
+    }
+
     await batch.commit()
     toast.success('게시물을 성공적으로 삭제했습니다.')
     router.push('/')
-  }, [postRef, router, user])
+  }, [post, postRef, router, user])
   // const [editorState, setEditorState] = useState(
   //   EditorState.createWithContent(
   //     ContentState.createFromBlockArray("<h1>HAHAHOHO</h1>")
