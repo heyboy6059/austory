@@ -244,7 +244,7 @@ const PostContent: FC<PostContentProps> = ({
             )}
           </FlexCenterDiv>
         </FlexSpaceBetween>
-        <h2 style={{ marginTop: '4px' }}>{post?.title}</h2>
+        <h2 style={{ margin: '10px 0' }}>{post?.title}</h2>
         <span className="text-sm">
           {/* Written by{" "}
         <Link href={`/${post.username}/`}>
