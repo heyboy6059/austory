@@ -169,17 +169,35 @@ const PostContent: FC<PostContentProps> = ({
       />
       <Paper sx={{ p: 2 }}>
         <FlexSpaceBetween style={{ alignItems: 'center' }}>
-          <Tooltip title="뒤로가기" placement="bottom" arrow>
-            <ArrowBackIcon
-              onClick={() =>
-                // window.history.pushState("", "", `/post/abcd`)
-                // router.push("/", undefined, { shallow: true })
-                //REVIEW: go back without reload/refresh/keep scroll
-                router.push('/')
-              }
-              style={{ cursor: 'pointer' }}
-            />
-          </Tooltip>
+          <FlexCenterDiv style={{ gap: '8px' }}>
+            <Tooltip title="뒤로가기" placement="bottom" arrow>
+              <ArrowBackIcon
+                onClick={() =>
+                  // window.history.pushState("", "", `/post/abcd`)
+                  // router.push("/", undefined, { shallow: true })
+                  //REVIEW: go back without reload/refresh/keep scroll
+                  router.push('/')
+                }
+                style={{ cursor: 'pointer' }}
+              />
+            </Tooltip>
+
+            {post.categories.length ? (
+              <div>
+                {post.categories.map(category => (
+                  <Chip
+                    key={category.categoryId}
+                    label={category.name}
+                    variant={'outlined'}
+                    size="small"
+                    style={{ marginRight: '4px', fontSize: '12px' }}
+                  />
+                ))}
+              </div>
+            ) : (
+              <></>
+            )}
+          </FlexCenterDiv>
 
           <FlexCenterDiv style={{ gap: '5px' }}>
             <Tooltip title="링크 복사" placement="bottom" arrow>
@@ -226,22 +244,7 @@ const PostContent: FC<PostContentProps> = ({
             )}
           </FlexCenterDiv>
         </FlexSpaceBetween>
-        {post.categories.length ? (
-          <div style={{ marginTop: '4px' }}>
-            {post.categories.map(category => (
-              <Chip
-                key={category.categoryId}
-                label={category.name}
-                variant={'outlined'}
-                size="small"
-                style={{ marginRight: '4px', fontSize: '12px' }}
-              />
-            ))}
-          </div>
-        ) : (
-          <></>
-        )}
-        <h2 style={{ marginTop: '6px' }}>{post?.title}</h2>
+        <h2 style={{ marginTop: '4px' }}>{post?.title}</h2>
         <span className="text-sm">
           {/* Written by{" "}
         <Link href={`/${post.username}/`}>

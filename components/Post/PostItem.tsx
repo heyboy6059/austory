@@ -64,7 +64,8 @@ const PostItem: FC<{
               post.images?.[0]?.['thumbnail100']?.url
                 ? '1fr 100px'
                 : '1fr',
-            gap: '4px'
+            gap: '4px',
+            alignItems: 'center'
           }}
         >
           <GridDiv
@@ -153,7 +154,7 @@ const PostItem: FC<{
           style={{
             gridTemplateColumns: '1fr 10px 100px',
             alignItems: 'center',
-            margin: '5px 0 5px 0'
+            margin: '4px 0 5px 0'
           }}
         >
           <div
