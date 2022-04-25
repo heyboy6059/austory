@@ -297,7 +297,7 @@ const PostContent: FC<PostContentProps> = ({
         {/* <Linky>
         <div style={{ whiteSpace: "break-spaces" }}>{post?.content}</div>
       </Linky> */}
-        <div style={{ margin: '25px 0px' }}>
+        <div style={{ margin: '5px 0px' }}>
           <Linkify
             componentDecorator={(decoratedHref, decoratedText, key) => (
               <a
