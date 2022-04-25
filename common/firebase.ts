@@ -121,7 +121,8 @@ export const categoryToJSON = (
   const categoryData = category.data()
   return {
     ...categoryData,
-    createdAt: categoryData?.createdAt?.toMillis() || 0
+    createdAt: categoryData?.createdAt?.toMillis() || 0,
+    updatedAt: categoryData?.updatedAt?.toMillis() || 0
   }
 }
 // TODO: generalize all dataToJSON functions

@@ -46,6 +46,7 @@ import {
 import CommentMain from '../Comment/CommentMain'
 import Typography from '@mui/material/Typography'
 import { AiOutlineLink } from 'react-icons/ai'
+import Chip from '@mui/material/Chip'
 
 // import { Editor, EditorState, ContentState } from "draft-js"
 
@@ -225,7 +226,22 @@ const PostContent: FC<PostContentProps> = ({
             )}
           </FlexCenterDiv>
         </FlexSpaceBetween>
-        <h2>{post?.title}</h2>
+        {post.categories.length ? (
+          <div style={{ marginTop: '4px' }}>
+            {post.categories.map(category => (
+              <Chip
+                key={category.categoryId}
+                label={category.name}
+                variant={'outlined'}
+                size="small"
+                style={{ marginRight: '4px' }}
+              />
+            ))}
+          </div>
+        ) : (
+          <></>
+        )}
+        <h2 style={{ marginTop: '6px' }}>{post?.title}</h2>
         <span className="text-sm">
           {/* Written by{" "}
         <Link href={`/${post.username}/`}>

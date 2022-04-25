@@ -5,7 +5,8 @@ import {
   User,
   Comment,
   FirebaseCollectionRef,
-  Category
+  Category,
+  CategoryOption
 } from '../typing/interfaces'
 import {
   FIRESTORE_CATEGORIES,
@@ -134,7 +135,7 @@ export const batchUpdateViewCounts = (
 
 export const batchUpdateCategoryCounts = (
   batch: firebase.firestore.WriteBatch,
-  categories: Category[],
+  categories: Category[] | CategoryOption[],
   updatedBy: string,
   changes: Partial<Category>
 ) => {

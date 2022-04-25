@@ -40,6 +40,21 @@ const PostItem: FC<{
       }}
     >
       <div style={{ padding: '12px' }}>
+        {post.categories.length ? (
+          <div>
+            {post.categories.map(category => (
+              <Chip
+                key={category.categoryId}
+                label={category.name}
+                variant={'outlined'}
+                size="small"
+                style={{ marginRight: '4px' }}
+              />
+            ))}
+          </div>
+        ) : (
+          <></>
+        )}
         <GridDiv
           style={{
             // thumbnailImage? give 100px space
