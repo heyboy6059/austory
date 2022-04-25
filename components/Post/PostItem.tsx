@@ -48,7 +48,7 @@ const PostItem: FC<{
                 label={category.name}
                 variant={'outlined'}
                 size="small"
-                style={{ marginRight: '4px' }}
+                style={{ marginRight: '4px', fontSize: '12px' }}
               />
             ))}
           </div>
@@ -69,14 +69,15 @@ const PostItem: FC<{
         >
           <GridDiv
             style={{
-              gridTemplateRows: '55px 45px'
+              gridTemplateRows: '40px 45px',
+              gap: '6px'
             }}
           >
             <div style={{ display: 'flex', alignItems: 'center' }}>
               <Link href={`/post/${post.postId}`} passHref>
                 <Typography
                   style={{
-                    fontSize: '18px',
+                    fontSize: '16px',
                     margin: '2px 0',
                     display: '-webkit-box',
                     WebkitLineClamp: 2,
@@ -103,7 +104,8 @@ const PostItem: FC<{
                     display: '-webkit-box',
                     WebkitLineClamp: 2,
                     WebkitBoxOrient: 'vertical',
-                    overflow: 'hidden'
+                    overflow: 'hidden',
+                    fontSize: '14px'
                   }}
                 >
                   {post.excerpt ? `${post.excerpt}` : post.content}
@@ -151,7 +153,7 @@ const PostItem: FC<{
           style={{
             gridTemplateColumns: '1fr 10px 100px',
             alignItems: 'center',
-            margin: '10px 0 5px 0'
+            margin: '5px 0 5px 0'
           }}
         >
           <div

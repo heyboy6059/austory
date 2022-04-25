@@ -234,7 +234,7 @@ const PostContent: FC<PostContentProps> = ({
                 label={category.name}
                 variant={'outlined'}
                 size="small"
-                style={{ marginRight: '4px' }}
+                style={{ marginRight: '4px', fontSize: '12px' }}
               />
             ))}
           </div>
