@@ -78,7 +78,7 @@ const PostItem: FC<{
               <Link href={`/post/${post.postId}`} passHref>
                 <Typography
                   style={{
-                    fontSize: '16px',
+                    fontSize: '17px',
                     margin: '2px 0',
                     display: '-webkit-box',
                     WebkitLineClamp: 2,
