@@ -159,6 +159,16 @@ const PostContent: FC<PostContentProps> = ({
   //   editor.current.focus()
   // }
 
+  // REVIEW: GOOGLE ADSENSE
+  // useEffect(() => {
+  //   try {
+  //     ;(window['adsbygoogle'] = window['adsbygoogle'] || []).push({})
+  //     console.log('hit useEffect')
+  //   } catch (err) {
+  //     console.log(err)
+  //   }
+  // }, [])
+
   return (
     <>
       <Metatags
@@ -364,6 +374,19 @@ const PostContent: FC<PostContentProps> = ({
             content="정말로 이 글을 지우시겠습니까?"
           />
         )}
+        {/* 
+        REVIEW: GOOGLE ADSENSE
+        <ins
+          className="adsbygoogle"
+          style={{
+            display: 'block',
+            textAlign: 'center'
+          }}
+          data-ad-client="ca-pub-1805879168244149"
+          data-ad-slot="3559760421"
+          data-ad-format="auto"
+          data-full-width-responsive="true"
+        ></ins> */}
       </Paper>
     </>
   )
