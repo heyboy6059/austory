@@ -9,7 +9,7 @@ import {
 
 // Custom hook to read auth record and user profile doc
 export const useUserData = (): UserDataContext => {
-  const [userAuth] = useAuthState(auth)
+  const [userAuth, firebaseAuthLoading] = useAuthState(auth)
   const [user, setUser] = useState(null)
   const [username, setUsername] = useState<string>(null)
   const [isAdmin, setIsAdmin] = useState<boolean>(false)
@@ -38,5 +38,5 @@ export const useUserData = (): UserDataContext => {
     return unsubscribe
   }, [userAuth])
 
-  return { user, userAuth, username, isAdmin }
+  return { user, userAuth, username, isAdmin, firebaseAuthLoading }
 }

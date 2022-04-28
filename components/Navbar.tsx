@@ -1,4 +1,4 @@
-import { useContext, useState, useCallback } from 'react'
+import { useContext, useState, useCallback, useMemo } from 'react'
 import Link from 'next/link'
 import { UserContext } from '../common/context'
 import {
@@ -45,7 +45,8 @@ import toast from 'react-hot-toast'
 
 // Top navbar
 export default function Navbar() {
-  const { userAuth, username, isAdmin, user } = useContext(UserContext)
+  const { userAuth, username, isAdmin, user, firebaseAuthLoading } =
+    useContext(UserContext)
   const [covidInfoOpen, setCovidInfoOpen] = useState(false)
 
   // const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
@@ -59,6 +60,11 @@ export default function Navbar() {
   // const handleClose = () => {
   //   setAnchorEl(null)
   // }
+
+  const isLoggingIn = useMemo(
+    () => !firebaseAuthLoading && userAuth && user,
+    [firebaseAuthLoading, user, userAuth]
+  )
 
   const toggleDrawer = useCallback(
     (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
@@ -229,7 +235,7 @@ export default function Navbar() {
                 {/* </a> */}
                 {/* </Link> */}
 
-                {user ? (
+                {isLoggingIn ? (
                   // signed in user has username
                   // <Link href={`/${username}`} passHref>
                   //   <a>
@@ -262,7 +268,7 @@ export default function Navbar() {
                           padding: '0px'
                         }}
                       >
-                        {userAuth ? '등록' : 'LOG IN'}
+                        LOG IN
                       </Button>
                     </a>
                   </Link>
@@ -292,7 +298,7 @@ export default function Navbar() {
                     <AdminPanelSettingsIcon style={{ color: 'orange' }} />
                   </Tooltip>
                 )}
-                {userAuth && (
+                {isLoggingIn && (
                   <IconButton
                     size="large"
                     edge="start"

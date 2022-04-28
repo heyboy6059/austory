@@ -21,9 +21,10 @@ import { useRouter } from 'next/router'
 import Stack from '@mui/material/Stack'
 import Image from 'next/image'
 import { NotificationMethod } from '../typing/enums'
+import CircularProgress from '@mui/material/CircularProgress'
 
 export default function Enter() {
-  const { userAuth, user } = useContext(UserContext)
+  const { userAuth, user, firebaseAuthLoading } = useContext(UserContext)
   const router = useRouter()
 
   // route user to home page if account is already registered
@@ -52,7 +53,9 @@ export default function Enter() {
       {/**
        * Logged in with firebase auth but no username yet = no registered yet
        */}
-      {userAuth ? (
+      {firebaseAuthLoading ? (
+        <CircularProgress />
+      ) : userAuth ? (
         !user ? (
           <UsernameForm />
         ) : (
