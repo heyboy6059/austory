@@ -95,8 +95,11 @@ export const tempPostToJSON = doc => {
   }
 }
 
-export const userToJSON = (user: FirebaseDocumentSnapshot<RawUser>): User => {
+export const userToJSON = (
+  user: FirebaseDocumentSnapshot<RawUser>
+): User | null => {
   const userData = user.data()
+  if (!userData) return null
   return {
     ...userData,
     createdAt: userData?.createdAt?.toMillis() || 0,

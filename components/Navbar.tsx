@@ -45,7 +45,7 @@ import toast from 'react-hot-toast'
 
 // Top navbar
 export default function Navbar() {
-  const { username, isAdmin, user } = useContext(UserContext)
+  const { userAuth, username, isAdmin, user } = useContext(UserContext)
   const [covidInfoOpen, setCovidInfoOpen] = useState(false)
 
   // const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
@@ -83,36 +83,54 @@ export default function Navbar() {
       onKeyDown={toggleDrawer(false)}
     >
       <List>
-        <ListItem
-          button
-          key={'Account'}
-          onClick={() => router.push(`/${username}`)}
-        >
-          <ListItemIcon>
-            <AccountBoxIcon />
-          </ListItemIcon>
-          <ListItemText primary={'내 계정'} />
-        </ListItem>
-        <ListItem
-          button
-          key={'HeartPosts'}
-          onClick={() => router.push(`/user/heartPosts`)}
-        >
-          <ListItemIcon>
-            <FavoriteIcon />
-          </ListItemIcon>
-          <ListItemText primary={'하트 누른 게시물'} />
-        </ListItem>
-        <ListItem
-          button
-          key={'Stats'}
-          onClick={() => router.push(`/user/stats`)}
-        >
-          <ListItemIcon>
-            <QueryStatsIcon />
-          </ListItemIcon>
-          <ListItemText primary={'나의 활동'} />
-        </ListItem>
+        {user ? (
+          <>
+            <ListItem
+              button
+              key={'Account'}
+              onClick={() => router.push(`/${username}`)}
+            >
+              <ListItemIcon>
+                <AccountBoxIcon />
+              </ListItemIcon>
+              <ListItemText primary={'내 계정'} />
+            </ListItem>
+            <ListItem
+              button
+              key={'HeartPosts'}
+              onClick={() => router.push(`/user/heartPosts`)}
+            >
+              <ListItemIcon>
+                <FavoriteIcon />
+              </ListItemIcon>
+              <ListItemText primary={'하트 누른 게시물'} />
+            </ListItem>
+            <ListItem
+              button
+              key={'Stats'}
+              onClick={() => router.push(`/user/stats`)}
+            >
+              <ListItemIcon>
+                <QueryStatsIcon />
+              </ListItemIcon>
+              <ListItemText primary={'나의 활동'} />
+            </ListItem>
+          </>
+        ) : (
+          <ListItem
+            button
+            key={'Account'}
+            onClick={() => router.push(`/enter`)}
+          >
+            <ListItemIcon>
+              <AccountBoxIcon />
+            </ListItemIcon>
+            <ListItemText
+              primary={'등록'}
+              secondary={'정상적인 이용을 위해 등록을 해주세요.'}
+            />
+          </ListItem>
+        )}
       </List>
       <Divider />
       <List>
@@ -211,7 +229,7 @@ export default function Navbar() {
                 {/* </a> */}
                 {/* </Link> */}
 
-                {username ? (
+                {user ? (
                   // signed in user has username
                   // <Link href={`/${username}`} passHref>
                   //   <a>
@@ -244,7 +262,7 @@ export default function Navbar() {
                           padding: '0px'
                         }}
                       >
-                        LOG IN
+                        {userAuth ? '등록' : 'LOG IN'}
                       </Button>
                     </a>
                   </Link>
@@ -274,7 +292,7 @@ export default function Navbar() {
                     <AdminPanelSettingsIcon style={{ color: 'orange' }} />
                   </Tooltip>
                 )}
-                {user && (
+                {userAuth && (
                   <IconButton
                     size="large"
                     edge="start"

@@ -23,16 +23,16 @@ import Image from 'next/image'
 import { NotificationMethod } from '../typing/enums'
 
 export default function Enter() {
-  const { userAuth, user, username } = useContext(UserContext)
+  const { userAuth, user } = useContext(UserContext)
   const router = useRouter()
 
   // route user to home page if account is already registered
   useEffect(() => {
-    if (userAuth && username) {
+    if (userAuth && user) {
       console.log('redirecting to Home page')
       router.push('/')
     }
-  }, [router, userAuth, username])
+  }, [router, user, userAuth])
 
   // 1. user signed out <SignInButton />
   // 2. user signed in, but missing username <UsernameForm />
@@ -49,8 +49,11 @@ export default function Enter() {
       ) : (
         <SignInButton />
       )} */}
-      {user ? (
-        !username ? (
+      {/**
+       * Logged in with firebase auth but no username yet = no registered yet
+       */}
+      {userAuth ? (
+        !user ? (
           <UsernameForm />
         ) : (
           // REVIEW: maybe loading indicator?
@@ -157,7 +160,7 @@ function UsernameForm() {
   const [isExistInDB, setIsExistInDB] = useState(false)
   // const [loading, setLoading] = useState(false)
 
-  const { userAuth, user, username } = useContext(UserContext)
+  const { userAuth, username } = useContext(UserContext)
 
   const onSubmit = async e => {
     e.preventDefault()
@@ -271,11 +274,13 @@ function UsernameForm() {
             margin="normal"
             disabled={true}
             value={userAuth.email}
+            variant="standard"
+            helperText="이메일 정보는 다른 유저에게 공개되지 않습니다."
           />
           <TextField
             required={true}
             label="닉네임"
-            size="small"
+            size="medium"
             fullWidth
             margin="normal"
             onChange={onChange}
@@ -283,19 +288,21 @@ function UsernameForm() {
             error={inkrauUsername?.length > 2 && (isExistInDB || isNotValid)}
             helperText={usernameHelperText()}
           />
-          {inkrauUsername?.length < 2 && inkrauUsername !== user.displayName && (
-            // display it inkrauUsername is not equals to displayName
-            <Chip
-              label={`기존 이메일 프로필 사용. ${userAuth.displayName}`}
-              variant="outlined"
-              color="success"
-              size="small"
-              onClick={() => {
-                setInkrauUsername(userAuth.displayName)
-                setIsNotValid(false)
-              }}
-            />
-          )}
+          {userAuth.displayName &&
+            inkrauUsername?.length < 2 &&
+            inkrauUsername !== userAuth.displayName && (
+              // display it inkrauUsername is not equals to displayName
+              <Chip
+                label={`기존 이메일 프로필 사용. ${userAuth.displayName}`}
+                variant="outlined"
+                color="success"
+                size="small"
+                onClick={() => {
+                  setInkrauUsername(userAuth.displayName)
+                  setIsNotValid(false)
+                }}
+              />
+            )}
 
           {/* <UsernameMessage
             username={inkrauUsername}
@@ -307,6 +314,7 @@ function UsernameForm() {
             <FormControlLabel
               control={
                 <Checkbox
+                  checked={isMarketingEmail}
                   onChange={e => {
                     setIsMarketingEmail(e.target.checked)
                   }}
