@@ -160,14 +160,14 @@ const PostContent: FC<PostContentProps> = ({
   // }
 
   // REVIEW: GOOGLE ADSENSE
-  // useEffect(() => {
-  //   try {
-  //     ;(window['adsbygoogle'] = window['adsbygoogle'] || []).push({})
-  //     console.log('hit useEffect')
-  //   } catch (err) {
-  //     console.log(err)
-  //   }
-  // }, [])
+  useEffect(() => {
+    try {
+      ;(window['adsbygoogle'] = window['adsbygoogle'] || []).push({})
+      console.log('hit useEffect')
+    } catch (err) {
+      console.log(err)
+    }
+  }, [])
 
   return (
     <>
@@ -374,8 +374,8 @@ const PostContent: FC<PostContentProps> = ({
             content="정말로 이 글을 지우시겠습니까?"
           />
         )}
-        {/* 
-        REVIEW: GOOGLE ADSENSE
+
+        {/* REVIEW: GOOGLE ADSENSE */}
         <ins
           className="adsbygoogle"
           style={{
@@ -386,7 +386,7 @@ const PostContent: FC<PostContentProps> = ({
           data-ad-slot="3559760421"
           data-ad-format="auto"
           data-full-width-responsive="true"
-        ></ins> */}
+        ></ins>
       </Paper>
     </>
   )
