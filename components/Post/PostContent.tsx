@@ -160,14 +160,14 @@ const PostContent: FC<PostContentProps> = ({
   // }
 
   // REVIEW: GOOGLE ADSENSE
-  useEffect(() => {
-    try {
-      ;(window['adsbygoogle'] = window['adsbygoogle'] || []).push({})
-      console.log('hit useEffect')
-    } catch (err) {
-      console.log(err)
-    }
-  }, [])
+  // useEffect(() => {
+  //   try {
+  //     ;(window['adsbygoogle'] = window['adsbygoogle'] || []).push({})
+  //     console.log('hit useEffect')
+  //   } catch (err) {
+  //     console.log(err)
+  //   }
+  // }, [])
 
   return (
     <>
@@ -376,7 +376,7 @@ const PostContent: FC<PostContentProps> = ({
         )}
 
         {/* REVIEW: GOOGLE ADSENSE */}
-        <ins
+        {/* <ins
           className="adsbygoogle"
           style={{
             display: 'block',
@@ -386,7 +386,7 @@ const PostContent: FC<PostContentProps> = ({
           data-ad-slot="3559760421"
           data-ad-format="auto"
           data-full-width-responsive="true"
-        ></ins>
+        ></ins> */}
       </Paper>
     </>
   )
