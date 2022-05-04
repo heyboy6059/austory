@@ -137,7 +137,6 @@ const CommentItem: FC<Props> = ({
                     <>
                       <Tooltip title="수정" placement="bottom" arrow>
                         <EditIcon
-                          fontSize="small"
                           onClick={() => {
                             setEditMode(true)
                           }}
@@ -149,7 +148,6 @@ const CommentItem: FC<Props> = ({
                       </Tooltip>
                       <Tooltip title="삭제" placement="bottom" arrow>
                         <DeleteIcon
-                          fontSize="small"
                           style={{
                             color: COLOURS.CANCEL_RED,
                             cursor: 'pointer'

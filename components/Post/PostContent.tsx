@@ -20,6 +20,7 @@ import NextImage from 'next/image'
 import AccountBoxIcon from '@mui/icons-material/AccountBox'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 import VisibilityIcon from '@mui/icons-material/Visibility'
+import LinkIcon from '@mui/icons-material/Link'
 import EditIcon from '@mui/icons-material/Edit'
 import DeleteIcon from '@mui/icons-material/Delete'
 import { useRouter } from 'next/router'
@@ -45,7 +46,6 @@ import {
 } from '../../common/update'
 import CommentMain from '../Comment/CommentMain'
 import Typography from '@mui/material/Typography'
-import { AiOutlineLink } from 'react-icons/ai'
 import Chip from '@mui/material/Chip'
 
 // import { Editor, EditorState, ContentState } from "draft-js"
@@ -211,9 +211,12 @@ const PostContent: FC<PostContentProps> = ({
 
           <FlexCenterDiv style={{ gap: '5px' }}>
             <Tooltip title="링크 복사" placement="bottom" arrow>
-              <AiOutlineLink
-                fontSize={20}
-                style={{ cursor: 'pointer' }}
+              <LinkIcon
+                style={{
+                  cursor: 'pointer',
+                  fontSize: '26px',
+                  transform: 'rotate(135deg)'
+                }}
                 onClick={() => {
                   navigator.clipboard.writeText(window.location.href)
                   toast.success('게시물 링크를 복사했습니다.')
@@ -224,20 +227,23 @@ const PostContent: FC<PostContentProps> = ({
               <>
                 <Tooltip title="수정" placement="bottom" arrow>
                   <EditIcon
-                    // fontSize="small"
                     onClick={() => {
                       router.push(`/post/edit/${post.postId}`)
                     }}
                     style={{
                       cursor: 'pointer',
-                      color: COLOURS.DARK_BLUE
+                      color: COLOURS.DARK_BLUE,
+                      fontSize: '25px'
                     }}
                   />
                 </Tooltip>
                 <Tooltip title="삭제" placement="bottom" arrow>
                   <DeleteIcon
-                    fontSize="small"
-                    style={{ color: COLOURS.CANCEL_RED, cursor: 'pointer' }}
+                    style={{
+                      color: COLOURS.CANCEL_RED,
+                      cursor: 'pointer',
+                      fontSize: '24px'
+                    }}
                     onClick={() => setDeleteAlertOpen(true)}
                   />
                 </Tooltip>
