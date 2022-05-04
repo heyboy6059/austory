@@ -400,7 +400,11 @@ const PostForm: FC<Props> = ({ editPost }) => {
           }
         />
         <FlexCenterDiv>
-          <Button variant="outlined" type="submit" disabled={imageLoading}>
+          <Button
+            variant="outlined"
+            type="submit"
+            disabled={imageLoading || !watch().content || !watch().title}
+          >
             완료
           </Button>
         </FlexCenterDiv>
