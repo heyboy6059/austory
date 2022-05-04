@@ -34,6 +34,7 @@ export const IMAGE_THUMBNAIL600_PREFIX = 'thumbnail600_'
 export const IMAGE_ORIGINAL_PREFIX = 'original_'
 
 export const ORIGINAL_IMAGE_UPLOAD_MAX_THRESHOLD = 1024 * 2000 // 2MB
+export const IMAGE_UPLOAD_SIZE_LIMIT = 1024 * 8000 // 8MB
 
 export enum FileExt {
   GIF = 'gif',

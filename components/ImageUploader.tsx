@@ -2,7 +2,8 @@ import { FC, Dispatch, SetStateAction, useState } from 'react'
 import {
   ORIGINAL_IMAGE_UPLOAD_MAX_THRESHOLD,
   FileExt,
-  COLOURS
+  COLOURS,
+  IMAGE_UPLOAD_SIZE_LIMIT
 } from '../common/constants'
 import Image from 'next/image'
 import { UseFormSetValue } from 'react-hook-form/dist/types/form'
@@ -49,6 +50,12 @@ const ImageUploader: FC<Props> = ({
       const { filename: name, extension } = extractFilenameExtension(file.name)
 
       try {
+        // file size check - early return
+        if (size > IMAGE_UPLOAD_SIZE_LIMIT) {
+          toast.error(`이미지는 최대 8MB 까지 업로드 가능합니다.`)
+          return
+        }
+
         // Resize for thumbnail600
         thumbnail600ImageDetails = await resizeImageJpeg(
           file,
