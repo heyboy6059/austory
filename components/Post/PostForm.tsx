@@ -50,6 +50,7 @@ const PostForm: FC<Props> = ({ editPost }) => {
   const isEditMode = !!editPost
   const [categories, setCategories] = useState<ExtendedCategory[]>([])
   const [categoryLoading, setCategoryLoading] = useState(false)
+  const [imageLoading, setImageLoading] = useState(false)
 
   // getAllCategories + pre select categories from editPost
   useEffect(() => {
@@ -392,20 +393,14 @@ const PostForm: FC<Props> = ({ editPost }) => {
         </Stack>
         <ImageUploader
           setValue={setValue}
+          setImageLoading={setImageLoading}
           editThumbnailImgUrl={
             // REVIEW: this only supports single thumbnail url
             isEditMode ? editPost?.images?.[0]?.thumbnail600?.url || '' : null
           }
         />
         <FlexCenterDiv>
-          <Button
-            variant="outlined"
-            type="submit"
-            // style={{
-            //   color: COLOURS.LIGHT_PURPLE,
-            //   borderColor: COLOURS.LIGHT_PURPLE
-            // }}
-          >
+          <Button variant="outlined" type="submit" disabled={imageLoading}>
             완료
           </Button>
         </FlexCenterDiv>

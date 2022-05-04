@@ -1,4 +1,4 @@
-import { FC, useState } from 'react'
+import { FC, Dispatch, SetStateAction, useState } from 'react'
 import {
   ORIGINAL_IMAGE_UPLOAD_MAX_THRESHOLD,
   FileExt,
@@ -17,10 +17,15 @@ import Tooltip from '@mui/material/Tooltip'
 
 interface Props {
   setValue: UseFormSetValue<PostWrite>
+  setImageLoading?: Dispatch<SetStateAction<boolean>>
   editThumbnailImgUrl?: string
 }
 
-const ImageUploader: FC<Props> = ({ setValue, editThumbnailImgUrl }) => {
+const ImageUploader: FC<Props> = ({
+  setValue,
+  setImageLoading,
+  editThumbnailImgUrl
+}) => {
   const [uploading, setUploading] = useState(false)
   const [thumbnailImgUrl, setThumbnailImgUrl] = useState(
     editThumbnailImgUrl || ''
@@ -29,6 +34,8 @@ const ImageUploader: FC<Props> = ({ setValue, editThumbnailImgUrl }) => {
   // Creates a Firebase Upload Task
   const uploadFile = async e => {
     setUploading(true)
+    // parent component loading
+    setImageLoading && setImageLoading(true)
 
     let thumbnail200ImageDetails: ImageDetails = null
     let thumbnail600ImageDetails: ImageDetails = null
@@ -97,6 +104,7 @@ const ImageUploader: FC<Props> = ({ setValue, editThumbnailImgUrl }) => {
         toast.error(`이미지 업로드중 에러가 발생했습니다. 다시 시도해주세요.`)
       } finally {
         setUploading(false)
+        setImageLoading && setImageLoading(false)
       }
     } else {
       //HANDLE FILE ERROR
