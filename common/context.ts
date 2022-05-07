@@ -6,7 +6,8 @@ export const UserContext = createContext({
   user: null,
   username: null,
   isAdmin: null,
-  firebaseAuthLoading: null
+  firebaseAuthLoading: null,
+  userLoading: null
 } as UserDataContext)
 
 export const PostContext = createContext({

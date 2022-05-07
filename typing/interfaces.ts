@@ -146,6 +146,7 @@ export interface UserDataContext {
   username: string
   isAdmin: boolean
   firebaseAuthLoading: boolean
+  userLoading: boolean
 }
 
 export interface RawHeart {

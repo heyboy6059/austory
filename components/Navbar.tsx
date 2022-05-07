@@ -45,8 +45,14 @@ import toast from 'react-hot-toast'
 
 // Top navbar
 export default function Navbar() {
-  const { userAuth, username, isAdmin, user, firebaseAuthLoading } =
-    useContext(UserContext)
+  const {
+    userAuth,
+    username,
+    isAdmin,
+    user,
+    firebaseAuthLoading,
+    userLoading
+  } = useContext(UserContext)
   const [covidInfoOpen, setCovidInfoOpen] = useState(false)
 
   // const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
@@ -62,8 +68,8 @@ export default function Navbar() {
   // }
 
   const isLoggingIn = useMemo(
-    () => !firebaseAuthLoading && userAuth && user,
-    [firebaseAuthLoading, user, userAuth]
+    () => !firebaseAuthLoading && !userLoading && userAuth && user,
+    [firebaseAuthLoading, user, userAuth, userLoading]
   )
 
   const toggleDrawer = useCallback(

@@ -6,6 +6,7 @@ import {
   auth,
   facebookAuthProvider,
   firestore,
+  getNewUsernameSuggestionHttpCall,
   googleAuthProvider,
   serverTimestamp
 } from '../common/firebase'
@@ -15,16 +16,21 @@ import Button from '@mui/material/Button'
 import Checkbox from '@mui/material/Checkbox'
 import FormControlLabel from '@mui/material/FormControlLabel'
 import { FirestoreTimestamp, RawUser } from '../typing/interfaces'
-import { FlexCenterDiv } from '../common/uiComponents'
+import { FlexCenterDiv, GridDiv } from '../common/uiComponents'
 import toast from 'react-hot-toast'
 import { useRouter } from 'next/router'
 import Stack from '@mui/material/Stack'
 import Image from 'next/image'
 import { NotificationMethod } from '../typing/enums'
 import CircularProgress from '@mui/material/CircularProgress'
+import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh'
+import Tooltip from '@mui/material/Tooltip'
+import { COLOURS } from '../common/constants'
+import { NewUsernameSuggestionRes } from '../typing/api'
 
 export default function Enter() {
-  const { userAuth, user, firebaseAuthLoading } = useContext(UserContext)
+  const { userAuth, user, firebaseAuthLoading, userLoading } =
+    useContext(UserContext)
   const router = useRouter()
 
   // route user to home page if account is already registered
@@ -41,22 +47,19 @@ export default function Enter() {
   return (
     <main>
       {/* <Metatags title="Enter" description="Sign up for this amazing app!" /> */}
-      {/* {user ? (
-        !username ? (
-          <UsernameForm />
-        ) : (
-          <SignOutButton />
-        )
-      ) : (
-        <SignInButton />
-      )} */}
       {/**
        * Logged in with firebase auth but no username yet = no registered yet
        */}
       {firebaseAuthLoading ? (
-        <CircularProgress />
+        <FlexCenterDiv>
+          <CircularProgress />
+        </FlexCenterDiv>
       ) : userAuth ? (
-        !user ? (
+        userLoading ? (
+          <FlexCenterDiv>
+            <CircularProgress />
+          </FlexCenterDiv>
+        ) : !user ? (
           <UsernameForm />
         ) : (
           // REVIEW: maybe loading indicator?
@@ -148,11 +151,6 @@ function SignInButton() {
   )
 }
 
-// Sign out button
-// function SignOutButton() {
-//   return <button onClick={() => auth.signOut()}>Sign Out</button>
-// }
-
 function UsernameForm() {
   const router = useRouter()
 
@@ -164,6 +162,9 @@ function UsernameForm() {
   // const [loading, setLoading] = useState(false)
 
   const { userAuth, username } = useContext(UserContext)
+
+  const [usernameSuggestionLoading, setUsernameSuggestionLoading] =
+    useState(false)
 
   const onSubmit = async e => {
     e.preventDefault()
@@ -219,12 +220,14 @@ function UsernameForm() {
     setIsExistInDB(false)
 
     // Force form value typed in form to match correct format
-    const val = e.target.value.toLowerCase()
+    const val = e.target.value
+    const lowerValue = e.target.value.toLowerCase()
 
     // Korean, English, number only regex
     const reg = /^[ㄱ-ㅎ|가-힣|a-z|A-Z|0-9|\s]+$/
 
-    if (reg.test(val) && val.length < 20) {
+    // blank value = always valid
+    if (val === '' || (reg.test(lowerValue) && lowerValue.length < 20)) {
       setIsNotValid(false)
     } else {
       setIsNotValid(true)
@@ -280,31 +283,99 @@ function UsernameForm() {
             variant="standard"
             helperText="이메일 정보는 다른 유저에게 공개되지 않습니다."
           />
-          <TextField
-            required={true}
-            label="닉네임"
-            size="medium"
-            fullWidth
-            margin="normal"
-            onChange={onChange}
-            value={inkrauUsername}
-            error={inkrauUsername?.length > 2 && (isExistInDB || isNotValid)}
-            helperText={usernameHelperText()}
-          />
+          <GridDiv style={{ gridTemplateColumns: '1fr 55px', gap: '5px' }}>
+            <TextField
+              required={true}
+              label="닉네임"
+              size="medium"
+              fullWidth
+              margin="normal"
+              onChange={onChange}
+              value={inkrauUsername}
+              error={inkrauUsername?.length > 2 && (isExistInDB || isNotValid)}
+              helperText={usernameHelperText()}
+              // focused
+              autoFocus
+            />
+            <div style={{ display: 'grid', gridTemplateRows: '1fr 20px' }}>
+              <div
+                style={{ alignSelf: 'center' }}
+                onClick={async () => {
+                  setUsernameSuggestionLoading(true)
+                  try {
+                    const res: NewUsernameSuggestionRes =
+                      await getNewUsernameSuggestionHttpCall()
+                    const { newUsername, suggestion } = res.data
+
+                    if (!suggestion) {
+                      toast.error(`죄송합니다. 추천할 닉네임이 없습니다.`)
+                    }
+                    if (newUsername) {
+                      setInkrauUsername(newUsername)
+                    }
+                  } catch (err) {
+                    console.error(`Error in auto nickname/username generation`)
+                    toast.error(
+                      `죄송합니다. 에러가 발생했습니다. 다시 시도해주세요.`
+                    )
+                  } finally {
+                    setUsernameSuggestionLoading(false)
+                  }
+                }}
+              >
+                <Tooltip title="랜덤 닉네임 생성" placement="bottom" arrow>
+                  <FlexCenterDiv>
+                    {usernameSuggestionLoading ? (
+                      <CircularProgress size={34} />
+                    ) : (
+                      <AutoFixHighIcon
+                        fontSize="large"
+                        style={{
+                          padding: '2px',
+                          cursor: 'pointer',
+                          color: COLOURS.PRIMARY_BLUE
+                        }}
+                      />
+                    )}
+                  </FlexCenterDiv>
+                </Tooltip>
+                <div
+                  style={{
+                    fontSize: 10,
+                    color: 'white',
+                    backgroundColor: COLOURS.PRIMARY_BLUE,
+                    padding: '1px',
+                    textAlign: 'center'
+                  }}
+                >
+                  닉네임 추천
+                </div>
+              </div>
+              <div></div>
+            </div>
+          </GridDiv>
           {userAuth.displayName &&
             inkrauUsername?.length < 2 &&
             inkrauUsername !== userAuth.displayName && (
               // display it inkrauUsername is not equals to displayName
-              <Chip
-                label={`기존 이메일 프로필 사용. ${userAuth.displayName}`}
-                variant="outlined"
-                color="success"
-                size="small"
-                onClick={() => {
-                  setInkrauUsername(userAuth.displayName)
-                  setIsNotValid(false)
-                }}
-              />
+              <FlexCenterDiv>
+                <Chip
+                  label={
+                    <span>
+                      기존 이메일 프로필 사용:{' '}
+                      <strong>{userAuth.displayName}</strong>
+                    </span>
+                  }
+                  variant="outlined"
+                  color="success"
+                  size="small"
+                  onClick={() => {
+                    setInkrauUsername(userAuth.displayName)
+                    setIsNotValid(false)
+                  }}
+                  style={{ display: 'grid', maxWidth: '350px' }}
+                />
+              </FlexCenterDiv>
             )}
 
           {/* <UsernameMessage

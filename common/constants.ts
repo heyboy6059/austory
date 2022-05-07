@@ -10,7 +10,9 @@ export enum COLOURS {
   BRIGHT_GREEN = '#8bc34a',
   HEART_RED = '#f44336',
   CANCEL_RED = '#E3242B',
-  LIGHT_PURPLE = '#8c519d'
+  LIGHT_PURPLE = '#8c519d',
+  PRIMARY_BLUE = '#1769aa',
+  SECONDARY_BLUE = '#2196f3'
 }
 
 export const POST_FEED_NUM_LIMIT = 10

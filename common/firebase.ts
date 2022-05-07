@@ -3,6 +3,7 @@ import 'firebase/compat/auth'
 import 'firebase/compat/firestore'
 import 'firebase/compat/storage'
 import 'firebase/compat/analytics'
+import 'firebase/compat/functions'
 
 // import { getAnalytics } from 'firebase/analytics'
 import {
@@ -38,9 +39,15 @@ if (typeof window !== 'undefined') {
 export const auth = firebase.auth()
 export const firestore = firebase.firestore()
 export const storage = firebase.storage()
+export const functions = firebase.functions()
 export const STATE_CHANGED = firebase.storage.TaskEvent.STATE_CHANGED
 
 export const fromMillis = firebase.firestore.Timestamp.fromMillis
+
+// http functions
+export const getNewUsernameSuggestionHttpCall = functions.httpsCallable(
+  'getNewUsernameSuggestion'
+)
 
 // auth providers
 export const googleAuthProvider = new firebase.auth.GoogleAuthProvider()
