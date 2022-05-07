@@ -35,6 +35,9 @@ import LogoutIcon from '@mui/icons-material/Logout'
 import FavoriteIcon from '@mui/icons-material/Favorite'
 import QueryStatsIcon from '@mui/icons-material/QueryStats'
 import AccountBoxIcon from '@mui/icons-material/AccountBox'
+import CalculateIcon from '@mui/icons-material/Calculate'
+import MapsHomeWorkIcon from '@mui/icons-material/MapsHomeWork'
+import PeopleIcon from '@mui/icons-material/People'
 import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutline'
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings'
 import Tooltip from '@mui/material/Tooltip'
@@ -68,8 +71,8 @@ export default function Navbar() {
   // }
 
   const isLoggingIn = useMemo(
-    () => !firebaseAuthLoading && !userLoading && userAuth && user,
-    [firebaseAuthLoading, user, userAuth, userLoading]
+    () => !firebaseAuthLoading && !userLoading && userAuth,
+    [firebaseAuthLoading, userAuth, userLoading]
   )
 
   const toggleDrawer = useCallback(
@@ -143,6 +146,39 @@ export default function Navbar() {
             />
           </ListItem>
         )}
+      </List>
+      <Divider />
+      <List>
+        <ListItem
+          button
+          key={'WorkingHolidayTaxCalculator'}
+          onClick={() => alert('준비중 입니다.')}
+        >
+          <ListItemIcon>
+            <CalculateIcon />
+          </ListItemIcon>
+          <ListItemText primary={'워홀 세금계산기'} />
+        </ListItem>
+        <ListItem
+          button
+          key={'RealEstate'}
+          onClick={() => alert('준비중 입니다.')}
+        >
+          <ListItemIcon>
+            <MapsHomeWorkIcon />
+          </ListItemIcon>
+          <ListItemText primary={'부동산 트랜드'} />
+        </ListItem>
+        <ListItem
+          button
+          key={'KoreanStaff'}
+          onClick={() => alert('준비중 입니다.')}
+        >
+          <ListItemIcon>
+            <PeopleIcon />
+          </ListItemIcon>
+          <ListItemText primary={'한국인 직원'} />
+        </ListItem>
       </List>
       <Divider />
       <List>
