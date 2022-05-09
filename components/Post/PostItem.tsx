@@ -76,22 +76,24 @@ const PostItem: FC<{
           >
             <div style={{ display: 'flex', alignItems: 'center' }}>
               <Link href={`/post/${post.postId}`} passHref>
-                <Typography
-                  style={{
-                    fontSize: '17px',
-                    margin: '2px 0',
-                    display: '-webkit-box',
-                    WebkitLineClamp: 2,
-                    WebkitBoxOrient: 'vertical',
-                    overflow: 'hidden',
-                    fontWeight: 'bold',
-                    lineHeight: '1.2',
-                    cursor: 'pointer'
-                  }}
-                >
-                  {post.isTest && <Chip label="TEST" color="primary" />}
-                  <span>{post.title}</span>
-                </Typography>
+                <a>
+                  <Typography
+                    style={{
+                      fontSize: '17px',
+                      margin: '2px 0',
+                      display: '-webkit-box',
+                      WebkitLineClamp: 2,
+                      WebkitBoxOrient: 'vertical',
+                      overflow: 'hidden',
+                      fontWeight: 'bold',
+                      lineHeight: '1.2',
+                      cursor: 'pointer'
+                    }}
+                  >
+                    {post.isTest && <Chip label="TEST" color="primary" />}
+                    <span>{post.title}</span>
+                  </Typography>
+                </a>
               </Link>
             </div>
             <EllipsisDiv
@@ -100,17 +102,19 @@ const PostItem: FC<{
               }}
             >
               <Link href={`/post/${post.postId}`} passHref>
-                <Typography
-                  style={{
-                    display: '-webkit-box',
-                    WebkitLineClamp: 2,
-                    WebkitBoxOrient: 'vertical',
-                    overflow: 'hidden',
-                    fontSize: '14px'
-                  }}
-                >
-                  {post.excerpt ? `${post.excerpt}` : post.content}
-                </Typography>
+                <a>
+                  <Typography
+                    style={{
+                      display: '-webkit-box',
+                      WebkitLineClamp: 2,
+                      WebkitBoxOrient: 'vertical',
+                      overflow: 'hidden',
+                      fontSize: '14px'
+                    }}
+                  >
+                    {post.excerpt ? `${post.excerpt}` : post.content}
+                  </Typography>
+                </a>
               </Link>
 
               {ownerUser && (
