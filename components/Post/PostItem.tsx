@@ -15,10 +15,10 @@ import {
 
 import Typography from '@mui/material/Typography'
 import { COLOURS, KOR_MONTH_DAY_FORMAT } from '../../common/constants'
-import AccountBoxIcon from '@mui/icons-material/AccountBox'
 import Chip from '@mui/material/Chip'
 import { AiOutlineHeart, AiOutlineComment, AiOutlineEye } from 'react-icons/ai'
 import { UserContext } from '../../common/context'
+import AccountIconName from '../Account/AccountIconName'
 
 const PostItem: FC<{
   post: Post
@@ -170,16 +170,11 @@ const PostItem: FC<{
               fontSize: '13px'
             }}
           >
-            {/* <Link href={`/${post.username}`} passHref> */}
-            <FlexCenterDiv style={{ gap: '2px', alignItems: 'center' }}>
-              <AccountBoxIcon style={{ fontSize: '16px', marginTop: '4px' }} />
-              {/**
-               * coverUsername is for admin purpose only
-               * - temporarily cover the username
-               */}
-              <div>{post.coverUsername || post.username}</div>
-            </FlexCenterDiv>
-            {/* </Link> */}
+            {/**
+             * coverUsername is for admin purpose only
+             * - temporarily cover the username
+             */}
+            <AccountIconName username={post.coverUsername || post.username} />
             <span>|</span>
             <EllipsisSpan>
               {dayjs(post.createdAt).format(KOR_MONTH_DAY_FORMAT)}

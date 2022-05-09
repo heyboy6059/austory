@@ -17,7 +17,6 @@ import {
 import dayjs from 'dayjs'
 import { COLOURS, KOR_FULL_DATE_FORMAT } from '../../common/constants'
 import NextImage from 'next/image'
-import AccountBoxIcon from '@mui/icons-material/AccountBox'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 import VisibilityIcon from '@mui/icons-material/Visibility'
 import LinkIcon from '@mui/icons-material/Link'
@@ -47,6 +46,7 @@ import {
 import CommentMain from '../Comment/CommentMain'
 import Typography from '@mui/material/Typography'
 import Chip from '@mui/material/Chip'
+import AccountIconName from '../Account/AccountIconName'
 
 // import { Editor, EditorState, ContentState } from "draft-js"
 
@@ -269,14 +269,11 @@ const PostContent: FC<PostContentProps> = ({
         on {dayjs(post.createdAt).format(KOR_FULL_DATE_FORMAT)} */}
           {/* <FlexCenterDiv style={{ gap: "2px", alignItems: "center" }}> */}
           <FlexVerticalCenterDiv style={{ gap: '8px', margin: '5px 0' }}>
-            <div style={{ display: 'flex' }}>
-              <AccountBoxIcon style={{ fontSize: '16px' }} />
-              {/**
-               * coverUsername is for admin purpose only
-               * - temporarily cover the username
-               */}
-              <div>{post.coverUsername || post.username}</div>
-            </div>
+            {/**
+             * coverUsername is for admin purpose only
+             * - temporarily cover the username
+             */}
+            <AccountIconName username={post.coverUsername || post.username} />
             <div>|</div>
             <div>{dayjs(post.createdAt).format(KOR_FULL_DATE_FORMAT)}</div>
           </FlexVerticalCenterDiv>
