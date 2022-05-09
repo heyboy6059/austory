@@ -7,8 +7,10 @@ import { batchUpdateUsers } from '../common/update'
 import { UserContext } from '../common/context'
 import toast from 'react-hot-toast'
 import { RawHeart } from '../typing/interfaces'
-import { COLOURS } from '../common/constants'
+import { COLOURS, FIRESTORE_POSTS } from '../common/constants'
 import { AiOutlineHeart, AiFillHeart } from 'react-icons/ai'
+import AddCircleIcon from '@mui/icons-material/AddCircle'
+import Tooltip from '@mui/material/Tooltip'
 interface Props {
   postId: string
   heartCount: number
@@ -16,7 +18,7 @@ interface Props {
 }
 const Heart: FC<Props> = ({ postId, heartCount, username }) => {
   // REVIEW: better way to have user?
-  const { user } = useContext(UserContext)
+  const { user, isAdmin } = useContext(UserContext)
   const heartId = `${generateHeartDocumentId(postId, user?.uid)}`
   const heartRef = firestore.collection('hearts').doc(heartId)
   const [heartDoc] = useDocument(heartRef)
@@ -72,22 +74,50 @@ const Heart: FC<Props> = ({ postId, heartCount, username }) => {
     [heartId, heartRef, postId, user, username]
   )
 
-  return heartDoc?.exists ? (
-    <FlexCenterDiv
-      style={{ cursor: 'pointer' }}
-      onClick={() => addRemoveHeart('remove')}
-    >
-      <AiFillHeart style={{ fontSize: '25px', color: COLOURS.HEART_RED }} />{' '}
-      <span style={{ fontSize: '20px' }}>{localHeartCount}</span>
-    </FlexCenterDiv>
-  ) : (
-    <FlexCenterDiv
-      style={{ cursor: 'pointer' }}
-      onClick={() => addRemoveHeart('add')}
-    >
-      <AiOutlineHeart style={{ fontSize: '25px' }} />{' '}
-      <span style={{ fontSize: '20px' }}>{localHeartCount}</span>
-    </FlexCenterDiv>
+  const adminOnlyHeartAdd = async () => {
+    const postRef = firestore.collection(FIRESTORE_POSTS).doc(postId)
+    await postRef.update({
+      heartCount: increment(1)
+    })
+    setLocalHeartCount(prev => prev + 1)
+    toast.success(`관리자 권한으로 하트를 추가했습니다.`)
+  }
+  return (
+    <>
+      {heartDoc?.exists ? (
+        <FlexCenterDiv
+          style={{ cursor: 'pointer' }}
+          onClick={() => addRemoveHeart('remove')}
+        >
+          <AiFillHeart style={{ fontSize: '25px', color: COLOURS.HEART_RED }} />{' '}
+          <span style={{ fontSize: '20px' }}>{localHeartCount}</span>
+        </FlexCenterDiv>
+      ) : (
+        <FlexCenterDiv
+          style={{ cursor: 'pointer' }}
+          onClick={() => addRemoveHeart('add')}
+        >
+          <AiOutlineHeart style={{ fontSize: '25px' }} />{' '}
+          <span style={{ fontSize: '20px' }}>{localHeartCount}</span>
+        </FlexCenterDiv>
+      )}
+      {/**
+       * ADMIN ONLY
+       *  - ADD HEART COUNT
+       */}
+      {isAdmin ? (
+        <FlexCenterDiv>
+          <Tooltip title="관리자 only" placement="bottom" arrow>
+            <AddCircleIcon
+              style={{ cursor: 'pointer', color: COLOURS.BRIGHT_GREEN }}
+              onClick={() => adminOnlyHeartAdd()}
+            />
+          </Tooltip>
+        </FlexCenterDiv>
+      ) : (
+        <></>
+      )}
+    </>
   )
 }
 
