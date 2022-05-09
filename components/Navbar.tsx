@@ -241,7 +241,14 @@ export default function Navbar() {
               width: `${MAX_WIDTH_PX}px`
             }}
           >
-            <FlexCenterDiv>
+            <FlexCenterDiv
+              onClick={
+                // reload the page when user is in home page
+                typeof window !== 'undefined' && location.pathname === '/'
+                  ? () => location.reload()
+                  : null
+              }
+            >
               <Link href={`/`} passHref>
                 <a>
                   <LogoImage
