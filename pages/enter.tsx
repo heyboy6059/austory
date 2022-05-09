@@ -82,13 +82,28 @@ function SignInButton() {
           : provider === 'Facebook'
           ? facebookAuthProvider
           : provider === 'Apple' && appleAuthProvider
-      // : new Error('Provider not found.')
 
       const authRes = await auth.signInWithPopup(authProvider)
       console.log({ authRes })
       console.log(`Successfully signed in with ${provider} popup.`)
     } catch (err) {
       console.error(`Error in signInWithPopup. ${err.message}`)
+      if (
+        err.message.includes(
+          `An account already exists with the same email address but different sign-in credentials.`
+        )
+      ) {
+        toast.error(
+          `해당 이메일로 ${
+            provider === 'Google'
+              ? '구글'
+              : provider === 'Facebook'
+              ? '페이스북'
+              : provider === 'Apple' && '애플'
+          }이 아닌 다른 제공자로 이미 가입이 되어 있습니다.`
+        )
+        return
+      }
       if (
         !err.message.includes(
           'The popup has been closed by the user before finalizing the operation.'
