@@ -67,7 +67,7 @@ export const resizeImageJpeg = async (
     Resizer.imageFileResizer(
       file,
       maxWidthHeight,
-      maxWidthHeight,
+      maxWidthHeight * 3,
       RESIZE_IMAGE_EXT,
       90,
       0,
