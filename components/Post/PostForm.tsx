@@ -169,6 +169,8 @@ const PostForm: FC<Props> = ({ editPost }) => {
         await batch.commit()
 
         toast.success('게시물 업데이트가 완료 되었습니다.')
+
+        router.push(`/post/${postId}`)
       }
       // CREATE
       if (!isEditMode) {
@@ -218,9 +220,8 @@ const PostForm: FC<Props> = ({ editPost }) => {
         await batch.commit()
 
         toast.success('게시물이 성공적으로 등록 되었습니다.')
+        router.push('/')
       }
-
-      router.push('/')
     } catch (err) {
       console.error(`Error in PostForm create/edit. ${err.message}`)
       toast.error('에러가 발생했습니다. 다시 시도해주세요.')
