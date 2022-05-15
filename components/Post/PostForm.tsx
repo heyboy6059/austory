@@ -35,7 +35,7 @@ import {
 } from 'react-simple-horizontal-scroller'
 import Box from '@mui/material/Box'
 import { getAllCategories } from '../../common/get'
-import { Chip, Skeleton } from '@mui/material'
+import { Chip, Paper, Skeleton } from '@mui/material'
 
 type ExtendedCategory = Category & {
   selected: boolean
@@ -229,11 +229,7 @@ const PostForm: FC<Props> = ({ editPost }) => {
   }
 
   return (
-    <div
-      style={{
-        padding: '10px'
-      }}
-    >
+    <Paper sx={{ p: 2, mt: 1 }}>
       {/**
        * DEV ONLY - easy category creation
        */}
@@ -405,12 +401,13 @@ const PostForm: FC<Props> = ({ editPost }) => {
             variant="outlined"
             type="submit"
             disabled={imageLoading || !watch().content || !watch().title}
+            style={{ marginBottom: '5px' }}
           >
             완료
           </Button>
         </FlexCenterDiv>
       </form>
-    </div>
+    </Paper>
   )
 }
 
