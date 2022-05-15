@@ -136,7 +136,7 @@ export default function Navbar() {
               <ListItemText primary={'나의 활동'} />
             </ListItem>
           </>
-        ) : (
+        ) : userAuth ? (
           <ListItem
             button
             key={'Account'}
@@ -150,6 +150,19 @@ export default function Navbar() {
               secondary={'정상적인 이용을 위해 등록을 해주세요.'}
             />
           </ListItem>
+        ) : (
+          <>
+            <ListItem
+              button
+              key={'Account'}
+              onClick={() => router.push(`/enter`)}
+            >
+              <ListItemIcon>
+                <AccountBoxIcon />
+              </ListItemIcon>
+              <ListItemText primary={'로그인'} secondary={'구글/페북/애플'} />
+            </ListItem>
+          </>
         )}
       </List>
       <Divider />
@@ -197,20 +210,24 @@ export default function Navbar() {
           </ListItemIcon>
           <ListItemText primary={'문의'} />
         </ListItem>
-        <ListItem
-          button
-          key={'LogOut'}
-          onClick={async () => {
-            await auth.signOut()
-            router.push('/')
-            toast.success(`로그아웃 되었습니다.`)
-          }}
-        >
-          <ListItemIcon>
-            <LogoutIcon />
-          </ListItemIcon>
-          <ListItemText primary={'로그아웃'} />
-        </ListItem>
+        {user ? (
+          <ListItem
+            button
+            key={'LogOut'}
+            onClick={async () => {
+              await auth.signOut()
+              router.push('/')
+              toast.success(`로그아웃 되었습니다.`)
+            }}
+          >
+            <ListItemIcon>
+              <LogoutIcon />
+            </ListItemIcon>
+            <ListItemText primary={'로그아웃'} />
+          </ListItem>
+        ) : (
+          <></>
+        )}
       </List>
       <List>
         <FlexCenterDiv style={{ gap: '25px' }}>
@@ -253,7 +270,11 @@ export default function Navbar() {
       <AppBar position="static" style={{ backgroundColor: 'white' }}>
         <Toolbar
           variant="dense"
-          style={{ display: 'flex', justifyContent: 'center' }}
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+            paddingRight: '0px'
+          }}
         >
           <FlexSpaceBetween
             style={{
@@ -285,7 +306,7 @@ export default function Navbar() {
 
             <FlexVerticalCenterDiv>
               {/* // user is signed-in and has username */}
-              <FlexVerticalCenterDiv style={{ gap: '10px' }}>
+              <FlexCenterDiv style={{ gap: '10px' }}>
                 {/*
                  * REVIEW: temporarily closed
                  */}
@@ -368,25 +389,20 @@ export default function Navbar() {
                     <AdminPanelSettingsIcon style={{ color: 'orange' }} />
                   </Tooltip>
                 )}
-                {isLoggingIn && (
-                  <IconButton
-                    size="large"
-                    edge="start"
-                    aria-label="menu"
-                    sx={{
-                      svg: {
-                        color: COLOURS.LIGHT_PURPLE
-                      }
-                    }}
-                    style={{
-                      paddingRight: '0'
-                    }}
-                    onClick={toggleDrawer(true)}
-                  >
-                    <MenuIcon />
-                  </IconButton>
-                )}
-              </FlexVerticalCenterDiv>
+                <IconButton
+                  size="large"
+                  edge="start"
+                  aria-label="menu"
+                  sx={{
+                    svg: {
+                      color: COLOURS.LIGHT_PURPLE
+                    }
+                  }}
+                  onClick={toggleDrawer(true)}
+                >
+                  <MenuIcon />
+                </IconButton>
+              </FlexCenterDiv>
             </FlexVerticalCenterDiv>
           </FlexSpaceBetween>
         </Toolbar>
