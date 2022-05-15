@@ -3,6 +3,8 @@ import Link from 'next/link'
 import { UserContext } from '../common/context'
 import {
   COLOURS,
+  FACEBOOK_INKRAU_URL,
+  INSTAGRAM_INKRAU_URL,
   MAX_WIDTH_PX,
   REQUEST_GOOGLE_FORM_URL
 } from '../common/constants'
@@ -14,6 +16,9 @@ import {
 } from '../common/uiComponents'
 
 import Logo from '../public/inKRAU_New_Logo_200_80.png'
+
+import InstagramSvg from '../public/instagram_logo.svg'
+import FacebookSvg from '../public/facebook_logo.svg'
 
 /**
  * Material UI
@@ -206,6 +211,22 @@ export default function Navbar() {
           </ListItemIcon>
           <ListItemText primary={'로그아웃'} />
         </ListItem>
+      </List>
+      <List>
+        <FlexCenterDiv style={{ gap: '25px' }}>
+          <LogoImage
+            src={FacebookSvg}
+            width={30}
+            height={30}
+            onClick={() => window.open(FACEBOOK_INKRAU_URL, '_blank').focus()}
+          />
+          <LogoImage
+            src={InstagramSvg}
+            width={30}
+            height={30}
+            onClick={() => window.open(INSTAGRAM_INKRAU_URL, '_blank').focus()}
+          />
+        </FlexCenterDiv>
       </List>
       {isAdmin && (
         <>
