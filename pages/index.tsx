@@ -9,6 +9,45 @@ import ScrollToTop from 'react-scroll-up'
 import ArrowCircleUpIcon from '@mui/icons-material/ArrowCircleUp'
 import Head from 'next/head'
 
+import Tabs from '@mui/material/Tabs'
+import Tab from '@mui/material/Tab'
+// import Typography from '@mui/material/Typography'
+import Box from '@mui/material/Box'
+// import StarsIcon from '@mui/icons-material/Stars'
+
+// interface TabPanelProps {
+//   children?: React.ReactNode
+//   index: number
+//   value: number
+// }
+
+// function TabPanel(props: TabPanelProps) {
+//   const { children, value, index, ...other } = props
+
+//   return (
+//     <div
+//       role="tabpanel"
+//       hidden={value !== index}
+//       id={`simple-tabpanel-${index}`}
+//       aria-labelledby={`simple-tab-${index}`}
+//       {...other}
+//     >
+//       {value === index && (
+//         <Box sx={{ p: 3 }}>
+//           <Typography>{children}</Typography>
+//         </Box>
+//       )}
+//     </div>
+//   )
+// }
+
+function a11yProps(index: number) {
+  return {
+    id: `simple-tab-${index}`,
+    'aria-controls': `simple-tabpanel-${index}`
+  }
+}
+
 export const getServerSideProps = async context => {
   context
   const postsQuery = firestore
@@ -29,6 +68,13 @@ const Home = props => {
   // const [loading, setLoading] = useState(false)
 
   const [postsEnd, setPostsEnd] = useState(false)
+
+  const [tabValue, setTabValue] = useState(0)
+
+  // TODO: rename this
+  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+    setTabValue(newValue)
+  }
 
   const getMorePosts = async () => {
     // setLoading(true)
@@ -57,10 +103,51 @@ const Home = props => {
   }
 
   return (
-    <div style={{ marginTop: '10px' }}>
+    <div>
       <Head>
         <title>inKRAU 인크라우</title>
       </Head>
+      <Box sx={{ width: '100%' }}>
+        <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+          <Tabs
+            value={tabValue}
+            onChange={handleChange}
+            textColor="secondary"
+            indicatorColor="secondary"
+            aria-label="main menu tabs"
+            style={{ minHeight: '0', padding: '0', height: '42px' }}
+          >
+            <Tab
+              label={
+                <strong>인크라우 컨텐츠</strong>
+                // <FlexCenterDiv>
+                //   <StarsIcon style={{ fontSize: '18px', marginRight: '2px' }} />
+                //   <FlexCenterDiv>
+                //     <strong>인크라우 컨텐츠</strong>
+                //   </FlexCenterDiv>
+                // </FlexCenterDiv>
+              }
+              {...a11yProps(0)}
+              style={{ padding: '15px' }}
+            />
+            <Tab
+              label={<strong>커뮤니티</strong>}
+              {...a11yProps(1)}
+              style={{ padding: '15px' }}
+            />
+            {/* <Tab label="Item Three" {...a11yProps(2)} /> */}
+          </Tabs>
+        </Box>
+        {/* <TabPanel value={tabValue} index={0}>
+          Item One
+        </TabPanel>
+        <TabPanel value={tabValue} index={1}>
+          Item Two
+        </TabPanel>
+        <TabPanel value={tabValue} index={2}>
+          Item Three
+        </TabPanel> */}
+      </Box>
       <PostFeed posts={posts} loadMore={getMorePosts} hasMore={!postsEnd} />
 
       <FlexCenterDiv style={{ marginBottom: '10px' }}>
