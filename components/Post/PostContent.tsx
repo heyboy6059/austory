@@ -170,6 +170,13 @@ const PostContent: FC<PostContentProps> = ({
     }
   }, [])
 
+  // useEffect(() => {
+  //   if (window) {
+  //     console.log('innerWidth', window.innerWidth)
+  //   }
+  // }, [])
+
+  // console.log('innerWidth', window.innerWidth)
   return (
     <>
       <Metatags
@@ -390,22 +397,22 @@ const PostContent: FC<PostContentProps> = ({
             content="정말로 이 글을 지우시겠습니까?"
           />
         )}
-
-        {/* REVIEW: GOOGLE ADSENSE */}
-        <Box style={{ marginTop: '10px', width: '100%' }}>
-          <ins
-            className="adsbygoogle"
-            style={{
-              display: 'block',
-              textAlign: 'center'
-            }}
-            data-ad-client="ca-pub-1805879168244149"
-            data-ad-slot="3559760421"
-            data-ad-format="auto"
-            data-full-width-responsive="true"
-          ></ins>
-        </Box>
       </Paper>
+      {/* REVIEW: GOOGLE ADSENSE */}
+      <Box style={{ marginTop: '10px' }}>
+        <ins
+          className="adsbygoogle"
+          style={{
+            display: 'inline-block',
+            textAlign: 'center',
+            width: '100%'
+          }}
+          data-ad-client="ca-pub-1805879168244149"
+          data-ad-slot="3559760421"
+          data-ad-format="auto"
+          data-full-width-responsive="true"
+        ></ins>
+      </Box>
     </>
   )
 }
