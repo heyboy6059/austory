@@ -1,5 +1,5 @@
 import Box from '@mui/material/Box'
-import Head from 'next/head'
+// import Head from 'next/head'
 import { FC, useEffect } from 'react'
 import { FlexCenterDiv } from '../common/uiComponents'
 
@@ -31,19 +31,25 @@ const AdSense: FC = () => {
   //   }, [])
 
   return (
-    <FlexCenterDiv>
-      <Head>
+    <>
+      {/* <Head>
         <script
           async
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1805879168244149"
           crossOrigin="anonymous"
         ></script>
-      </Head>
-      <div>
-        <div>애드센스 광고 테스트</div>
-        <div style={{ border: '1px solid black' }}>
-          <Box>
-            {/* <ins
+      </Head> */}
+      <FlexCenterDiv style={{ width: '100%' }}>
+        <div style={{ width: '100%' }}>
+          <div style={{ width: '100%' }}>애드센스 광고 테스트</div>
+          <div
+            style={{
+              width: '100%',
+              border: '1px solid black'
+            }}
+          >
+            <Box style={{ width: '100%' }}>
+              {/* <ins
               className="adsbygoogle"
               style={{
                 display: 'block',
@@ -54,15 +60,15 @@ const AdSense: FC = () => {
               data-ad-format="auto"
               data-full-width-responsive="true"
             ></ins> */}
-            <ins
-              className="adsbygoogle"
-              style={{ display: 'block' }}
-              data-ad-client="ca-pub-1805879168244149"
-              data-ad-slot="3559760421"
-              data-ad-format="auto"
-              data-full-width-responsive="true"
-            ></ins>
-            {/* <ins
+              <ins
+                className="adsbygoogle"
+                style={{ display: 'block' }}
+                data-ad-client="ca-pub-1805879168244149"
+                data-ad-slot="3559760421"
+                data-ad-format="auto"
+                data-full-width-responsive="true"
+              ></ins>
+              {/* <ins
               className="adsbygoogle adbanner-customize"
               style={{
                 display: 'block'
@@ -70,10 +76,11 @@ const AdSense: FC = () => {
               data-ad-client="ca-pub-1805879168244149"
               data-ad-slot="3559760421"
             /> */}
-          </Box>
+            </Box>
+          </div>
         </div>
-      </div>
-    </FlexCenterDiv>
+      </FlexCenterDiv>
+    </>
   )
 }
 
