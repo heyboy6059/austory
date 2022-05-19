@@ -47,6 +47,7 @@ import CommentMain from '../Comment/CommentMain'
 import Typography from '@mui/material/Typography'
 import Chip from '@mui/material/Chip'
 import AccountIconName from '../Account/AccountIconName'
+import Box from '@mui/material/Box'
 
 // import { Editor, EditorState, ContentState } from "draft-js"
 
@@ -160,14 +161,14 @@ const PostContent: FC<PostContentProps> = ({
   // }
 
   // REVIEW: GOOGLE ADSENSE
-  // useEffect(() => {
-  //   try {
-  //     ;(window['adsbygoogle'] = window['adsbygoogle'] || []).push({})
-  //     console.log('hit useEffect')
-  //   } catch (err) {
-  //     console.log(err)
-  //   }
-  // }, [])
+  useEffect(() => {
+    try {
+      ;(window['adsbygoogle'] = window['adsbygoogle'] || []).push({})
+      console.log('hit useEffect')
+    } catch (err) {
+      console.log(err)
+    }
+  }, [])
 
   return (
     <>
@@ -391,17 +392,19 @@ const PostContent: FC<PostContentProps> = ({
         )}
 
         {/* REVIEW: GOOGLE ADSENSE */}
-        {/* <ins
-          className="adsbygoogle"
-          style={{
-            display: 'block',
-            textAlign: 'center'
-          }}
-          data-ad-client="ca-pub-1805879168244149"
-          data-ad-slot="3559760421"
-          data-ad-format="auto"
-          data-full-width-responsive="true"
-        ></ins> */}
+        <Box style={{ width: '100%' }}>
+          <ins
+            className="adsbygoogle"
+            style={{
+              display: 'block',
+              textAlign: 'center'
+            }}
+            data-ad-client="ca-pub-1805879168244149"
+            data-ad-slot="3559760421"
+            data-ad-format="auto"
+            data-full-width-responsive="true"
+          ></ins>
+        </Box>
       </Paper>
     </>
   )
