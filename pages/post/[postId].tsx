@@ -100,9 +100,12 @@ const SinglePost: FC<PostProps> = (
 ) => {
   return (
     <Box
-      sx={{
-        p: 1
+      style={{
+        padding: '8px 0px'
       }}
+      // sx={{
+      //   p: 1
+      // }}
     >
       <PostContent post={post} />
     </Box>
