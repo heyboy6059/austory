@@ -186,7 +186,19 @@ const PostContent: FC<PostContentProps> = ({
                   // window.history.pushState("", "", `/post/abcd`)
                   // router.push("/", undefined, { shallow: true })
                   //REVIEW: go back without reload/refresh/keep scroll
-                  router.push('/')
+
+                  {
+                    if (post?.isInkrauOfficial === false) {
+                      router.push({
+                        pathname: '/',
+                        query: {
+                          postType: 'community'
+                        }
+                      })
+                    } else {
+                      router.push('/')
+                    }
+                  }
                 }
                 style={{ cursor: 'pointer' }}
               />

@@ -54,24 +54,48 @@ function a11yProps(index: number) {
   }
 }
 
-export const getServerSideProps = async () => {
-  const posts = await getPostsByType('inkrau')
+export const getServerSideProps = async context => {
+  const { postType } = context.query
+
+  let posts = null
+  let postTypeFromQuery = null
+  if (postType === 'inkrau' || postType === 'community') {
+    posts = await getPostsByType(postType)
+    postTypeFromQuery = postType
+  } else {
+    posts = await getPostsByType('inkrau')
+  }
 
   return {
-    props: { posts } // will be passed to the page component as props
+    props: { posts, postTypeFromQuery }
   }
 }
 
-const Home = props => {
-  const [postType, setPostType] = useState<PostType>('inkrau')
+const Home = ({ posts, postTypeFromQuery }) => {
+  const [postType, setPostType] = useState<PostType>(
+    postTypeFromQuery || 'inkrau'
+  )
 
-  const [inkrauPosts, setInkrauPosts] = useState(props.posts)
-  const [communityPosts, setCommunityPosts] = useState<Post[]>([])
+  const [inkrauPosts, setInkrauPosts] = useState<Post[]>(
+    postTypeFromQuery === 'inkrau' ? posts : []
+  )
+  const [communityPosts, setCommunityPosts] = useState<Post[]>(
+    postTypeFromQuery === 'community' ? posts : []
+  )
 
   const [inkrauPostEnd, setInkrauPostEnd] = useState(false)
   const [communityPostEnd, setCommunityPostEnd] = useState(false)
 
-  const [tabValue, setTabValue] = useState(0)
+  // REVIEW: replace 0, 1 to actual string name
+  // 0 = inkrau contents menu
+  // 1 = community contents menu
+  const [tabValue, setTabValue] = useState(
+    postTypeFromQuery === 'inkrau'
+      ? 0
+      : postTypeFromQuery === 'community'
+      ? 1
+      : 0
+  )
 
   // TODO: rename this
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
@@ -122,11 +146,15 @@ const Home = props => {
     }
   }
 
-  const getCommunityPosts = async () => {
+  const getInitialPosts = async (postType: PostType) => {
     try {
-      if (!communityPosts.length) {
+      if (postType === 'community' && !communityPosts.length) {
         const posts = await getPostsByType('community')
         setCommunityPosts(posts)
+      }
+      if (postType === 'inkrau' && !inkrauPosts.length) {
+        const posts = await getPostsByType('inkrau')
+        setInkrauPosts(posts)
       }
     } catch (err) {
       console.error(`Error in getCommunityPosts: ${err.message}`)
@@ -163,6 +191,7 @@ const Home = props => {
               style={{ padding: '15px' }}
               onClick={async () => {
                 setPostType('inkrau')
+                await getInitialPosts(postType)
               }}
             />
             <Tab
@@ -171,7 +200,7 @@ const Home = props => {
               style={{ padding: '15px' }}
               onClick={async () => {
                 setPostType('community')
-                await getCommunityPosts()
+                await getInitialPosts(postType)
               }}
             />
             {/* <Tab label="Item Three" {...a11yProps(2)} /> */}
