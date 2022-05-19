@@ -99,6 +99,7 @@ export type RawPost = {
   updatedBy: string | null
   updatedAt: FirestoreTimestamp | null
   //
+  isInkrauOfficial: boolean
   isTest: boolean
 }
 
@@ -110,7 +111,13 @@ export type Post = Omit<RawPost, 'createdAt' | 'updatedAt' | 'commentCount'> & {
 
 export type PostWrite = Pick<
   Post,
-  'title' | 'content' | 'images' | 'categories' | 'isTest' | 'coverUsername'
+  | 'title'
+  | 'content'
+  | 'images'
+  | 'categories'
+  | 'isTest'
+  | 'coverUsername'
+  | 'isInkrauOfficial'
 >
 
 export type ImgType = 'thumbnail200' | 'thumbnail600' | 'original'
@@ -180,3 +187,5 @@ export type Category = Omit<
 }
 
 export type CategoryOption = Pick<RawCategory, 'categoryId' | 'name'>
+
+export type PostType = 'inkrau' | 'community'

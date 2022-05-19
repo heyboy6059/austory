@@ -102,7 +102,8 @@ const PostForm: FC<Props> = ({ editPost }) => {
           categories: editPost.categories,
           content: editPost.content,
           isTest: editPost.isTest,
-          coverUsername: editPost.coverUsername
+          coverUsername: editPost.coverUsername,
+          isInkrauOfficial: editPost.isInkrauOfficial
         }
       : // CREATE
         {
@@ -110,7 +111,8 @@ const PostForm: FC<Props> = ({ editPost }) => {
           images: [],
           categories: [],
           content: '',
-          isTest: false
+          isTest: false,
+          isInkrauOfficial: false
         }
   })
 
@@ -200,7 +202,8 @@ const PostForm: FC<Props> = ({ editPost }) => {
           createdAt: serverTimestamp() as FirestoreTimestamp,
           updatedBy: null,
           updatedAt: null,
-          isTest: data.isTest
+          isTest: data.isTest,
+          isInkrauOfficial: data.isInkrauOfficial
         }
 
         const batch = firestore.batch()
@@ -267,6 +270,18 @@ const PostForm: FC<Props> = ({ editPost }) => {
               control={
                 <Controller
                   name="isTest"
+                  control={control}
+                  render={({ field }) => <Checkbox {...field} />}
+                />
+              }
+            />
+            <FormControlLabel
+              label={`인크라우 공식 컨텐츠 (관리자 전용) - ${
+                watch().isInkrauOfficial
+              }`}
+              control={
+                <Controller
+                  name="isInkrauOfficial"
                   control={control}
                   render={({ field }) => <Checkbox {...field} />}
                 />

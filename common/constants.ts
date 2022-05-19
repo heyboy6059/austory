@@ -59,3 +59,5 @@ export const GENERIC_KOREAN_ERROR_MESSAGE =
 export const REQUEST_GOOGLE_FORM_URL = 'https://forms.gle/fxLmKtN1RrYen7LH6'
 export const FACEBOOK_INKRAU_URL = 'https://www.facebook.com/inKRAUofficial'
 export const INSTAGRAM_INKRAU_URL = 'https://www.instagram.com/inkrau_official'
+
+export const INKRAU_OFFICIAL_USER_ID = '7eBBo9hmZPgYIi3dws9derB0SYe2'

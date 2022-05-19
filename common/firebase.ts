@@ -17,6 +17,7 @@ import {
   RawCategory,
   Category
 } from '../typing/interfaces'
+import { QueryDocumentSnapshot } from 'firebase/firestore'
 
 const firebaseConfig = {
   apiKey: 'AIzaSyDZM4GcEwLya_cjnIHbn2qJth7gnw-U0QU',
@@ -78,6 +79,23 @@ export const getUserWithUsername = async (
  * @returns
  */
 export const postToJSON = (doc: FirebaseDocumentSnapshot<RawPost>): Post => {
+  const data = doc.data()
+  return {
+    ...data,
+    // Gotcha! firestore timestamp NOT serializable to JSON. Must convert to milliseconds
+    createdAt: data?.createdAt?.toMillis() || 0,
+    updatedAt: data?.updatedAt?.toMillis() || 0
+  }
+}
+
+/**
+ * Converts a firestore document to JSON
+ * @param doc
+ * @returns
+ */
+export const postQueryDocToJSON = (
+  doc: QueryDocumentSnapshot<RawPost>
+): Post => {
   const data = doc.data()
   return {
     ...data,
