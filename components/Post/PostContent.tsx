@@ -47,7 +47,7 @@ import CommentMain from '../Comment/CommentMain'
 import Typography from '@mui/material/Typography'
 import Chip from '@mui/material/Chip'
 import AccountIconName from '../Account/AccountIconName'
-// import Box from '@mui/material/Box'
+import Box from '@mui/material/Box'
 
 // import { Editor, EditorState, ContentState } from "draft-js"
 
@@ -160,15 +160,15 @@ const PostContent: FC<PostContentProps> = ({
   //   editor.current.focus()
   // }
 
-  // REVIEW: GOOGLE ADSENSE
-  // useEffect(() => {
-  //   try {
-  //     ;(window['adsbygoogle'] = window['adsbygoogle'] || []).push({})
-  //     console.log('hit useEffect')
-  //   } catch (err) {
-  //     console.log(err)
-  //   }
-  // }, [])
+  // google adsense
+  useEffect(() => {
+    try {
+      ;(window['adsbygoogle'] = window['adsbygoogle'] || []).push({})
+      console.log('useEffect for google adsense')
+    } catch (err) {
+      console.log(err)
+    }
+  }, [])
 
   return (
     <>
@@ -392,7 +392,7 @@ const PostContent: FC<PostContentProps> = ({
         )}
 
         {/* REVIEW: GOOGLE ADSENSE */}
-        {/* <Box style={{ width: '100%' }}>
+        <Box style={{ marginTop: '10px', width: '100%' }}>
           <ins
             className="adsbygoogle"
             style={{
@@ -404,7 +404,7 @@ const PostContent: FC<PostContentProps> = ({
             data-ad-format="auto"
             data-full-width-responsive="true"
           ></ins>
-        </Box> */}
+        </Box>
       </Paper>
     </>
   )
