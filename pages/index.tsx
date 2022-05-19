@@ -77,7 +77,8 @@ const Home = ({ posts, postTypeFromQuery }) => {
   )
 
   const [inkrauPosts, setInkrauPosts] = useState<Post[]>(
-    postTypeFromQuery === 'inkrau' ? posts : []
+    // postType = inkrau or null
+    postTypeFromQuery !== 'community' ? posts : []
   )
   const [communityPosts, setCommunityPosts] = useState<Post[]>(
     postTypeFromQuery === 'community' ? posts : []
