@@ -114,6 +114,11 @@ function SignInButton() {
     }
   }
 
+  useEffect(() => {
+    console.log('wake up function app!')
+    getNewUsernameSuggestionHttpCall()
+  }, [])
+
   return (
     <>
       <Stack
