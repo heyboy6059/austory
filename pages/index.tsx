@@ -152,7 +152,7 @@ const Home = ({ posts, postTypeFromQuery }) => {
   return (
     <div>
       <Head>
-        <title>inKRAU 인크라우</title>
+        <title>인크라우 inKRAU</title>
       </Head>
       <Box sx={{ width: '100%' }}>
         <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
