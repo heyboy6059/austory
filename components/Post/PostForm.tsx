@@ -425,7 +425,7 @@ const PostForm: FC<Props> = ({ editPost }) => {
         </FlexCenterDiv>
         <FlexCenterDiv>
           <div style={{ fontSize: '11px' }}>
-            {user.notificationMethod === NotificationMethod.EMAIL ? (
+            {user?.notificationMethod === NotificationMethod.EMAIL ? (
               <>
                 <span style={{ color: COLOURS.PRIMARY_SPACE_GREY }}>
                   새로운 댓글이 달리면 이메일로 알려드립니다.{' '}
@@ -436,7 +436,7 @@ const PostForm: FC<Props> = ({ editPost }) => {
                   </a>
                 </Link>
               </>
-            ) : user.notificationMethod === NotificationMethod.NONE ? (
+            ) : user?.notificationMethod === NotificationMethod.NONE ? (
               <>
                 <span style={{ color: COLOURS.PRIMARY_SPACE_GREY }}>
                   새로운 댓글 알림 설정이 꺼져 있습니다.{' '}
