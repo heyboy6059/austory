@@ -172,7 +172,9 @@ export default function Navbar() {
         <ListItem
           button
           key={'WorkingHolidayTaxCalculator'}
-          onClick={() => alert('준비중 입니다.')}
+          onClick={() =>
+            alert('준비중 입니다. 베타 테스팅 후에 버튼이 가려집니다. ')
+          }
         >
           <ListItemIcon>
             <CalculateIcon />
@@ -182,7 +184,9 @@ export default function Navbar() {
         <ListItem
           button
           key={'RealEstate'}
-          onClick={() => alert('준비중 입니다.')}
+          onClick={() =>
+            alert('준비중 입니다. 베타 테스팅 후에 버튼이 가려집니다. ')
+          }
         >
           <ListItemIcon>
             <MapsHomeWorkIcon />
@@ -192,7 +196,9 @@ export default function Navbar() {
         <ListItem
           button
           key={'KoreanStaff'}
-          onClick={() => alert('준비중 입니다.')}
+          onClick={() =>
+            alert('준비중 입니다. 베타 테스팅 후에 버튼이 가려집니다. ')
+          }
         >
           <ListItemIcon>
             <PeopleIcon />
