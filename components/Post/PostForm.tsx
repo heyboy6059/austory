@@ -36,6 +36,9 @@ import {
 import Box from '@mui/material/Box'
 import { getAllCategories } from '../../common/get'
 import { Chip, Paper, Skeleton } from '@mui/material'
+import { NotificationMethod } from '../../typing/enums'
+import Link from 'next/link'
+import { COLOURS } from '../../common/constants'
 
 type ExtendedCategory = Category & {
   selected: boolean
@@ -416,10 +419,38 @@ const PostForm: FC<Props> = ({ editPost }) => {
             variant="outlined"
             type="submit"
             disabled={imageLoading || !watch().content || !watch().title}
-            style={{ marginBottom: '5px' }}
           >
             완료
           </Button>
+        </FlexCenterDiv>
+        <FlexCenterDiv>
+          <div style={{ fontSize: '11px' }}>
+            {user.notificationMethod === NotificationMethod.EMAIL ? (
+              <>
+                <span style={{ color: COLOURS.PRIMARY_SPACE_GREY }}>
+                  새로운 댓글이 달리면 이메일로 알려드립니다.{' '}
+                </span>
+                <Link href={`/${user.username}`}>
+                  <a target="_blank" style={{ color: COLOURS.PRIMARY_BLUE }}>
+                    설정 바꾸기
+                  </a>
+                </Link>
+              </>
+            ) : user.notificationMethod === NotificationMethod.NONE ? (
+              <>
+                <span style={{ color: COLOURS.PRIMARY_SPACE_GREY }}>
+                  새로운 댓글 알림 설정이 꺼져 있습니다.{' '}
+                </span>
+                <Link href={`/${user.username}`}>
+                  <a target="_blank" style={{ color: COLOURS.PRIMARY_BLUE }}>
+                    설정 바꾸기
+                  </a>
+                </Link>
+              </>
+            ) : (
+              <></>
+            )}
+          </div>
         </FlexCenterDiv>
       </form>
     </Paper>

@@ -118,6 +118,7 @@ const UserProfilePage: FC = () => {
     [internalUser, user]
   )
 
+  console.log('method?', internalUser?.notificationMethod)
   return (
     <main>
       {user ? (
@@ -139,7 +140,7 @@ const UserProfilePage: FC = () => {
                 <Select
                   labelId="notification-method-select-label"
                   id="notification-method-select"
-                  value={internalUser?.notificationMethod}
+                  value={internalUser ? internalUser.notificationMethod : null}
                   // label="댓글 알림"
                   onChange={(event: SelectChangeEvent) => {
                     notificationMethodHandler(
