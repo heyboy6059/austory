@@ -19,33 +19,8 @@ import Box from '@mui/material/Box'
 import { Post, PostType } from '../typing/interfaces'
 import { getPostsByType } from '../common/get'
 import toast from 'react-hot-toast'
-// import StarsIcon from '@mui/icons-material/Stars'
 
-// interface TabPanelProps {
-//   children?: React.ReactNode
-//   index: number
-//   value: number
-// }
-
-// function TabPanel(props: TabPanelProps) {
-//   const { children, value, index, ...other } = props
-
-//   return (
-//     <div
-//       role="tabpanel"
-//       hidden={value !== index}
-//       id={`simple-tabpanel-${index}`}
-//       aria-labelledby={`simple-tab-${index}`}
-//       {...other}
-//     >
-//       {value === index && (
-//         <Box sx={{ p: 3 }}>
-//           <Typography>{children}</Typography>
-//         </Box>
-//       )}
-//     </div>
-//   )
-// }
+import { useRouter } from 'next/router'
 
 function a11yProps(index: number) {
   return {
@@ -57,13 +32,14 @@ function a11yProps(index: number) {
 export const getServerSideProps = async context => {
   const { postType } = context.query
 
+  // NOTE: community is default
   let posts = null
   let postTypeFromQuery = null
   if (postType === 'inkrau' || postType === 'community') {
     posts = await getPostsByType(postType)
     postTypeFromQuery = postType
   } else {
-    posts = await getPostsByType('inkrau')
+    posts = await getPostsByType('community')
   }
 
   return {
@@ -72,28 +48,30 @@ export const getServerSideProps = async context => {
 }
 
 const Home = ({ posts, postTypeFromQuery }) => {
+  const router = useRouter()
+
   const [postType, setPostType] = useState<PostType>(
-    postTypeFromQuery || 'inkrau'
+    postTypeFromQuery || 'community'
   )
 
   const [inkrauPosts, setInkrauPosts] = useState<Post[]>(
-    // postType = inkrau or null
-    postTypeFromQuery !== 'community' ? posts : []
+    postTypeFromQuery === 'inkrau' ? posts : []
   )
+  // postType = community or null
   const [communityPosts, setCommunityPosts] = useState<Post[]>(
-    postTypeFromQuery === 'community' ? posts : []
+    postTypeFromQuery !== 'inkrau' ? posts : []
   )
 
   const [inkrauPostEnd, setInkrauPostEnd] = useState(false)
   const [communityPostEnd, setCommunityPostEnd] = useState(false)
 
   // REVIEW: replace 0, 1 to actual string name
-  // 0 = inkrau contents menu
-  // 1 = community contents menu
+  // 0 = community contents menu
+  // 1 = inkrau contents menu
   const [tabValue, setTabValue] = useState(
-    postTypeFromQuery === 'inkrau'
+    postTypeFromQuery === 'community'
       ? 0
-      : postTypeFromQuery === 'community'
+      : postTypeFromQuery === 'inkrau'
       ? 1
       : 0
   )
@@ -131,7 +109,6 @@ const Home = ({ posts, postTypeFromQuery }) => {
           communityPosts[communityPosts.length - 1]
         )
 
-        console.log({ newPosts })
         setCommunityPosts(communityPosts.concat(newPosts))
 
         if (newPosts.length < POST_FEED_NUM_LIMIT) {
@@ -149,6 +126,7 @@ const Home = ({ posts, postTypeFromQuery }) => {
 
   const getInitialPosts = async (postType: PostType) => {
     try {
+      console.log('here!', postType)
       if (postType === 'community' && !communityPosts.length) {
         const posts = await getPostsByType('community')
         setCommunityPosts(posts)
@@ -163,6 +141,14 @@ const Home = ({ posts, postTypeFromQuery }) => {
     }
   }
 
+  const tabHandler = async (postType: PostType) => {
+    setPostType(postType)
+    await getInitialPosts(postType)
+    // add postType in url query for browser back in the post page
+    router.replace({
+      query: { ...router.query, postType: postType }
+    })
+  }
   return (
     <div>
       <Head>
@@ -179,48 +165,28 @@ const Home = ({ posts, postTypeFromQuery }) => {
             style={{ minHeight: '0', padding: '0', height: '42px' }}
           >
             <Tab
-              label={
-                <strong>인크라우 컨텐츠</strong>
-                // <FlexCenterDiv>
-                //   <StarsIcon style={{ fontSize: '18px', marginRight: '2px' }} />
-                //   <FlexCenterDiv>
-                //     <strong>인크라우 컨텐츠</strong>
-                //   </FlexCenterDiv>
-                // </FlexCenterDiv>
-              }
+              label={<strong>커뮤니티</strong>}
               {...a11yProps(0)}
               style={{ padding: '15px' }}
               onClick={async () => {
-                setPostType('inkrau')
-                await getInitialPosts(postType)
+                tabHandler('community')
               }}
             />
             <Tab
-              label={<strong>커뮤니티</strong>}
+              label={<strong>인크라우 컨텐츠</strong>}
               {...a11yProps(1)}
               style={{ padding: '15px' }}
               onClick={async () => {
-                setPostType('community')
-                await getInitialPosts(postType)
+                tabHandler('inkrau')
               }}
             />
-            {/* <Tab label="Item Three" {...a11yProps(2)} /> */}
           </Tabs>
         </Box>
-        {/* <TabPanel value={tabValue} index={0}>
-          Item One
-        </TabPanel>
-        <TabPanel value={tabValue} index={1}>
-          Item Two
-        </TabPanel>
-        <TabPanel value={tabValue} index={2}>
-          Item Three
-        </TabPanel> */}
       </Box>
       <PostFeed
-        posts={postType === 'inkrau' ? inkrauPosts : communityPosts}
+        posts={postType === 'community' ? communityPosts : inkrauPosts}
         loadMore={() => getMorePosts(postType)}
-        hasMore={postType === 'inkrau' ? !inkrauPostEnd : !communityPostEnd}
+        hasMore={postType === 'community' ? !communityPostEnd : !inkrauPostEnd}
       />
 
       <FlexCenterDiv style={{ marginBottom: '10px' }}>

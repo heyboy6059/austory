@@ -196,11 +196,11 @@ const PostContent: FC<PostContentProps> = ({
                   //REVIEW: go back without reload/refresh/keep scroll
 
                   {
-                    if (post?.isInkrauOfficial === false) {
+                    if (post?.isInkrauOfficial === true) {
                       router.push({
                         pathname: '/',
                         query: {
-                          postType: 'community'
+                          postType: 'inkrau'
                         }
                       })
                     } else {
