@@ -1,4 +1,4 @@
-import { FC, Dispatch, SetStateAction, useState } from 'react'
+import { FC, Dispatch, SetStateAction, useState, useEffect } from 'react'
 import {
   ORIGINAL_IMAGE_UPLOAD_MAX_THRESHOLD,
   FileExt,
@@ -20,17 +20,26 @@ interface Props {
   setValue: UseFormSetValue<PostWrite>
   setImageLoading?: Dispatch<SetStateAction<boolean>>
   editThumbnailImgUrl?: string
+  thumbnailOnly?: boolean
 }
 
 const ImageUploader: FC<Props> = ({
   setValue,
   setImageLoading,
-  editThumbnailImgUrl
+  editThumbnailImgUrl,
+  thumbnailOnly
 }) => {
   const [uploading, setUploading] = useState(false)
   const [thumbnailImgUrl, setThumbnailImgUrl] = useState(
     editThumbnailImgUrl || ''
   )
+
+  useEffect(() => {
+    if (editThumbnailImgUrl) {
+      console.log('update thumbnailImgUrl')
+      setThumbnailImgUrl(editThumbnailImgUrl)
+    }
+  }, [editThumbnailImgUrl])
 
   // Creates a Firebase Upload Task
   const uploadFile = async e => {
@@ -56,55 +65,84 @@ const ImageUploader: FC<Props> = ({
           return
         }
 
-        // Resize for thumbnail600
-        thumbnail600ImageDetails = await resizeImageJpeg(
-          file,
-          'thumbnail600',
-          name
-        )
-
-        // update thumbnail url to be shown in UI before storing original image
-        setThumbnailImgUrl(thumbnail600ImageDetails.url)
-
-        // Resize for thumbnail200
-        thumbnail200ImageDetails = await resizeImageJpeg(
-          file,
-          'thumbnail200',
-          name
-        )
-
-        if (
-          size > ORIGINAL_IMAGE_UPLOAD_MAX_THRESHOLD &&
-          extension !== FileExt.GIF // gif cannot be resized to jpeg
-        ) {
-          originalImageDetails = await resizeImageJpeg(file, 'original', name)
-        } else {
-          const { imgUrl, savedName } = await uploadImageToStorage(
-            'original',
-            name,
+        /**
+         * Thumbnail(200px) Only
+         */
+        if (thumbnailOnly) {
+          // Resize for thumbnail200
+          thumbnail200ImageDetails = await resizeImageJpeg(
             file,
-            extension
+            'thumbnail200',
+            name
           )
 
-          const { filename, extension: ext } =
-            extractFilenameExtension(savedName)
+          // update thumbnail url to be shown in UI before storing original image
+          setThumbnailImgUrl(thumbnail200ImageDetails.url)
 
-          originalImageDetails = {
-            url: imgUrl,
-            name: filename,
-            ext,
-            size
-          }
+          setValue('images', [
+            {
+              thumbnail200: thumbnail200ImageDetails,
+              thumbnail600: null,
+              original: null
+            }
+          ])
         }
 
-        setValue('images', [
-          {
-            thumbnail200: thumbnail200ImageDetails,
-            thumbnail600: thumbnail600ImageDetails,
-            original: originalImageDetails
-          }
-        ])
+        /**
+         * Thumbnail(200px)
+         * Optimized(600px)
+         * Original(1080px)
+         */
+        if (!thumbnailOnly) {
+          // Resize for thumbnail600
+          thumbnail600ImageDetails = await resizeImageJpeg(
+            file,
+            'thumbnail600',
+            name
+          )
 
+          // update thumbnail url to be shown in UI before storing original image
+          setThumbnailImgUrl(thumbnail600ImageDetails.url)
+
+          // Resize for thumbnail200
+          thumbnail200ImageDetails = await resizeImageJpeg(
+            file,
+            'thumbnail200',
+            name
+          )
+
+          if (
+            size > ORIGINAL_IMAGE_UPLOAD_MAX_THRESHOLD &&
+            extension !== FileExt.GIF // gif cannot be resized to jpeg
+          ) {
+            originalImageDetails = await resizeImageJpeg(file, 'original', name)
+          } else {
+            const { imgUrl, savedName } = await uploadImageToStorage(
+              'original',
+              name,
+              file,
+              extension
+            )
+
+            const { filename, extension: ext } =
+              extractFilenameExtension(savedName)
+
+            originalImageDetails = {
+              url: imgUrl,
+              name: filename,
+              ext,
+              size
+            }
+          }
+
+          setValue('images', [
+            {
+              thumbnail200: thumbnail200ImageDetails,
+              thumbnail600: thumbnail600ImageDetails,
+              original: originalImageDetails
+            }
+          ])
+        }
         // toast.success(`성공적으로 이미지가 업로드 되었습니다.`)
       } catch (err) {
         console.error(`ERROR in image upload. ${err.message}`)
@@ -130,7 +168,7 @@ const ImageUploader: FC<Props> = ({
             <CircularProgress size={16} />
           ) : (
             <>
-              <ImageIcon /> <span>이미지</span>
+              <ImageIcon /> <span>{thumbnailOnly ? '썸네일' : '이미지'}</span>
             </>
           )}
           <input
