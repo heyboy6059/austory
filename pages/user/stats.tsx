@@ -18,10 +18,10 @@ const UserStats: NextPage = () => {
                 label={`내가 작성한 글: ${user.myPostCountTotal}개`}
                 color="default"
               />
-              <Chip
+              {/* <Chip
                 label={`내 글 조회수: ${user.receivedViewCountTotal}회`}
                 color="default"
-              />
+              /> */}
               <Chip
                 label={`내 글에 달린 댓글: ${user.receivedCommentCountTotal}개`}
                 color="default"

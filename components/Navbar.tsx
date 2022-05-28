@@ -39,12 +39,12 @@ import List from '@mui/material/List'
 import Divider from '@mui/material/Divider'
 import QuizIcon from '@mui/icons-material/Quiz'
 import LogoutIcon from '@mui/icons-material/Logout'
-import FavoriteIcon from '@mui/icons-material/Favorite'
+// import FavoriteIcon from '@mui/icons-material/Favorite'
 import QueryStatsIcon from '@mui/icons-material/QueryStats'
 import AccountBoxIcon from '@mui/icons-material/AccountBox'
-import CalculateIcon from '@mui/icons-material/Calculate'
-import MapsHomeWorkIcon from '@mui/icons-material/MapsHomeWork'
-import PeopleIcon from '@mui/icons-material/People'
+// import CalculateIcon from '@mui/icons-material/Calculate'
+// import MapsHomeWorkIcon from '@mui/icons-material/MapsHomeWork'
+// import PeopleIcon from '@mui/icons-material/People'
 import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutline'
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings'
 import Tooltip from '@mui/material/Tooltip'
@@ -117,7 +117,7 @@ export default function Navbar() {
               </ListItemIcon>
               <ListItemText primary={'내 계정'} />
             </ListItem>
-            <ListItem
+            {/* <ListItem
               button
               key={'HeartPosts'}
               onClick={() => router.push(`/user/heartPosts`)}
@@ -126,7 +126,7 @@ export default function Navbar() {
                 <FavoriteIcon />
               </ListItemIcon>
               <ListItemText primary={'하트 누른 게시물'} />
-            </ListItem>
+            </ListItem> */}
             <ListItem
               button
               key={'Stats'}
@@ -167,7 +167,7 @@ export default function Navbar() {
           </>
         )}
       </List>
-      <Divider />
+      {/* <Divider />
       <List>
         <ListItem
           button
@@ -205,7 +205,7 @@ export default function Navbar() {
           </ListItemIcon>
           <ListItemText primary={'한국인 직원'} />
         </ListItem>
-      </List>
+      </List> */}
       <Divider />
       <List>
         <ListItem
