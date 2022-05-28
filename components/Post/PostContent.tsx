@@ -330,25 +330,31 @@ const PostContent: FC<PostContentProps> = ({
         {/* <Linky>
         <div style={{ whiteSpace: "break-spaces" }}>{post?.content}</div>
       </Linky> */}
-        <div style={{ margin: '5px 0px', wordBreak: 'break-word' }}>
-          <Linkify
-            componentDecorator={(decoratedHref, decoratedText, key) => (
-              <a
-                target="blank"
-                href={decoratedHref}
-                key={key}
-                style={{ color: '#00008B' }}
-              >
-                {decoratedText}
-              </a>
-            )}
-          >
-            <div style={{ whiteSpace: 'break-spaces' }}>
-              {' '}
-              <Typography>{post?.content}</Typography>
-            </div>
-          </Linkify>
-        </div>
+        {post.isHtmlContent && post.htmlContent ? (
+          <div style={{ margin: '5px' }}>
+            <div dangerouslySetInnerHTML={{ __html: post.htmlContent }} />
+          </div>
+        ) : (
+          <div style={{ margin: '5px 0px', wordBreak: 'break-word' }}>
+            <Linkify
+              componentDecorator={(decoratedHref, decoratedText, key) => (
+                <a
+                  target="blank"
+                  href={decoratedHref}
+                  key={key}
+                  style={{ color: '#00008B' }}
+                >
+                  {decoratedText}
+                </a>
+              )}
+            >
+              <div style={{ whiteSpace: 'break-spaces' }}>
+                {' '}
+                <Typography>{post?.content}</Typography>
+              </div>
+            </Linkify>
+          </div>
+        )}
         <div
           style={{
             width: '40px',

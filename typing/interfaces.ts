@@ -87,6 +87,10 @@ export type RawPost = {
   viewCount: number
   //
   content: string
+  htmlContent: string
+  //
+  isHtmlContent: boolean
+  //
   images: Image[]
   excerpt: string
   //
@@ -112,6 +116,8 @@ export type Post = Omit<RawPost, 'createdAt' | 'updatedAt' | 'commentCount'> & {
 export type PostWrite = Pick<
   Post,
   | 'title'
+  | 'htmlContent'
+  | 'isHtmlContent'
   | 'content'
   | 'images'
   | 'categories'

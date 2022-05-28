@@ -15,7 +15,7 @@ import {
 } from '../../common/firebase'
 import { useRouter } from 'next/router'
 import { useForm, Controller } from 'react-hook-form'
-import { generateExcerpt } from '../../common/functions'
+import { generateExcerpt, generateHtmlExcerpt } from '../../common/functions'
 import toast from 'react-hot-toast'
 import TextField from '@mui/material/TextField'
 import ImageUploader from '../ImageUploader'
@@ -39,6 +39,8 @@ import { Chip, Paper, Skeleton } from '@mui/material'
 import { NotificationMethod } from '../../typing/enums'
 import Link from 'next/link'
 import { COLOURS } from '../../common/constants'
+import QuillEditor from './QuillEditor'
+import Switch from '@mui/material/Switch'
 
 type ExtendedCategory = Category & {
   selected: boolean
@@ -54,6 +56,16 @@ const PostForm: FC<Props> = ({ editPost }) => {
   const [categories, setCategories] = useState<ExtendedCategory[]>([])
   const [categoryLoading, setCategoryLoading] = useState(false)
   const [imageLoading, setImageLoading] = useState(false)
+  const [htmlContent, setHtmlContent] = useState('')
+  const [isHtmlContent, setIsHtmlContent] = useState(false)
+
+  useEffect(() => {
+    if (editPost) {
+      console.log('updating htmlContent, isHtmlContent values')
+      setHtmlContent(editPost.htmlContent)
+      setIsHtmlContent(editPost.isHtmlContent)
+    }
+  }, [editPost])
 
   // getAllCategories + pre select categories from editPost
   useEffect(() => {
@@ -104,6 +116,9 @@ const PostForm: FC<Props> = ({ editPost }) => {
           images: editPost.images,
           categories: editPost.categories,
           content: editPost.content,
+          // handling htmlContent outside
+          // htmlContent: editPost.htmlContent,
+          // isHtmlContent: editPost.isHtmlContent,
           isTest: editPost.isTest,
           coverUsername: editPost.coverUsername,
           isInkrauOfficial: editPost.isInkrauOfficial
@@ -114,6 +129,9 @@ const PostForm: FC<Props> = ({ editPost }) => {
           images: [],
           categories: [],
           content: '',
+          // handling htmlContent outside
+          // htmlContent: '',
+          // isHtmlContent: false,
           isTest: false,
           isInkrauOfficial: false
         }
@@ -137,7 +155,11 @@ const PostForm: FC<Props> = ({ editPost }) => {
             categoryId: category.categoryId,
             name: category.name
           })),
-          excerpt: generateExcerpt(data.content, 150),
+          htmlContent,
+          isHtmlContent: isHtmlContent,
+          excerpt: isHtmlContent
+            ? generateHtmlExcerpt(htmlContent, 150)
+            : generateExcerpt(data.content, 150),
           updatedBy: user.uid,
           updatedAt: serverTimestamp()
         })
@@ -190,7 +212,11 @@ const PostForm: FC<Props> = ({ editPost }) => {
           username,
           title: data.title,
           content: data.content,
-          excerpt: generateExcerpt(data.content, 150),
+          htmlContent,
+          isHtmlContent: isHtmlContent,
+          excerpt: isHtmlContent
+            ? generateHtmlExcerpt(htmlContent, 150)
+            : generateExcerpt(data.content, 150),
           deleted: false,
           heartCount: 0,
           viewCount: 0,
@@ -314,6 +340,18 @@ const PostForm: FC<Props> = ({ editPost }) => {
                 />
               )}
             />
+            <FormControlLabel
+              control={
+                <Switch
+                  checked={isHtmlContent}
+                  onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+                    setIsHtmlContent(event.target.checked)
+                  }
+                  inputProps={{ 'aria-label': 'controlled' }}
+                />
+              }
+              label="텍스트 에디터 (관리자 전용)"
+            />
           </>
         )}
         <Stack spacing={2} style={{ marginTop: '5px' }} sx={{ width: '100%' }}>
@@ -390,35 +428,50 @@ const PostForm: FC<Props> = ({ editPost }) => {
               <TextField label="제목" variant="outlined" {...field} fullWidth />
             )}
           />
-          <Controller
-            name="content"
-            control={control}
-            rules={{ required: true }}
-            render={({ field }) => (
-              <TextField
-                label="내용"
-                variant="outlined"
-                {...field}
-                multiline
-                rows={15}
-                fullWidth
-              />
-            )}
-          />
+          {isHtmlContent ? (
+            <div style={{ height: '500px' }}>
+              <QuillEditor content={htmlContent} setContent={setHtmlContent} />
+            </div>
+          ) : (
+            <Controller
+              name="content"
+              control={control}
+              rules={{ required: true }}
+              render={({ field }) => (
+                <TextField
+                  label="내용"
+                  variant="outlined"
+                  {...field}
+                  multiline
+                  rows={15}
+                  fullWidth
+                />
+              )}
+            />
+          )}
         </Stack>
         <ImageUploader
           setValue={setValue}
           setImageLoading={setImageLoading}
           editThumbnailImgUrl={
             // REVIEW: this only supports single thumbnail url
-            isEditMode ? editPost?.images?.[0]?.thumbnail600?.url || '' : null
+            isEditMode
+              ? isHtmlContent //html content has small thumbnail only
+                ? editPost?.images?.[0]?.thumbnail200?.url || ''
+                : editPost?.images?.[0]?.thumbnail600?.url || ''
+              : null
           }
+          thumbnailOnly={isHtmlContent}
         />
         <FlexCenterDiv>
           <Button
             variant="outlined"
             type="submit"
-            disabled={imageLoading || !watch().content || !watch().title}
+            disabled={
+              imageLoading ||
+              !(watch().content || htmlContent) ||
+              !watch().title
+            }
           >
             완료
           </Button>
