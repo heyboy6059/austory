@@ -22,6 +22,7 @@ import {
   batchUpdateCommentCounts,
   batchUpdateComments
 } from '../../common/update'
+import AccountIconName from '../Account/AccountIconName'
 
 interface Props {
   comment: CommentWithChildren
@@ -122,9 +123,13 @@ const CommentItem: FC<Props> = ({
                * coverUsername is for admin purpose only
                * - temporarily cover the username
                */}
-              <div style={{ fontWeight: 'bold' }}>
+              {/* <div style={{ fontWeight: 'bold' }}>
                 {comment.coverUsername || comment.username}
-              </div>
+              </div> */}
+              <AccountIconName
+                username={comment.coverUsername || comment.username}
+                role={comment.createdByRole}
+              />
 
               <FlexVerticalCenterDiv>
                 <small style={{ color: COLOURS.TEXT_GREY, marginRight: '2px' }}>

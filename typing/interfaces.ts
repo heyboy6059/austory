@@ -13,7 +13,17 @@ export type FirebaseDocumentRef<T = firebase.firestore.DocumentData> =
 export type FirebaseCollectionRef<T = firebase.firestore.DocumentData> =
   firebase.firestore.CollectionReference<T>
 
-export type Role = 'Base'
+export enum Role {
+  ADMIN = 'Admin',
+  PARTNER = 'Partner',
+  WORKING_HOLIDAY = 'WorkingHoliday',
+  STUDENT = 'Student',
+  WORKER = 'Worker',
+  BUSINESS = 'Business',
+  FREE_MAN = 'FreeMan',
+  MYSTIC = 'Mystic',
+  BASE = 'Base'
+}
 
 export type RawUser = {
   uid: string
@@ -103,6 +113,8 @@ export type RawPost = {
   updatedBy: string | null
   updatedAt: FirestoreTimestamp | null
   //
+  createdByRole: Role
+  //
   isInkrauOfficial: boolean
   isTest: boolean
 }
@@ -142,6 +154,8 @@ export type RawComment = {
   createdAt: FirestoreTimestamp
   updatedBy: string
   updatedAt: FirestoreTimestamp
+  //
+  createdByRole: Role
 }
 
 export type Comment = Omit<RawComment, 'createdAt' | 'updatedAt'> & {

@@ -231,6 +231,7 @@ const PostForm: FC<Props> = ({ editPost }) => {
           createdAt: serverTimestamp() as FirestoreTimestamp,
           updatedBy: null,
           updatedAt: null,
+          createdByRole: user.role,
           isTest: data.isTest,
           isInkrauOfficial: data.isInkrauOfficial
         }

@@ -293,7 +293,10 @@ const PostContent: FC<PostContentProps> = ({
              * coverUsername is for admin purpose only
              * - temporarily cover the username
              */}
-            <AccountIconName username={post.coverUsername || post.username} />
+            <AccountIconName
+              username={post.coverUsername || post.username}
+              role={post.createdByRole}
+            />
             <div>|</div>
             <div>{dayjs(post.createdAt).format(KOR_FULL_DATE_FORMAT)}</div>
           </FlexVerticalCenterDiv>

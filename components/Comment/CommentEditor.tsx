@@ -142,6 +142,7 @@ const CommentEditor: FC<Props> = ({
             adminDeletedReason: null,
             createdBy: user.uid,
             createdAt: serverTimestamp() as FirestoreTimestamp,
+            createdByRole: user.role,
             updatedBy: null,
             updatedAt: null
           }

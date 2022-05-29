@@ -15,7 +15,7 @@ import Chip from '@mui/material/Chip'
 import Button from '@mui/material/Button'
 import Checkbox from '@mui/material/Checkbox'
 import FormControlLabel from '@mui/material/FormControlLabel'
-import { FirestoreTimestamp, RawUser } from '../typing/interfaces'
+import { FirestoreTimestamp, RawUser, Role } from '../typing/interfaces'
 import { FlexCenterDiv, GridDiv } from '../common/uiComponents'
 import toast from 'react-hot-toast'
 import { useRouter } from 'next/router'
@@ -27,6 +27,10 @@ import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh'
 import Tooltip from '@mui/material/Tooltip'
 import { COLOURS } from '../common/constants'
 import { NewUsernameSuggestionRes } from '../typing/api'
+import FormControl from '@mui/material/FormControl'
+import InputLabel from '@mui/material/InputLabel'
+import Select, { SelectChangeEvent } from '@mui/material/Select'
+import MenuItem from '@mui/material/MenuItem'
 
 export default function Enter() {
   const { userAuth, user, firebaseAuthLoading, userLoading } =
@@ -176,6 +180,7 @@ function UsernameForm() {
 
   const [inkrauUsername, setInkrauUsername] = useState('')
   const [isMarketingEmail, setIsMarketingEmail] = useState(true)
+  const [role, setRole] = useState<Role>(Role.WORKER)
 
   const [isNotValid, setIsNotValid] = useState(false)
   const [isExistInDB, setIsExistInDB] = useState(false)
@@ -213,7 +218,7 @@ function UsernameForm() {
         isAdmin: false,
         isMarketingEmail,
         notificationMethod: NotificationMethod.EMAIL,
-        role: 'Base',
+        role,
         createdAt: serverTimestamp() as FirestoreTimestamp,
         updatedAt: null,
         disabledAt: null
@@ -403,6 +408,30 @@ function UsernameForm() {
             isValid={isValid}
             loading={loading}
           /> */}
+
+          <div style={{ margin: '20px 0' }}>
+            <FormControl fullWidth>
+              <InputLabel id="role-select-label">나는 누구입니까? *</InputLabel>
+              <Select
+                labelId="role-select-label"
+                id="role-select"
+                value={role}
+                label="나는 누구입니까? *"
+                onChange={(event: SelectChangeEvent) => {
+                  setRole(event.target.value as Role)
+                }}
+                required
+              >
+                <MenuItem value={Role.WORKER}>직장인</MenuItem>
+                <MenuItem value={Role.BUSINESS}>비즈니스 운영</MenuItem>
+                <MenuItem value={Role.STUDENT}>학생</MenuItem>
+                <MenuItem value={Role.WORKING_HOLIDAY}>워홀러</MenuItem>
+                <MenuItem value={Role.FREE_MAN}>자유인</MenuItem>
+                <MenuItem value={Role.BASE}>선택 안 함</MenuItem>
+                {/* <MenuItem value={Role.MYSTIC}>신비주의</MenuItem> */}
+              </Select>
+            </FormControl>
+          </div>
 
           <div style={{ margin: '20px 0' }}>
             <FormControlLabel
