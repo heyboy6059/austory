@@ -293,10 +293,13 @@ const PostContent: FC<PostContentProps> = ({
           {/* <FlexCenterDiv style={{ gap: "2px", alignItems: "center" }}> */}
           <FlexVerticalCenterDiv style={{ gap: '8px', margin: '5px 0' }}>
             {/**
-             * coverUsername is for admin purpose only
-             * - temporarily cover the username
+             * coverUsername / coverRole are for admin purpose only
+             * - temporarily cover the username / role
              */}
-            <AccountIconName username={post.coverUsername || post.username} />
+            <AccountIconName
+              username={post.coverUsername || post.username}
+              role={post.coverRole || post.createdByRole}
+            />
             <div>|</div>
             <div>{dayjs(post.createdAt).format(KOR_FULL_DATE_FORMAT)}</div>
           </FlexVerticalCenterDiv>

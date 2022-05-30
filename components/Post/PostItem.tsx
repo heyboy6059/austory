@@ -174,7 +174,10 @@ const PostItem: FC<{
              * coverUsername is for admin purpose only
              * - temporarily cover the username
              */}
-            <AccountIconName username={post.coverUsername || post.username} />
+            <AccountIconName
+              username={post.coverUsername || post.username}
+              role={post.createdByRole}
+            />
             <span>|</span>
             <EllipsisSpan>
               {dayjs(post.createdAt).format(KOR_MONTH_DAY_FORMAT)}

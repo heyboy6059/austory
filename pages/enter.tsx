@@ -15,7 +15,12 @@ import Chip from '@mui/material/Chip'
 import Button from '@mui/material/Button'
 import Checkbox from '@mui/material/Checkbox'
 import FormControlLabel from '@mui/material/FormControlLabel'
-import { FirestoreTimestamp, RawUser } from '../typing/interfaces'
+import {
+  FirestoreTimestamp,
+  RawUser,
+  Role,
+  ROLE_ITEMS_LIST
+} from '../typing/interfaces'
 import { FlexCenterDiv, GridDiv } from '../common/uiComponents'
 import toast from 'react-hot-toast'
 import { useRouter } from 'next/router'
@@ -27,6 +32,10 @@ import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh'
 import Tooltip from '@mui/material/Tooltip'
 import { COLOURS } from '../common/constants'
 import { NewUsernameSuggestionRes } from '../typing/api'
+import FormControl from '@mui/material/FormControl'
+import InputLabel from '@mui/material/InputLabel'
+import Select, { SelectChangeEvent } from '@mui/material/Select'
+import MenuItem from '@mui/material/MenuItem'
 
 export default function Enter() {
   const { userAuth, user, firebaseAuthLoading, userLoading } =
@@ -176,6 +185,7 @@ function UsernameForm() {
 
   const [inkrauUsername, setInkrauUsername] = useState('')
   const [isMarketingEmail, setIsMarketingEmail] = useState(true)
+  const [role, setRole] = useState<Role>(Role.WORKER)
 
   const [isNotValid, setIsNotValid] = useState(false)
   const [isExistInDB, setIsExistInDB] = useState(false)
@@ -213,7 +223,7 @@ function UsernameForm() {
         isAdmin: false,
         isMarketingEmail,
         notificationMethod: NotificationMethod.EMAIL,
-        role: 'Base',
+        role,
         createdAt: serverTimestamp() as FirestoreTimestamp,
         updatedAt: null,
         disabledAt: null
@@ -403,6 +413,28 @@ function UsernameForm() {
             isValid={isValid}
             loading={loading}
           /> */}
+
+          <div style={{ margin: '20px 0' }}>
+            <FormControl fullWidth>
+              <InputLabel id="role-select-label">나는 누구입니까? *</InputLabel>
+              <Select
+                labelId="role-select-label"
+                id="role-select"
+                value={role}
+                label="나는 누구입니까? *"
+                onChange={(event: SelectChangeEvent) => {
+                  setRole(event.target.value as Role)
+                }}
+                required
+              >
+                {ROLE_ITEMS_LIST.map(roleItem => (
+                  <MenuItem value={roleItem.role} key={roleItem.role}>
+                    {roleItem.label}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </div>
 
           <div style={{ margin: '20px 0' }}>
             <FormControlLabel

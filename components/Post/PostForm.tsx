@@ -4,7 +4,9 @@ import {
   FirestoreTimestamp,
   Post,
   PostWrite,
-  RawPost
+  RawPost,
+  Role,
+  ROLE_ITEMS_WITH_NULL_LIST
 } from '../../typing/interfaces'
 import { UserContext } from '../../common/context'
 import {
@@ -35,7 +37,16 @@ import {
 } from 'react-simple-horizontal-scroller'
 import Box from '@mui/material/Box'
 import { getAllCategories } from '../../common/get'
-import { Chip, Paper, Skeleton } from '@mui/material'
+import {
+  Chip,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Paper,
+  Select,
+  SelectChangeEvent,
+  Skeleton
+} from '@mui/material'
 import { NotificationMethod } from '../../typing/enums'
 import Link from 'next/link'
 import { COLOURS } from '../../common/constants'
@@ -59,11 +70,14 @@ const PostForm: FC<Props> = ({ editPost }) => {
   const [htmlContent, setHtmlContent] = useState('')
   const [isHtmlContent, setIsHtmlContent] = useState(false)
 
+  const [coverRole, setCoverRole] = useState<Role>(null)
+
   useEffect(() => {
     if (editPost) {
       console.log('updating htmlContent, isHtmlContent values')
       setHtmlContent(editPost.htmlContent)
       setIsHtmlContent(editPost.isHtmlContent)
+      setCoverRole(editPost.coverRole)
     }
   }, [editPost])
 
@@ -120,6 +134,7 @@ const PostForm: FC<Props> = ({ editPost }) => {
           // htmlContent: editPost.htmlContent,
           // isHtmlContent: editPost.isHtmlContent,
           isTest: editPost.isTest,
+          coverRole: editPost.coverRole,
           coverUsername: editPost.coverUsername,
           isInkrauOfficial: editPost.isInkrauOfficial
         }
@@ -151,6 +166,7 @@ const PostForm: FC<Props> = ({ editPost }) => {
 
         batch.update(postRef, {
           ...data,
+          coverRole,
           categories: selectedCategories.map(category => ({
             categoryId: category.categoryId,
             name: category.name
@@ -208,6 +224,7 @@ const PostForm: FC<Props> = ({ editPost }) => {
         const post: RawPost = {
           postId,
           uid: auth.currentUser.uid,
+          coverRole: coverRole || Role.BASE,
           coverUsername: data.coverUsername || '',
           username,
           title: data.title,
@@ -231,6 +248,7 @@ const PostForm: FC<Props> = ({ editPost }) => {
           createdAt: serverTimestamp() as FirestoreTimestamp,
           updatedBy: null,
           updatedAt: null,
+          createdByRole: user.role,
           isTest: data.isTest,
           isInkrauOfficial: data.isInkrauOfficial
         }
@@ -340,6 +358,31 @@ const PostForm: FC<Props> = ({ editPost }) => {
                 />
               )}
             />
+            <div style={{ marginTop: '10px' }}>
+              <FormControl fullWidth>
+                <InputLabel id="role-select-label">
+                  커버 나는 누구? *
+                </InputLabel>
+                <Select
+                  labelId="cover-role-select-label"
+                  id="cover-role-select"
+                  value={coverRole}
+                  label="커버 나는 누구? *"
+                  onChange={(event: SelectChangeEvent) => {
+                    setCoverRole(event.target.value as Role)
+                  }}
+                >
+                  {ROLE_ITEMS_WITH_NULL_LIST.map(roleItem => (
+                    <MenuItem
+                      value={roleItem.role}
+                      key={`${roleItem.role}${roleItem.label}`}
+                    >
+                      {roleItem.label}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </div>
             <FormControlLabel
               control={
                 <Switch

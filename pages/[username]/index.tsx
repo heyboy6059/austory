@@ -13,6 +13,7 @@ import {
 import { updateUser } from '../../common/update'
 import { GENERIC_KOREAN_ERROR_MESSAGE } from '../../common/constants'
 import CircularProgress from '@mui/material/CircularProgress'
+import { Role, ROLE_ITEMS_LIST } from '../../typing/interfaces'
 
 // export const getServerSideProps = async ({ query }) => {
 //   const { username } = query
@@ -65,6 +66,30 @@ const UserProfilePage: FC = () => {
       setInternalUser(user)
     }
   }, [internalUser, user])
+
+  // TODO: generalize handlers
+  const roleHandler = useCallback(
+    async (role: Role) => {
+      const oldValue = internalUser.role
+      try {
+        setInternalUser(prev => ({
+          ...prev,
+          role
+        }))
+        await updateUser(user.uid, {
+          role
+        })
+      } catch (err) {
+        console.error(`Error in roleHandler. ${err.message}`)
+        setInternalUser(prev => ({
+          ...prev,
+          role: oldValue
+        }))
+        toast.error(GENERIC_KOREAN_ERROR_MESSAGE)
+      }
+    },
+    [internalUser, user]
+  )
 
   const notificationMethodHandler = useCallback(
     async (notificationMethod: NotificationMethod) => {
@@ -130,6 +155,35 @@ const UserProfilePage: FC = () => {
             <div style={{ textAlign: 'center' }}>
               {/* <div style={{ color: 'red' }}>TODO: username 변경하기</div> */}
               {/* <div style={{ color: 'red' }}>TODO: 댓글 알림 기능 변경하기</div> */}
+              <FormControl fullWidth style={{ margin: '10px 0' }}>
+                {/* <InputLabel id="notification-method-select-label">
+                  댓글 알림
+                </InputLabel> */}
+                <small style={{ margin: '5px 0' }}>*나는 누구입니까?</small>
+                <Select
+                  labelId="notification-method-select-label"
+                  id="notification-method-select"
+                  value={internalUser ? internalUser.role : null}
+                  // label="댓글 알림"
+                  onChange={(event: SelectChangeEvent) => {
+                    roleHandler(event.target.value as Role)
+                  }}
+                  size="small"
+                  style={{
+                    width: '200px',
+                    alignSelf: 'center'
+                  }}
+                >
+                  {ROLE_ITEMS_LIST.map(roleItem => (
+                    <MenuItem
+                      value={roleItem.role}
+                      key={`${roleItem.role}${roleItem.label}`}
+                    >
+                      {roleItem.label}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
               <FormControl fullWidth style={{ margin: '10px 0' }}>
                 {/* <InputLabel id="notification-method-select-label">
                   댓글 알림

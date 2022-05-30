@@ -52,6 +52,7 @@ import CovidInfoDialog from './CovidInfoDialog'
 import router from 'next/router'
 import { auth } from '../common/firebase'
 import toast from 'react-hot-toast'
+import AccountIconName from './Account/AccountIconName'
 
 // Top navbar
 export default function Navbar() {
@@ -218,7 +219,7 @@ export default function Navbar() {
           </ListItemIcon>
           <ListItemText primary={'문의'} />
         </ListItem>
-        {user ? (
+        {userAuth ? (
           <ListItem
             button
             key={'LogOut'}
@@ -364,16 +365,17 @@ export default function Navbar() {
                   //     />
                   //   </a>
                   // </Link>
-                  <FlexVerticalCenterDiv
-                    style={{
-                      color: COLOURS.SECONDARY_SPACE_GREY,
-                      fontSize: '13px',
-                      maxWidth: '125px'
-                    }}
-                  >
-                    <AccountBoxIcon fontSize="small" />
-                    {username}
-                  </FlexVerticalCenterDiv>
+                  // <FlexVerticalCenterDiv
+                  //   style={{
+                  //     color: COLOURS.SECONDARY_SPACE_GREY,
+                  //     fontSize: '13px',
+                  //     maxWidth: '125px'
+                  //   }}
+                  // >
+                  //   <AccountBoxIcon fontSize="small" />
+                  //   {username}
+                  // </FlexVerticalCenterDiv>
+                  <AccountIconName username={username} role={user?.role} />
                 ) : (
                   <Link href="/enter" passHref>
                     <a>
