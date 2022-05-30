@@ -97,26 +97,29 @@ const PostContent: FC<PostContentProps> = ({
   }, [postRef, post, user, addedViewCount])
 
   useEffect(() => {
-    // TEMP fallback to original
-    const imgUrl =
-      post.images?.[0]?.thumbnail600?.url || post.images?.[0]?.original?.url
-    if (imgUrl) {
-      let width: number
-      let height: number
-      const img = new Image()
-      img.src = imgUrl
-      img.onload = function (event) {
-        const loadedImage = event.currentTarget as HTMLImageElement
-        width = loadedImage.width
-        height = loadedImage.height
-        console.log('image height: ' + height)
-        console.log('image width: ' + width)
-        setMainImage({
-          originalUrl: post.images?.[0]?.original?.url,
-          url: imgUrl,
-          width,
-          height
-        })
+    // htmlContent doesn't need main image
+    if (!post.isHtmlContent) {
+      // TEMP fallback to original
+      const imgUrl =
+        post.images?.[0]?.thumbnail600?.url || post.images?.[0]?.original?.url
+      if (imgUrl) {
+        let width: number
+        let height: number
+        const img = new Image()
+        img.src = imgUrl
+        img.onload = function (event) {
+          const loadedImage = event.currentTarget as HTMLImageElement
+          width = loadedImage.width
+          height = loadedImage.height
+          console.log('image height: ' + height)
+          console.log('image width: ' + width)
+          setMainImage({
+            originalUrl: post.images?.[0]?.original?.url,
+            url: imgUrl,
+            width,
+            height
+          })
+        }
       }
     }
   }, [post])

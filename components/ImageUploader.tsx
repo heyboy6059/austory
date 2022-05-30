@@ -67,82 +67,83 @@ const ImageUploader: FC<Props> = ({
 
         /**
          * Thumbnail(200px) Only
+         *  - Temporarily off = Thumbnail Only mode still needs Original size for embedded link in FB
          */
-        if (thumbnailOnly) {
-          // Resize for thumbnail200
-          thumbnail200ImageDetails = await resizeImageJpeg(
-            file,
-            'thumbnail200',
-            name
-          )
+        // if (thumbnailOnly) {
+        //   // Resize for thumbnail200
+        //   thumbnail200ImageDetails = await resizeImageJpeg(
+        //     file,
+        //     'thumbnail200',
+        //     name
+        //   )
 
-          // update thumbnail url to be shown in UI before storing original image
-          setThumbnailImgUrl(thumbnail200ImageDetails.url)
+        //   // update thumbnail url to be shown in UI before storing original image
+        //   setThumbnailImgUrl(thumbnail200ImageDetails.url)
 
-          setValue('images', [
-            {
-              thumbnail200: thumbnail200ImageDetails,
-              thumbnail600: null,
-              original: null
-            }
-          ])
-        }
+        //   setValue('images', [
+        //     {
+        //       thumbnail200: thumbnail200ImageDetails,
+        //       thumbnail600: null,
+        //       original: null
+        //     }
+        //   ])
+        // }
 
         /**
          * Thumbnail(200px)
          * Optimized(600px)
          * Original(1080px)
          */
-        if (!thumbnailOnly) {
-          // Resize for thumbnail600
-          thumbnail600ImageDetails = await resizeImageJpeg(
+        // if (!thumbnailOnly) {
+        // Resize for thumbnail600
+        thumbnail600ImageDetails = await resizeImageJpeg(
+          file,
+          'thumbnail600',
+          name
+        )
+
+        // update thumbnail url to be shown in UI before storing original image
+        setThumbnailImgUrl(thumbnail600ImageDetails.url)
+
+        // Resize for thumbnail200
+        thumbnail200ImageDetails = await resizeImageJpeg(
+          file,
+          'thumbnail200',
+          name
+        )
+
+        if (
+          size > ORIGINAL_IMAGE_UPLOAD_MAX_THRESHOLD &&
+          extension !== FileExt.GIF // gif cannot be resized to jpeg
+        ) {
+          originalImageDetails = await resizeImageJpeg(file, 'original', name)
+        } else {
+          const { imgUrl, savedName } = await uploadImageToStorage(
+            'original',
+            name,
             file,
-            'thumbnail600',
-            name
+            extension
           )
 
-          // update thumbnail url to be shown in UI before storing original image
-          setThumbnailImgUrl(thumbnail600ImageDetails.url)
+          const { filename, extension: ext } =
+            extractFilenameExtension(savedName)
 
-          // Resize for thumbnail200
-          thumbnail200ImageDetails = await resizeImageJpeg(
-            file,
-            'thumbnail200',
-            name
-          )
-
-          if (
-            size > ORIGINAL_IMAGE_UPLOAD_MAX_THRESHOLD &&
-            extension !== FileExt.GIF // gif cannot be resized to jpeg
-          ) {
-            originalImageDetails = await resizeImageJpeg(file, 'original', name)
-          } else {
-            const { imgUrl, savedName } = await uploadImageToStorage(
-              'original',
-              name,
-              file,
-              extension
-            )
-
-            const { filename, extension: ext } =
-              extractFilenameExtension(savedName)
-
-            originalImageDetails = {
-              url: imgUrl,
-              name: filename,
-              ext,
-              size
-            }
+          originalImageDetails = {
+            url: imgUrl,
+            name: filename,
+            ext,
+            size
           }
-
-          setValue('images', [
-            {
-              thumbnail200: thumbnail200ImageDetails,
-              thumbnail600: thumbnail600ImageDetails,
-              original: originalImageDetails
-            }
-          ])
         }
+
+        setValue('images', [
+          {
+            thumbnail200: thumbnail200ImageDetails,
+            thumbnail600: thumbnail600ImageDetails,
+            original: originalImageDetails
+          }
+        ])
+        // }
         // toast.success(`성공적으로 이미지가 업로드 되었습니다.`)
       } catch (err) {
         console.error(`ERROR in image upload. ${err.message}`)
