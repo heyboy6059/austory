@@ -186,7 +186,7 @@ const PostContent: FC<PostContentProps> = ({
         title={`inKRAU - ${post.title}`}
         description={`${post.excerpt}`}
         // TODO: change fallback to logo image
-        image={post?.images?.[0]?.original?.url || ''}
+        image={post?.images?.[0]?.original?.url || undefined}
       />
       <Paper sx={{ p: 2 }}>
         <FlexSpaceBetween style={{ alignItems: 'center' }}>
