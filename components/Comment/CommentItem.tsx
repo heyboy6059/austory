@@ -120,15 +120,12 @@ const CommentItem: FC<Props> = ({
           <>
             <FlexSpaceBetweenCenter>
               {/**
-               * coverUsername is for admin purpose only
-               * - temporarily cover the username
+               * coverUsername / coverRole are for admin purpose only
+               * - temporarily cover the username / role
                */}
-              {/* <div style={{ fontWeight: 'bold' }}>
-                {comment.coverUsername || comment.username}
-              </div> */}
               <AccountIconName
                 username={comment.coverUsername || comment.username}
-                role={comment.createdByRole}
+                role={comment.coverRole || comment.createdByRole}
               />
 
               <FlexVerticalCenterDiv>

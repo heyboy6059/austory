@@ -15,7 +15,9 @@ import {
   Comment,
   FirebaseCollectionRef,
   FirestoreTimestamp,
-  RawComment
+  RawComment,
+  Role,
+  ROLE_ITEMS_WITH_NULL_LIST
 } from '../../typing/interfaces'
 import { generateCommentId } from '../../common/idHelper'
 import { firestore, increment, serverTimestamp } from '../../common/firebase'
@@ -27,6 +29,10 @@ import {
   batchUpdateUsers
 } from '../../common/update'
 import { getUidByUsername } from '../../common/get'
+import Select, { SelectChangeEvent } from '@mui/material/Select'
+import MenuItem from '@mui/material/MenuItem'
+import FormControl from '@mui/material/FormControl'
+import InputLabel from '@mui/material/InputLabel'
 
 interface Props {
   commentCollectionRef: FirebaseCollectionRef
@@ -69,6 +75,10 @@ const CommentEditor: FC<Props> = ({
   const [coverUsername, setCoverUsername] = useState(
     createMode ? '' : comment?.coverUsername || ''
   )
+  const [coverRole, setCoverRole] = useState<Role>(
+    createMode ? null : comment?.coverRole || null
+  )
+
   const [initFocus, setInitFocus] = useState(false)
   const [multiRows, setMultiRows] = useState(1)
 
@@ -91,7 +101,7 @@ const CommentEditor: FC<Props> = ({
 
   // TODO: refactor this callback function
   const createEditComment = useCallback(
-    async (content: string, coverUsername: string) => {
+    async (content: string, coverUsername: string, coverRole: Role) => {
       try {
         if (!content.length) {
           alert('댓글 입력후 등록을 눌러주세요.')
@@ -108,6 +118,7 @@ const CommentEditor: FC<Props> = ({
             user.uid,
             {
               content,
+              coverRole,
               coverUsername // only for admin purpose
             }
           )
@@ -137,6 +148,7 @@ const CommentEditor: FC<Props> = ({
             parentCommentId: level === 1 ? null : comment.commentId, // TODO: sub comments
             content,
             coverUsername, // only for admin purpose
+            coverRole, // only for admin purpose
             deleted: false,
             adminDeleted: false,
             adminDeletedReason: null,
@@ -183,6 +195,7 @@ const CommentEditor: FC<Props> = ({
           // }
           setContent('')
           setCoverUsername('')
+          setCoverRole(null)
           toast.success('댓글이 성공적으로 등록 되었습니다.')
         }
       } catch (err) {
@@ -195,11 +208,11 @@ const CommentEditor: FC<Props> = ({
       createMode,
       commentCollectionRef,
       comment,
-      username,
+      user,
       refetchCommentData,
       setEditMode,
+      username,
       level,
-      user,
       post,
       createCallback
     ]
@@ -254,7 +267,7 @@ const CommentEditor: FC<Props> = ({
                       // TODO: open login/sign up modal
                       return
                     }
-                    createEditComment(content, coverUsername)
+                    createEditComment(content, coverUsername, coverRole)
                   }}
                 >
                   등록
@@ -262,19 +275,44 @@ const CommentEditor: FC<Props> = ({
               </div>
             </FlexSpaceBetweenCenter>
             {isAdmin && (
-              <div>
-                <TextField
-                  id="cover-username-text-field"
-                  label="커버 닉네임 (관리자 전용)"
-                  fullWidth
-                  value={coverUsername}
-                  onChange={e => {
-                    const value = e.target.value
-                    return viewMode ? null : setCoverUsername(value)
-                  }}
-                  helperText="기존 유저들의 닉네임을 피해서 사용하세요. 빈칸으로 두면 원래대로 현재 유저의 닉네임이 사용 됩니다."
-                />
-              </div>
+              <>
+                <div>
+                  <TextField
+                    id="cover-username-text-field"
+                    label="커버 닉네임 (관리자 전용)"
+                    fullWidth
+                    value={coverUsername}
+                    onChange={e => {
+                      const value = e.target.value
+                      return viewMode ? null : setCoverUsername(value)
+                    }}
+                    helperText="기존 유저들의 닉네임을 피해서 사용하세요. 빈칸으로 두면 원래대로 현재 유저의 닉네임이 사용 됩니다."
+                  />
+                </div>
+                <div style={{ marginTop: '10px' }}>
+                  <FormControl fullWidth>
+                    <InputLabel id="role-select-label">
+                      커버 나는 누구? *
+                    </InputLabel>
+                    <Select
+                      labelId="cover-role-select-label"
+                      id="cover-role-select"
+                      value={coverRole}
+                      label="커버 나는 누구? *"
+                      onChange={(event: SelectChangeEvent) => {
+                        setCoverRole(event.target.value as Role)
+                      }}
+                      required
+                    >
+                      {ROLE_ITEMS_WITH_NULL_LIST.map(roleItem => (
+                        <MenuItem value={roleItem.role} key={roleItem.role}>
+                          {roleItem.label}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </div>
+              </>
             )}
           </>
         )

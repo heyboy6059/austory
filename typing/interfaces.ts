@@ -25,6 +25,57 @@ export enum Role {
   BASE = 'Base'
 }
 
+export interface RoleItem {
+  label: string
+  role: Role
+}
+
+export const ROLE_ITEMS_LIST: RoleItem[] = [
+  {
+    label: '직장인',
+    role: Role.WORKER
+  },
+  {
+    label: '비즈니스',
+    role: Role.BUSINESS
+  },
+  {
+    label: '학생',
+    role: Role.STUDENT
+  },
+  {
+    label: '워홀러',
+    role: Role.WORKING_HOLIDAY
+  },
+  {
+    label: '자유인',
+    role: Role.FREE_MAN
+  },
+  {
+    label: '일반인',
+    role: Role.BASE
+  }
+]
+
+export const FULL_ROLE_ITEMS_LIST: RoleItem[] = [
+  ...ROLE_ITEMS_LIST,
+  {
+    label: '파트너 에디터',
+    role: Role.PARTNER
+  },
+  {
+    label: '인크라우',
+    role: Role.ADMIN
+  }
+]
+export const ROLE_ITEMS_WITH_NULL_LIST: RoleItem[] = [
+  {
+    label: '없음',
+    role: null
+  },
+  ...ROLE_ITEMS_LIST
+]
+
 export type RawUser = {
   uid: string
   username: string // user typed in our system
@@ -89,6 +140,7 @@ export type RawPost = {
   uid: string // userId
   username: string
   coverUsername: string // only for admin purpose
+  coverRole: Role // only for admin purpose
   title: string
   deleted: boolean
   heartCount: number // need another approach?
@@ -135,6 +187,7 @@ export type PostWrite = Pick<
   | 'categories'
   | 'isTest'
   | 'coverUsername'
+  | 'coverRole'
   | 'isInkrauOfficial'
 >
 
@@ -144,6 +197,7 @@ export type RawComment = {
   commentId: string
   username: string
   coverUsername: string // only for admin purpose
+  coverRole: Role // only for admin purpose
   level: number
   parentCommentId: string | null
   content: string

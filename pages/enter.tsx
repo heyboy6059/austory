@@ -15,7 +15,12 @@ import Chip from '@mui/material/Chip'
 import Button from '@mui/material/Button'
 import Checkbox from '@mui/material/Checkbox'
 import FormControlLabel from '@mui/material/FormControlLabel'
-import { FirestoreTimestamp, RawUser, Role } from '../typing/interfaces'
+import {
+  FirestoreTimestamp,
+  RawUser,
+  Role,
+  ROLE_ITEMS_LIST
+} from '../typing/interfaces'
 import { FlexCenterDiv, GridDiv } from '../common/uiComponents'
 import toast from 'react-hot-toast'
 import { useRouter } from 'next/router'
@@ -422,13 +427,11 @@ function UsernameForm() {
                 }}
                 required
               >
-                <MenuItem value={Role.WORKER}>직장인</MenuItem>
-                <MenuItem value={Role.BUSINESS}>비즈니스 운영</MenuItem>
-                <MenuItem value={Role.STUDENT}>학생</MenuItem>
-                <MenuItem value={Role.WORKING_HOLIDAY}>워홀러</MenuItem>
-                <MenuItem value={Role.FREE_MAN}>자유인</MenuItem>
-                <MenuItem value={Role.BASE}>선택 안 함</MenuItem>
-                {/* <MenuItem value={Role.MYSTIC}>신비주의</MenuItem> */}
+                {ROLE_ITEMS_LIST.map(roleItem => (
+                  <MenuItem value={roleItem.role} key={roleItem.role}>
+                    {roleItem.label}
+                  </MenuItem>
+                ))}
               </Select>
             </FormControl>
           </div>
