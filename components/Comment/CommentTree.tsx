@@ -30,7 +30,7 @@ const CommentTree: FC<Props> = ({
               parent => parent.commentId === current.parentCommentId
             )
             if (parentComment) {
-              parentComment.childComments.push(current)
+              parentComment.childComments.unshift(current)
             }
           }
           return acc
