@@ -353,7 +353,7 @@ const PostContent: FC<PostContentProps> = ({
             <div dangerouslySetInnerHTML={{ __html: post.htmlContent }} />
           </HtmlContentWrapper>
         ) : (
-          <div style={{ margin: '5px 0px', wordBreak: 'break-word' }}>
+          <div style={{ margin: '10px 0px', wordBreak: 'break-word' }}>
             <Linkify
               componentDecorator={(decoratedHref, decoratedText, key) => (
                 <a
@@ -367,7 +367,6 @@ const PostContent: FC<PostContentProps> = ({
               )}
             >
               <div style={{ whiteSpace: 'break-spaces' }}>
-                {' '}
                 <Typography>{post?.content}</Typography>
               </div>
             </Linkify>

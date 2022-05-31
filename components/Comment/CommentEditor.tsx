@@ -33,6 +33,8 @@ import Select, { SelectChangeEvent } from '@mui/material/Select'
 import MenuItem from '@mui/material/MenuItem'
 import FormControl from '@mui/material/FormControl'
 import InputLabel from '@mui/material/InputLabel'
+import Linkify from 'react-linkify'
+import Typography from '@mui/material/Typography'
 
 interface Props {
   commentCollectionRef: FirebaseCollectionRef
@@ -223,7 +225,24 @@ const CommentEditor: FC<Props> = ({
       {
         // viewMode is coming from parent / internalViewMode sets to true after edit the comment
         viewMode || internalViewMode ? (
-          <div style={{ margin: '10px 0' }}>{comment.content}</div>
+          <div style={{ margin: '10px 0', wordBreak: 'break-word' }}>
+            <Linkify
+              componentDecorator={(decoratedHref, decoratedText, key) => (
+                <a
+                  target="blank"
+                  href={decoratedHref}
+                  key={key}
+                  style={{ color: '#00008B' }}
+                >
+                  {decoratedText}
+                </a>
+              )}
+            >
+              <div style={{ whiteSpace: 'break-spaces' }}>
+                <Typography>{comment.content}</Typography>
+              </div>
+            </Linkify>
+          </div>
         ) : (
           <>
             <TextField
