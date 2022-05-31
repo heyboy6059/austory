@@ -176,7 +176,7 @@ const PostItem: FC<{
              */}
             <AccountIconName
               username={post.coverUsername || post.username}
-              role={post.createdByRole}
+              role={post.coverRole || post.createdByRole}
             />
             <span>|</span>
             <EllipsisSpan>
