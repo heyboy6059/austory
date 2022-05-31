@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Nanum+Gothic&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans&display=swap");
 
 :root {
   --color-bg: #eef0f1;
@@ -11,7 +11,7 @@
 html body {
   padding: 0;
   margin: 0;
-  font-family: "Nanum Gothic", sans-serif;
+  font-family: 'Noto Sans', sans-serif;
   background-color: var(--color-bg);
   color: var(--color-text);
   /* width: 600px; */

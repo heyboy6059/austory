@@ -48,9 +48,21 @@ import Typography from '@mui/material/Typography'
 import Chip from '@mui/material/Chip'
 import AccountIconName from '../Account/AccountIconName'
 import Box from '@mui/material/Box'
+import styled from 'styled-components'
 
 // import { Editor, EditorState, ContentState } from "draft-js"
 
+const HtmlContentWrapper = styled.div`
+  margin: 20px 5px 5px 5px;
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  p {
+    margin: 0px;
+  }
+`
 interface PostContentProps {
   post: Post
   // postRef: FirebaseDocumentRef
@@ -337,9 +349,9 @@ const PostContent: FC<PostContentProps> = ({
         <div style={{ whiteSpace: "break-spaces" }}>{post?.content}</div>
       </Linky> */}
         {post.isHtmlContent && post.htmlContent ? (
-          <div style={{ margin: '5px' }}>
+          <HtmlContentWrapper>
             <div dangerouslySetInnerHTML={{ __html: post.htmlContent }} />
-          </div>
+          </HtmlContentWrapper>
         ) : (
           <div style={{ margin: '5px 0px', wordBreak: 'break-word' }}>
             <Linkify
