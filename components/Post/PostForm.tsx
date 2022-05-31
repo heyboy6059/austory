@@ -67,6 +67,7 @@ const PostForm: FC<Props> = ({ editPost }) => {
   const [categories, setCategories] = useState<ExtendedCategory[]>([])
   const [categoryLoading, setCategoryLoading] = useState(false)
   const [imageLoading, setImageLoading] = useState(false)
+  const [submitLoading, setSubmitLoading] = useState(false)
   const [htmlContent, setHtmlContent] = useState('')
   const [isHtmlContent, setIsHtmlContent] = useState(false)
 
@@ -154,6 +155,7 @@ const PostForm: FC<Props> = ({ editPost }) => {
 
   const onSubmit = async (data: PostWrite) => {
     try {
+      setSubmitLoading(true)
       const selectedCategories = categories.filter(e => e.selected)
 
       // EDIT
@@ -212,7 +214,7 @@ const PostForm: FC<Props> = ({ editPost }) => {
         await batch.commit()
 
         toast.success('게시물 업데이트가 완료 되었습니다.')
-
+        setSubmitLoading(false)
         router.push(`/post/${postId}`)
       }
       // CREATE
@@ -270,11 +272,13 @@ const PostForm: FC<Props> = ({ editPost }) => {
         await batch.commit()
 
         toast.success('게시물이 성공적으로 등록 되었습니다.')
+        setSubmitLoading(false)
         router.push('/')
       }
     } catch (err) {
       console.error(`Error in PostForm create/edit. ${err.message}`)
       toast.error('에러가 발생했습니다. 다시 시도해주세요.')
+      setSubmitLoading(false)
     }
   }
 
@@ -513,7 +517,8 @@ const PostForm: FC<Props> = ({ editPost }) => {
             disabled={
               imageLoading ||
               !(watch().content || htmlContent) ||
-              !watch().title
+              !watch().title ||
+              submitLoading
             }
           >
             완료
