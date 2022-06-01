@@ -7,3 +7,8 @@ export enum MarketingEmailSubscription {
   SUBSCRIBE = 'SUBSCRIBE',
   UNSUBSCRIBE = 'UNSUBSCRIBE'
 }
+
+export enum CommentOrder {
+  LATEST = 'Latest',
+  OLDEST = 'Oldest'
+}
