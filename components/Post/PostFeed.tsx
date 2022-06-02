@@ -1,4 +1,4 @@
-import React, { FC, useContext } from 'react'
+import React, { FC, useContext, Dispatch, SetStateAction } from 'react'
 import { Post } from '../../typing/interfaces'
 import PostItem from './PostItem'
 import Box from '@mui/material/Box'
@@ -13,7 +13,17 @@ const PostFeed: FC<{
   loadMore: () => Promise<void>
   hasMore: boolean
   ownerUser?: boolean
-}> = ({ posts, loadMore, hasMore, ownerUser }): JSX.Element => {
+  // REVIEW: post context
+  setSelectedPost?: Dispatch<SetStateAction<Post>>
+  setSelectedScrollPosition?: Dispatch<SetStateAction<number>>
+}> = ({
+  posts,
+  loadMore,
+  hasMore,
+  ownerUser,
+  setSelectedPost,
+  setSelectedScrollPosition
+}): JSX.Element => {
   const { isAdmin } = useContext(UserContext)
   return (
     <Box>
@@ -30,7 +40,13 @@ const PostFeed: FC<{
         {posts
           ? isAdmin
             ? posts.map(post => (
-                <PostItem post={post} key={post.postId} ownerUser={ownerUser} />
+                <PostItem
+                  post={post}
+                  key={post.postId}
+                  ownerUser={ownerUser}
+                  setSelectedPost={setSelectedPost}
+                  setSelectedScrollPosition={setSelectedScrollPosition}
+                />
               ))
             : // filter test posts out for non admin users
               posts
@@ -40,6 +56,8 @@ const PostFeed: FC<{
                     post={post}
                     key={post.postId}
                     ownerUser={ownerUser}
+                    setSelectedPost={setSelectedPost}
+                    setSelectedScrollPosition={setSelectedScrollPosition}
                   />
                 ))
           : null}

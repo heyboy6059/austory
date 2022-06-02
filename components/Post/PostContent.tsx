@@ -4,7 +4,9 @@ import {
   useMemo,
   useEffect,
   useCallback,
-  useState
+  useState,
+  Dispatch,
+  SetStateAction
 } from 'react'
 import Paper from '@mui/material/Paper'
 // import AuthCheck from '../../components/AuthCheck'
@@ -65,12 +67,17 @@ const HtmlContentWrapper = styled.div`
 `
 interface PostContentProps {
   post: Post
-  // postRef: FirebaseDocumentRef
+  // REVIEW: post context
+  setSelectedPost?: Dispatch<SetStateAction<Post>>
+  selectedScrollPosition?: number
+  fromDirectLink?: boolean
 }
 // UI component for main post content
 const PostContent: FC<PostContentProps> = ({
-  post
-  // postRef
+  post,
+  setSelectedPost,
+  selectedScrollPosition,
+  fromDirectLink
 }) => {
   const postRef = firestore.collection('posts').doc(post.postId)
   const { user, username, isAdmin } = useContext(UserContext)
@@ -88,6 +95,7 @@ const PostContent: FC<PostContentProps> = ({
     width: number
     height: number
   }>(null)
+
   // add viewCount in post
   useEffect(() => {
     const addViewCount = async () => {
@@ -205,12 +213,10 @@ const PostContent: FC<PostContentProps> = ({
           <FlexCenterDiv style={{ gap: '8px' }}>
             <Tooltip title="뒤로가기" placement="bottom" arrow>
               <ArrowBackIcon
-                onClick={() =>
-                  // window.history.pushState("", "", `/post/abcd`)
-                  // router.push("/", undefined, { shallow: true })
-                  //REVIEW: go back without reload/refresh/keep scroll
-
-                  {
+                onClick={() => {
+                  // CASE1. user opened the post through direct url
+                  if (fromDirectLink) {
+                    // go back to home page
                     if (post?.isInkrauOfficial === true) {
                       router.push({
                         pathname: '/',
@@ -221,8 +227,24 @@ const PostContent: FC<PostContentProps> = ({
                     } else {
                       router.push('/')
                     }
+                    return
                   }
-                }
+
+                  // CASE2. user opened the content from main feed
+                  if (!fromDirectLink) {
+                    // unselect the current post
+                    setSelectedPost(null)
+
+                    // mover user to previous scroll position
+                    setTimeout(() => {
+                      window.scrollTo(0, selectedScrollPosition)
+                    }, 0)
+
+                    // change url to home without refreshing
+                    router.push(`/`, undefined, { shallow: true })
+                    return
+                  }
+                }}
                 style={{ cursor: 'pointer' }}
               />
             </Tooltip>

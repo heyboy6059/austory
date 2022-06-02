@@ -1,10 +1,9 @@
-import { FC, useContext } from 'react'
+import { FC, useContext, useCallback, Dispatch, SetStateAction } from 'react'
 import dayjs from 'dayjs'
 import Link from 'next/link'
 import Image from 'next/image'
 import { Post } from '../../typing/interfaces'
 import Paper from '@mui/material/Paper'
-
 import {
   FlexVerticalCenterDiv,
   FlexCenterDiv,
@@ -19,16 +18,34 @@ import Chip from '@mui/material/Chip'
 import { AiOutlineHeart, AiOutlineComment, AiOutlineEye } from 'react-icons/ai'
 import { UserContext } from '../../common/context'
 import AccountIconName from '../Account/AccountIconName'
+import { useRouter } from 'next/router'
 
 const PostItem: FC<{
   post: Post
   ownerUser?: boolean
-}> = ({ post, ownerUser = false }): JSX.Element => {
-  // Naive method to calc word count and read time
-  // const wordCount = post?.content.trim().split(/\s+/g).length
-  // const minutesToRead = (wordCount / 100 + 1).toFixed(0)
-
+  // REVIEW: post context
+  setSelectedPost?: Dispatch<SetStateAction<Post>>
+  setSelectedScrollPosition?: Dispatch<SetStateAction<number>>
+}> = ({
+  post,
+  ownerUser = false,
+  setSelectedPost,
+  setSelectedScrollPosition
+}): JSX.Element => {
+  const router = useRouter()
   const { isAdmin } = useContext(UserContext)
+
+  const openPostContent = useCallback(() => {
+    // keep scroll position before opening post content
+    setSelectedScrollPosition(window.pageYOffset)
+    // open post content
+    setSelectedPost(post)
+    // move to the top
+    window.scrollTo(0, 0)
+    // change url for proper copy
+    router.push(`/`, `/post/${post.postId}`, { shallow: true })
+  }, [router, post, setSelectedPost, setSelectedScrollPosition])
+
   // TODO: div clean up
   return (
     <Paper
@@ -75,47 +92,43 @@ const PostItem: FC<{
             }}
           >
             <div style={{ display: 'flex', alignItems: 'center' }}>
-              <Link href={`/post/${post.postId}`} passHref>
-                <a>
-                  <Typography
-                    style={{
-                      fontSize: '17px',
-                      margin: '2px 0',
-                      display: '-webkit-box',
-                      WebkitLineClamp: 2,
-                      WebkitBoxOrient: 'vertical',
-                      overflow: 'hidden',
-                      fontWeight: 'bold',
-                      lineHeight: '1.2',
-                      cursor: 'pointer'
-                    }}
-                  >
-                    {post.isTest && <Chip label="TEST" color="primary" />}
-                    <span>{post.title}</span>
-                  </Typography>
-                </a>
-              </Link>
+              <span onClick={() => openPostContent()}>
+                <Typography
+                  style={{
+                    fontSize: '17px',
+                    margin: '2px 0',
+                    display: '-webkit-box',
+                    WebkitLineClamp: 2,
+                    WebkitBoxOrient: 'vertical',
+                    overflow: 'hidden',
+                    fontWeight: 'bold',
+                    lineHeight: '1.2',
+                    cursor: 'pointer'
+                  }}
+                >
+                  {post.isTest && <Chip label="TEST" color="primary" />}
+                  <span>{post.title}</span>
+                </Typography>
+              </span>
             </div>
             <EllipsisDiv
               style={{
                 cursor: 'pointer'
               }}
             >
-              <Link href={`/post/${post.postId}`} passHref>
-                <a>
-                  <Typography
-                    style={{
-                      display: '-webkit-box',
-                      WebkitLineClamp: 2,
-                      WebkitBoxOrient: 'vertical',
-                      overflow: 'hidden',
-                      fontSize: '14px'
-                    }}
-                  >
-                    {post.excerpt ? `${post.excerpt}` : post.content}
-                  </Typography>
-                </a>
-              </Link>
+              <span onClick={() => openPostContent()}>
+                <Typography
+                  style={{
+                    display: '-webkit-box',
+                    WebkitLineClamp: 2,
+                    WebkitBoxOrient: 'vertical',
+                    overflow: 'hidden',
+                    fontSize: '14px'
+                  }}
+                >
+                  {post.excerpt ? `${post.excerpt}` : post.content}
+                </Typography>
+              </span>
 
               {ownerUser && (
                 <>
@@ -133,21 +146,19 @@ const PostItem: FC<{
               // TEMP: fallback to thumbnail600
               post.images?.[0]?.thumbnail200?.url ||
               post.images?.[0]?.['thumbnail100']?.url ? (
-                <Link href={`/post/${post.postId}`} passHref>
-                  <a>
-                    <Image
-                      src={
-                        post.images?.[0]?.thumbnail200?.url ||
-                        post.images?.[0]?.['thumbnail100']?.url
-                      }
-                      alt="thumbnail image"
-                      width={'100%'}
-                      height={'100%'}
-                      layout="responsive"
-                      objectFit="cover"
-                    />
-                  </a>
-                </Link>
+                <span onClick={() => openPostContent()}>
+                  <Image
+                    src={
+                      post.images?.[0]?.thumbnail200?.url ||
+                      post.images?.[0]?.['thumbnail100']?.url
+                    }
+                    alt="thumbnail image"
+                    width={'100%'}
+                    height={'100%'}
+                    layout="responsive"
+                    objectFit="cover"
+                  />
+                </span>
               ) : (
                 ``
               )

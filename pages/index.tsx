@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import PostFeed from '../components/Post/PostFeed'
 
 import {
@@ -21,6 +21,7 @@ import { getPostsByType } from '../common/get'
 import toast from 'react-hot-toast'
 
 import { useRouter } from 'next/router'
+import PostContent from '../components/Post/PostContent'
 
 function a11yProps(index: number) {
   return {
@@ -64,6 +65,42 @@ const Home = ({ posts, postTypeFromQuery }) => {
 
   const [inkrauPostEnd, setInkrauPostEnd] = useState(false)
   const [communityPostEnd, setCommunityPostEnd] = useState(false)
+
+  /**
+   * REVIEW
+   * move all post handling (incl. posts, selectedPost, selectedScrollPosition...) to the context
+   * for better state management
+   */
+  const [selectedPost, setSelectedPost] = useState<Post>(null)
+  const [selectedScrollPosition, setSelectedScrollPosition] =
+    useState<number>(0)
+
+  // manually handle browser back event
+  useEffect(() => {
+    router.beforePopState(({ as }) => {
+      if (as !== router.asPath) {
+        console.log('handling browser back event')
+
+        // unselect post to show main feed
+        setSelectedPost(null)
+
+        // move back to previous scroll position
+        setTimeout(() => {
+          window.scrollTo(0, selectedScrollPosition)
+        }, 0)
+
+        // update url to home page
+        router.push(`/`, undefined, { shallow: true })
+      }
+      // don't actually go back (move page)
+      return false
+    })
+
+    console.log('outside - handling browser back event')
+    return () => {
+      router.beforePopState(() => true)
+    }
+  }, [router, selectedScrollPosition]) // Add any state variables to dependencies array if needed.
 
   // REVIEW: replace 0, 1 to actual string name
   // 0 = community contents menu
@@ -149,69 +186,98 @@ const Home = ({ posts, postTypeFromQuery }) => {
       query: { ...router.query, postType: postType }
     })
   }
+
   return (
     <div>
       <Head>
         <title>인크라우 inKRAU</title>
       </Head>
-      <Box sx={{ width: '100%' }}>
-        <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-          <Tabs
-            value={tabValue}
-            onChange={handleChange}
-            textColor="secondary"
-            indicatorColor="secondary"
-            aria-label="main menu tabs"
-            style={{ minHeight: '0', padding: '0', height: '42px' }}
+      {
+        /**
+         * Single Selected Post View
+         */
+        selectedPost ? (
+          <Box
+            style={{
+              padding: '8px 0px'
+            }}
           >
-            <Tab
-              label={<strong>커뮤니티</strong>}
-              {...a11yProps(0)}
-              style={{ padding: '15px' }}
-              onClick={async () => {
-                tabHandler('community')
-              }}
+            <PostContent
+              post={selectedPost}
+              setSelectedPost={setSelectedPost}
+              selectedScrollPosition={selectedScrollPosition}
             />
-            <Tab
-              label={<strong>인크라우 컨텐츠</strong>}
-              {...a11yProps(1)}
-              style={{ padding: '15px' }}
-              onClick={async () => {
-                tabHandler('inkrau')
-              }}
+          </Box>
+        ) : (
+          /**
+           * Main Post Feed View
+           */
+          <>
+            <Box sx={{ width: '100%' }}>
+              <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                <Tabs
+                  value={tabValue}
+                  onChange={handleChange}
+                  textColor="secondary"
+                  indicatorColor="secondary"
+                  aria-label="main menu tabs"
+                  style={{ minHeight: '0', padding: '0', height: '42px' }}
+                >
+                  <Tab
+                    label={<strong>커뮤니티</strong>}
+                    {...a11yProps(0)}
+                    style={{ padding: '15px' }}
+                    onClick={async () => {
+                      tabHandler('community')
+                    }}
+                  />
+                  <Tab
+                    label={<strong>인크라우 컨텐츠</strong>}
+                    {...a11yProps(1)}
+                    style={{ padding: '15px' }}
+                    onClick={async () => {
+                      tabHandler('inkrau')
+                    }}
+                  />
+                </Tabs>
+              </Box>
+            </Box>
+            <PostFeed
+              posts={postType === 'community' ? communityPosts : inkrauPosts}
+              loadMore={() => getMorePosts(postType)}
+              hasMore={
+                postType === 'community' ? !communityPostEnd : !inkrauPostEnd
+              }
+              setSelectedPost={setSelectedPost}
+              setSelectedScrollPosition={setSelectedScrollPosition}
             />
-          </Tabs>
-        </Box>
-      </Box>
-      <PostFeed
-        posts={postType === 'community' ? communityPosts : inkrauPosts}
-        loadMore={() => getMorePosts(postType)}
-        hasMore={postType === 'community' ? !communityPostEnd : !inkrauPostEnd}
-      />
 
-      <FlexCenterDiv style={{ marginBottom: '10px' }}>
-        {/* {!loading && !postsEnd && (
+            <FlexCenterDiv style={{ marginBottom: '10px' }}>
+              {/* {!loading && !postsEnd && (
           <Button onClick={getMorePosts}>Load more</Button>
         )} */}
-        {((postType === 'inkrau' && inkrauPostEnd) ||
-          (postType === 'community' && communityPostEnd)) &&
-          '더 이상 읽을 글이 없습니다.'}
-      </FlexCenterDiv>
+              {((postType === 'inkrau' && inkrauPostEnd) ||
+                (postType === 'community' && communityPostEnd)) &&
+                '더 이상 읽을 글이 없습니다.'}
+            </FlexCenterDiv>
 
-      {/* <Loader show={loading} /> */}
-      <ScrollToTop showUnder={300} style={{ bottom: 25, right: 15 }}>
-        <span>
-          <ArrowCircleUpIcon
-            style={{
-              backgroundColor: COLOURS.DARK_BLUE,
-              color: 'white',
-              borderRadius: '30px',
-              fontSize: '35px',
-              opacity: 0.85
-            }}
-          />
-        </span>
-      </ScrollToTop>
+            {/* <Loader show={loading} /> */}
+            <ScrollToTop showUnder={300} style={{ bottom: 25, right: 15 }}>
+              <span>
+                <ArrowCircleUpIcon
+                  style={{
+                    backgroundColor: COLOURS.DARK_BLUE,
+                    color: 'white',
+                    borderRadius: '30px',
+                    fontSize: '35px',
+                    opacity: 0.85
+                  }}
+                />
+              </span>
+            </ScrollToTop>
+          </>
+        )
+      }
     </div>
   )
 }
