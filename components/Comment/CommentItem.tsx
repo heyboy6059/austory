@@ -1,7 +1,7 @@
 import { FC, useState, useMemo, useContext, useCallback } from 'react'
 import Button from '@mui/material/Button'
 import dayjs from 'dayjs'
-import { COLOURS, KOR_FULL_DATE_FORMAT } from '../../common/constants'
+import { COLOURS, NUM_DATE_FORMAT } from '../../common/constants'
 import {
   FlexSpaceBetweenCenter,
   FlexVerticalCenterDiv,
@@ -130,7 +130,7 @@ const CommentItem: FC<Props> = ({
 
               <FlexVerticalCenterDiv>
                 <small style={{ color: COLOURS.TEXT_GREY, marginRight: '2px' }}>
-                  {dayjs(comment.createdAt).format(KOR_FULL_DATE_FORMAT)}
+                  {dayjs(comment.createdAt).format(NUM_DATE_FORMAT)}
                 </small>
 
                 {
@@ -144,7 +144,8 @@ const CommentItem: FC<Props> = ({
                           }}
                           style={{
                             cursor: 'pointer',
-                            color: COLOURS.DARK_BLUE
+                            color: COLOURS.DARK_BLUE,
+                            fontSize: '20px'
                           }}
                         />
                       </Tooltip>
@@ -152,7 +153,8 @@ const CommentItem: FC<Props> = ({
                         <DeleteIcon
                           style={{
                             color: COLOURS.CANCEL_RED,
-                            cursor: 'pointer'
+                            cursor: 'pointer',
+                            fontSize: '20px'
                           }}
                           onClick={() => removeComment()}
                         />
@@ -164,7 +166,7 @@ const CommentItem: FC<Props> = ({
                 }
               </FlexVerticalCenterDiv>
             </FlexSpaceBetweenCenter>
-            <div style={{ marginTop: '15px' }}>
+            <div style={{ marginTop: '5px' }}>
               <CommentEditor
                 commentCollectionRef={commentCollectionRef}
                 comment={comment}

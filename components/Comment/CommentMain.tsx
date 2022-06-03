@@ -113,6 +113,7 @@ const CommentMain: FC<Props> = ({ postRef }) => {
                   })
                 }}
                 size="small"
+                style={{ height: '30px' }}
               >
                 <MenuItem value={CommentOrder.LATEST} key={1}>
                   최신순

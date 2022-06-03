@@ -21,6 +21,8 @@ export const KOR_MONTH_DAY_FORMAT = 'M월 D일 h:mm A'
 
 export const KOR_FULL_DATE_FORMAT = 'YYYY년 M월 D일 h:mm A'
 
+export const NUM_DATE_FORMAT = 'YYYY.MM.DD h:mm A'
+
 export const KOR_DATE_WITHOUT_TIME_FORMAT = 'YYYY년 M월 D일'
 
 export const MAX_WIDTH_PX = 600

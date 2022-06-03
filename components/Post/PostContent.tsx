@@ -17,7 +17,7 @@ import {
   FirestoreTimestamp
 } from '../../typing/interfaces'
 import dayjs from 'dayjs'
-import { COLOURS, KOR_FULL_DATE_FORMAT } from '../../common/constants'
+import { COLOURS, NUM_DATE_FORMAT } from '../../common/constants'
 import NextImage from 'next/image'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 import VisibilityIcon from '@mui/icons-material/Visibility'
@@ -335,7 +335,7 @@ const PostContent: FC<PostContentProps> = ({
               role={post.coverRole || post.createdByRole}
             />
             <div>|</div>
-            <div>{dayjs(post.createdAt).format(KOR_FULL_DATE_FORMAT)}</div>
+            <div>{dayjs(post.createdAt).format(NUM_DATE_FORMAT)}</div>
           </FlexVerticalCenterDiv>
           {/* </FlexCenterDiv> */}
         </span>

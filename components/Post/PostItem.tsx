@@ -15,7 +15,12 @@ import {
 import Typography from '@mui/material/Typography'
 import { COLOURS, KOR_MONTH_DAY_FORMAT } from '../../common/constants'
 import Chip from '@mui/material/Chip'
-import { AiOutlineHeart, AiOutlineComment, AiOutlineEye } from 'react-icons/ai'
+import {
+  AiOutlineHeart,
+  // AiOutlineComment,
+  AiOutlineEye,
+  AiOutlineMessage
+} from 'react-icons/ai'
 import { UserContext } from '../../common/context'
 import AccountIconName from '../Account/AccountIconName'
 import { useRouter } from 'next/router'
@@ -56,7 +61,7 @@ const PostItem: FC<{
         borderRadius: '12px'
       }}
     >
-      <div style={{ padding: '12px' }}>
+      <div style={{ padding: '16px 12px 12px 12px' }}>
         {post.categories.length ? (
           <div>
             {post.categories.map(category => (
@@ -65,7 +70,12 @@ const PostItem: FC<{
                 label={category.name}
                 variant={'outlined'}
                 size="small"
-                style={{ marginRight: '4px', fontSize: '12px' }}
+                style={{
+                  marginRight: '4px',
+                  marginBottom: '4px',
+                  marginTop: '2px',
+                  fontSize: '12px'
+                }}
               />
             ))}
           </div>
@@ -169,7 +179,7 @@ const PostItem: FC<{
           style={{
             gridTemplateColumns: '1fr 10px 100px',
             alignItems: 'center',
-            margin: '4px 0 5px 0'
+            margin: '4px 0 0px 0'
           }}
         >
           <div
@@ -197,7 +207,8 @@ const PostItem: FC<{
           <div></div>
           <FlexCenterDiv
             style={{
-              gap: '6px'
+              gap: '6px',
+              alignItems: 'center'
               // justifyContent: 'right'
             }}
           >
@@ -223,8 +234,16 @@ const PostItem: FC<{
                 fontSize={18}
                 style={{ marginTop: '1px'}}
               /> */}
-              <AiOutlineComment
+              {/* <AiOutlineComment
                 fontSize={18}
+                style={{
+                  marginRight: '1px',
+                  marginTop: '1px',
+                  color: COLOURS.LIGHT_PURPLE
+                }}
+              /> */}
+              <AiOutlineMessage
+                fontSize={17}
                 style={{
                   marginRight: '1px',
                   marginTop: '1px',

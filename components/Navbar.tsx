@@ -17,11 +17,11 @@ import {
 
 import Logo from '../public/inKRAU_New_Logo_200_80.png'
 
-// import InstagramSvg from '../public/instagram_logo.svg'
-// import FacebookSvg from '../public/facebook_logo.svg'
+import InstagramSvg from '../public/instagram_logo.svg'
+import FacebookSvg from '../public/facebook_logo.svg'
 
-import InstagramInkrauSvg from '../public/inkrau_instagram.svg'
-import FacebookInkrauSvg from '../public/inkrau_facebook.svg'
+// import InstagramInkrauSvg from '../public/inkrau_instagram.svg'
+// import FacebookInkrauSvg from '../public/inkrau_facebook.svg'
 /**
  * Material UI
  */
@@ -238,7 +238,7 @@ export default function Navbar() {
           <></>
         )}
       </List>
-      {/* <List>
+      <List>
         <FlexCenterDiv style={{ gap: '25px' }}>
           <LogoImage
             src={FacebookSvg}
@@ -253,8 +253,8 @@ export default function Navbar() {
             onClick={() => window.open(INSTAGRAM_INKRAU_URL, '_blank').focus()}
           />
         </FlexCenterDiv>
-      </List> */}
-      <List>
+      </List>
+      {/* <List>
         <ListItem style={{ justifyContent: 'center' }}>
           <LogoImage
             src={FacebookInkrauSvg}
@@ -271,7 +271,7 @@ export default function Navbar() {
             onClick={() => window.open(INSTAGRAM_INKRAU_URL, '_blank').focus()}
           />
         </ListItem>
-      </List>
+      </List> */}
       {isAdmin && (
         <>
           <Divider />
