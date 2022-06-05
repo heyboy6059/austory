@@ -59,16 +59,12 @@ export default function Enter() {
       {/**
        * Logged in with firebase auth but no username yet = no registered yet
        */}
-      {firebaseAuthLoading ? (
+      {firebaseAuthLoading || userLoading ? (
         <FlexCenterDiv>
           <CircularProgress />
         </FlexCenterDiv>
       ) : userAuth ? (
-        userLoading ? (
-          <FlexCenterDiv>
-            <CircularProgress />
-          </FlexCenterDiv>
-        ) : !user ? (
+        !user ? (
           <UsernameForm />
         ) : (
           // REVIEW: maybe loading indicator?
