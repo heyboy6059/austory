@@ -99,9 +99,6 @@ const PostContent: FC<PostContentProps> = ({
   // add viewCount in post
   useEffect(() => {
     const addViewCount = async () => {
-      console.log(
-        'Added count 1 to Post.viewCount, (current)User.providedViewCountTotal, (post owner)User.receivedViewCountTotal'
-      )
       const batch = firestore.batch()
       batch.update(postRef, {
         viewCount: post.viewCount + 1
@@ -110,7 +107,10 @@ const PostContent: FC<PostContentProps> = ({
       batchUpdateViewCounts(batch, user?.uid, post.uid)
       await batch.commit()
     }
-    if (postRef && post && user && !addedViewCount) {
+    if (postRef && post && !addedViewCount) {
+      console.log(
+        'Added count 1 to Post.viewCount, (current)User.providedViewCountTotal, (post owner)User.receivedViewCountTotal'
+      )
       addViewCount()
       setAddedViewCount(true)
     }
