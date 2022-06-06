@@ -226,7 +226,7 @@ const PostForm: FC<Props> = ({ editPost }) => {
         const post: RawPost = {
           postId,
           uid: auth.currentUser.uid,
-          coverRole: coverRole || Role.BASE,
+          coverRole: coverRole,
           coverUsername: data.coverUsername || '',
           username,
           title: data.title,
