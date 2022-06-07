@@ -211,6 +211,7 @@ const PostContent: FC<PostContentProps> = ({
         description={`${post.excerpt}`}
         // TODO: change fallback to logo image
         image={post?.images?.[0]?.original?.url || undefined}
+        imgAlt={`게시물 썸네일 사진 - ${post.title}`}
         type="article"
         link={`${ROOT_INKRAU_URL}/post/${post.postId}`}
       />
