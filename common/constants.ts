@@ -1,3 +1,5 @@
+export const ROOT_INKRAU_URL = 'https://www.inkrau.com'
+
 export enum COLOURS {
   PRIMARY_SPACE_GREY = 'rgba(0,0,0,0.8)',
   SECONDARY_SPACE_GREY = '#424245',

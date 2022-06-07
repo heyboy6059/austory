@@ -17,7 +17,11 @@ import {
   FirestoreTimestamp
 } from '../../typing/interfaces'
 import dayjs from 'dayjs'
-import { COLOURS, NUM_DATE_FORMAT } from '../../common/constants'
+import {
+  COLOURS,
+  NUM_DATE_FORMAT,
+  ROOT_INKRAU_URL
+} from '../../common/constants'
 import NextImage from 'next/image'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 import VisibilityIcon from '@mui/icons-material/Visibility'
@@ -208,7 +212,7 @@ const PostContent: FC<PostContentProps> = ({
         // TODO: change fallback to logo image
         image={post?.images?.[0]?.original?.url || undefined}
         type="article"
-        // link={window.location.href}
+        link={`${ROOT_INKRAU_URL}/post/${post.postId}`}
       />
       <Paper sx={{ p: 2 }}>
         <FlexSpaceBetween style={{ alignItems: 'center' }}>
