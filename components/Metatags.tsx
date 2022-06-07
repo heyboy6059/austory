@@ -24,6 +24,7 @@ export default function Metatags({
       <meta property="og:image:url" content={image} />
       <meta property="og:type" content={type} />
       <meta property="og:url" content={link} />
+      <meta property="fb:app_id" content="1771190823175517" />
     </Head>
   )
 }
