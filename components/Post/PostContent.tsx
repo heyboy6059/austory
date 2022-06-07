@@ -207,8 +207,8 @@ const PostContent: FC<PostContentProps> = ({
         description={`${post.excerpt}`}
         // TODO: change fallback to logo image
         image={post?.images?.[0]?.original?.url || undefined}
-        type="article"
-        link={window.location.href}
+        // type="article"
+        // link={window.location.href}
       />
       <Paper sx={{ p: 2 }}>
         <FlexSpaceBetween style={{ alignItems: 'center' }}>
