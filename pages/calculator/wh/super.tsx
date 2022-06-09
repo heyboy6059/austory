@@ -6,6 +6,9 @@ import Stack from '@mui/material/Stack'
 import styled from 'styled-components'
 import { COLOURS } from '../../../common/constants'
 import Button from '@mui/material/Button'
+import Select, { SelectChangeEvent } from '@mui/material/Select'
+import MenuItem from '@mui/material/MenuItem'
+import { FinancialYear, FinancialYears } from '../../../typing/enums'
 
 const LabelWrapper = styled.div`
   text-align: center;
@@ -14,6 +17,7 @@ const Super: FC = () => {
   const [gross, setGross] = useState(0)
   const [taxWithheld, setTaxWithheld] = useState(0)
   const [estimatedTaxAmount, setEstimatedTaxAmount] = useState(0)
+  const [financialYear, setFinancialYear] = useState(FinancialYear.FY_2020_2021)
 
   console.log({ estimatedTaxAmount })
   const estimateTaxAmount = useCallback(() => {
@@ -26,6 +30,35 @@ const Super: FC = () => {
   return (
     <Box sx={{ width: '100%' }}>
       <Stack spacing={2}>
+        <GridDiv
+          style={{ gridTemplateColumns: '100px 1fr', alignItems: 'center' }}
+        >
+          <FlexCenterDiv>
+            <LabelWrapper>
+              <div>회계년도</div>
+              <div>
+                <small>Financial Year</small>
+              </div>
+            </LabelWrapper>
+          </FlexCenterDiv>
+          <Select
+            labelId="comment-order-select-label"
+            id="comment-order-select"
+            value={financialYear}
+            onChange={(event: SelectChangeEvent) => {
+              const fy = event.target.value as FinancialYear
+              setFinancialYear(fy)
+            }}
+            size="small"
+            style={{ height: '30px' }}
+          >
+            {FinancialYears.map(fy => (
+              <MenuItem value={fy} key={fy}>
+                {fy}
+              </MenuItem>
+            ))}
+          </Select>
+        </GridDiv>
         <GridDiv style={{ gridTemplateColumns: '100px 1fr' }}>
           <FlexCenterDiv>
             <LabelWrapper>
