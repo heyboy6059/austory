@@ -6,7 +6,20 @@ import { useTheme } from '@mui/material/styles'
 import Typography from '@mui/material/Typography'
 import { FlexCenterDiv } from '../../../common/uiComponents'
 import { FcCalculator } from 'react-icons/fc'
-import Super from './super'
+import CurrencyInput from 'react-currency-input-field'
+import TaxReturn from './taxReturn'
+import styled from 'styled-components'
+
+export const LabelWrapper = styled.div`
+  text-align: center;
+`
+
+export const CustomCurrencyInput = styled(CurrencyInput)`
+  height: 40px;
+  border: 1px solid lightgray;
+  border-radius: 5px;
+  font-size: 1.2rem;
+`
 
 function a11yProps(index: number) {
   return {
@@ -55,14 +68,14 @@ const WorkingHolidayCalculator: FC = () => {
       <FlexCenterDiv style={{ marginTop: '10px' }}>
         <FcCalculator fontSize={24} />
         <Typography variant="h6" sx={{ fontWeight: 500 }}>
-          워킹홀리데이 연금/세금 계산기
+          워킹홀리데이 세금 계산기
         </Typography>
       </FlexCenterDiv>
       <Tabs value={value} onChange={handleChange} variant="fullWidth" centered>
         <Tab
           label={
             <Typography sx={{ fontWeight: 'bold' }}>
-              연금<small>(Super)</small>
+              환급<small style={{ fontSize: '10px' }}>(Tax Return)</small>
             </Typography>
           }
           {...a11yProps(0)}
@@ -70,14 +83,14 @@ const WorkingHolidayCalculator: FC = () => {
         <Tab
           label={
             <Typography sx={{ fontWeight: 'bold' }}>
-              <small>세금(Tax)</small>
+              세금<small style={{ fontSize: '10px' }}>(Tax)</small>
             </Typography>
           }
           {...a11yProps(1)}
         />
       </Tabs>
       <TabPanel value={value} index={0} dir={theme.direction}>
-        <Super />
+        <TaxReturn />
       </TabPanel>
       <TabPanel value={value} index={1} dir={theme.direction}>
         <Box></Box>

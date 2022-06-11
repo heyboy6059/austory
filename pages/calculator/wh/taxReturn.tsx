@@ -1,30 +1,24 @@
 import Box from '@mui/material/Box'
 import { FC, useState, useCallback } from 'react'
 import { FlexCenterDiv, GridDiv } from '../../../common/uiComponents'
-import CurrencyInput from 'react-currency-input-field'
 import Stack from '@mui/material/Stack'
-import styled from 'styled-components'
 import { COLOURS } from '../../../common/constants'
 import Button from '@mui/material/Button'
 import Select, { SelectChangeEvent } from '@mui/material/Select'
 import MenuItem from '@mui/material/MenuItem'
 import { FinancialYear, FinancialYears } from '../../../typing/enums'
+import { CustomCurrencyInput, LabelWrapper } from '.'
+import { calculateTaxReturn } from '../../../common/functions'
 
-const LabelWrapper = styled.div`
-  text-align: center;
-`
-const Super: FC = () => {
-  const [gross, setGross] = useState(0)
-  const [taxWithheld, setTaxWithheld] = useState(0)
-  const [estimatedTaxAmount, setEstimatedTaxAmount] = useState(0)
+const TaxReturn: FC = () => {
+  const [gross, setGross] = useState(null)
+  const [taxWithheld, setTaxWithheld] = useState(null)
+  const [estimatedTaxReturnAmount, setEstimatedTaxReturnAmount] = useState(0)
   const [financialYear, setFinancialYear] = useState(FinancialYear.FY_2020_2021)
 
-  console.log({ estimatedTaxAmount })
   const estimateTaxAmount = useCallback(() => {
-    //TEMP
-    console.log({ gross })
-    console.log({ taxWithheld })
-    setEstimatedTaxAmount(gross * 0.3 - taxWithheld)
+    const taxReturnAmount = calculateTaxReturn(gross, taxWithheld)
+    setEstimatedTaxReturnAmount(taxReturnAmount)
   }, [gross, taxWithheld])
 
   return (
@@ -68,7 +62,7 @@ const Super: FC = () => {
               </div>
             </LabelWrapper>
           </FlexCenterDiv>
-          <CurrencyInput
+          <CustomCurrencyInput
             id="validationCustom01"
             name="input-1"
             // className={`form-control ${className}`}
@@ -83,7 +77,7 @@ const Super: FC = () => {
               }
               setGross(Number(value))
             }}
-            placeholder="금액을 입력해주세요"
+            placeholder="$"
             prefix="$"
             // step={1}
           />
@@ -97,7 +91,7 @@ const Super: FC = () => {
               </div>
             </LabelWrapper>
           </FlexCenterDiv>
-          <CurrencyInput
+          <CustomCurrencyInput
             id="validationCustom01"
             name="input-1"
             // className={`form-control ${className}`}
@@ -112,7 +106,7 @@ const Super: FC = () => {
               }
               setTaxWithheld(Number(value))
             }}
-            placeholder="금액을 입력해주세요"
+            placeholder="$"
             prefix="$"
             // step={1}
           />
@@ -140,7 +134,7 @@ const Super: FC = () => {
                 // These options are needed to round to whole numbers if that's what you want.
                 //minimumFractionDigits: 0, // (this suffices for whole numbers, but will print 2500.10 as $2,500.1)
                 //maximumFractionDigits: 0, // (causes 2500.99 to be printed as $2,501)
-              }).format(estimatedTaxAmount)}
+              }).format(estimatedTaxReturnAmount)}
             </h1>
           </FlexCenterDiv>
           <FlexCenterDiv>
@@ -157,4 +151,4 @@ const Super: FC = () => {
   )
 }
 
-export default Super
+export default TaxReturn
