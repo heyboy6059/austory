@@ -65,3 +65,24 @@ export const FACEBOOK_INKRAU_URL = 'https://www.facebook.com/inKRAUofficial'
 export const INSTAGRAM_INKRAU_URL = 'https://www.instagram.com/inkrau_official'
 
 export const INKRAU_OFFICIAL_USER_ID = '7eBBo9hmZPgYIi3dws9derB0SYe2'
+
+export const WHTaxRates = {
+  upTo45000: {
+    rateAmountLimit: 45000,
+    rate: 0.15
+  },
+  upTo120000: {
+    rateAmountLimit: 120000,
+    rate: 0.325
+  },
+  upTo180000: {
+    rateAmountLimit: 180000,
+    rate: 0.37
+  },
+  over180000: {
+    rateAmountLimit: 99999999999,
+    rate: 0.45
+  }
+}
+
+export const TEMP_KOR_AUS_RATE = 905

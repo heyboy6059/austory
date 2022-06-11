@@ -1,3 +1,5 @@
+import { WHTaxRates } from './constants'
+
 export const generateExcerpt = (strContent: string, maxLength: number) => {
   if (!strContent) return ''
   if (strContent.length > maxLength) return strContent.substring(0, maxLength)
@@ -51,44 +53,53 @@ export const extractFilenameExtension = (
   }
 }
 
-export const calculateTaxReturn = (
+export const calculateWHTax = (
   gross: number,
-  taxWithheld: number
+  taxReturnMode: boolean,
+  taxWithheld?: number
 ): number => {
-  enum WHTaxRateThreshold {
-    RATE_45000 = 45000,
-    RATE_120000 = 120000,
-    RATE_180000 = 180000
-    // over 180000
-  }
   let normalTax = 0
 
-  if (gross <= WHTaxRateThreshold.RATE_45000) {
-    return taxWithheld - gross * 0.15
+  if (gross <= WHTaxRates.upTo45000.rateAmountLimit) {
+    const tax = gross * WHTaxRates.upTo45000.rate
+    return taxReturnMode ? taxWithheld - tax : tax
   }
 
-  normalTax += WHTaxRateThreshold.RATE_45000 * 0.15
+  normalTax += WHTaxRates.upTo45000.rateAmountLimit * WHTaxRates.upTo45000.rate
 
   if (
-    gross > WHTaxRateThreshold.RATE_45000 &&
-    gross <= WHTaxRateThreshold.RATE_120000
+    gross > WHTaxRates.upTo45000.rateAmountLimit &&
+    gross <= WHTaxRates.upTo120000.rateAmountLimit
   ) {
-    const deductedGross = gross - WHTaxRateThreshold.RATE_45000
-    normalTax += deductedGross * 0.325
+    const deductedGross = gross - WHTaxRates.upTo45000.rateAmountLimit
+    normalTax += deductedGross * WHTaxRates.upTo120000.rate
   }
 
   if (
-    gross > WHTaxRateThreshold.RATE_120000 &&
-    gross <= WHTaxRateThreshold.RATE_180000
+    gross > WHTaxRates.upTo120000.rateAmountLimit &&
+    gross <= WHTaxRates.upTo180000.rateAmountLimit
   ) {
-    const deductedGross = gross - WHTaxRateThreshold.RATE_120000
-    normalTax += deductedGross * 0.37
+    const deductedGross = gross - WHTaxRates.upTo120000.rateAmountLimit
+    normalTax += deductedGross * WHTaxRates.upTo180000.rate
   }
 
-  if (gross > WHTaxRateThreshold.RATE_180000) {
-    const deductedGross = gross - WHTaxRateThreshold.RATE_180000
-    normalTax += deductedGross * 0.45
+  if (gross > WHTaxRates.upTo180000.rateAmountLimit) {
+    const deductedGross = gross - WHTaxRates.upTo180000.rateAmountLimit
+    normalTax += deductedGross * WHTaxRates.upTo180000.rate
   }
 
-  return taxWithheld - normalTax
+  return taxReturnMode ? taxWithheld - normalTax : normalTax
+}
+
+export const currencyFormatter = (value: number, country: 'KOR' | 'AUS') => {
+  const locale = country === 'KOR' ? 'ko-KR' : country === 'AUS' && 'en-US'
+  const currency = country === 'KOR' ? 'KRW' : country === 'AUS' && 'USD'
+  return new Intl.NumberFormat(locale, {
+    style: 'currency',
+    currency
+
+    // These options are needed to round to whole numbers if that's what you want.
+    //minimumFractionDigits: 0, // (this suffices for whole numbers, but will print 2500.10 as $2,500.1)
+    //maximumFractionDigits: 0, // (causes 2500.99 to be printed as $2,501)
+  }).format(value)
 }

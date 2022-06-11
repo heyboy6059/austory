@@ -9,6 +9,7 @@ import { FcCalculator } from 'react-icons/fc'
 import CurrencyInput from 'react-currency-input-field'
 import TaxReturn from './taxReturn'
 import styled from 'styled-components'
+import Tax from './tax'
 
 export const LabelWrapper = styled.div`
   text-align: center;
@@ -19,6 +20,12 @@ export const CustomCurrencyInput = styled(CurrencyInput)`
   border: 1px solid lightgray;
   border-radius: 5px;
   font-size: 1.2rem;
+`
+
+export const KoreanWonLabel = styled.div`
+  font-size: 12px;
+  text-align: right;
+  color: slategrey;
 `
 
 function a11yProps(index: number) {
@@ -93,7 +100,7 @@ const WorkingHolidayCalculator: FC = () => {
         <TaxReturn />
       </TabPanel>
       <TabPanel value={value} index={1} dir={theme.direction}>
-        <Box></Box>
+        <Tax />
       </TabPanel>
     </Box>
   )
