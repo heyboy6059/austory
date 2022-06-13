@@ -36,6 +36,19 @@ export const CustomInfoIcon = styled(InfoIcon)`
   cursor: pointer;
 `
 
+export const TaxDisclaimer = (
+  <div
+    style={{
+      fontSize: '10px',
+      margin: '10px 5px',
+      color: COLOURS.TEXT_GREY
+    }}
+  >
+    위 계산 금액은 개인의 현재 고용 상황과 재정 현황에 따라 약간씩 다를수
+    있습니다. 참고용으로 사용해주세요.
+  </div>
+)
+
 function a11yProps(index: number) {
   return {
     id: `full-width-tab-${index}`,

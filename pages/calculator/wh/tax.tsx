@@ -7,7 +7,7 @@ import Button from '@mui/material/Button'
 import Select, { SelectChangeEvent } from '@mui/material/Select'
 import MenuItem from '@mui/material/MenuItem'
 import { FinancialYear, FinancialYears } from '../../../typing/enums'
-import { CustomCurrencyInput, LabelWrapper } from '.'
+import { CustomCurrencyInput, LabelWrapper, TaxDisclaimer } from '.'
 import { calculateWHTax } from '../../../common/functions'
 import TaxInputBox from '../../../components/Calculator/TaxInputBox'
 
@@ -149,6 +149,7 @@ const Tax: FC = () => {
           </FlexCenterDiv>
         </GridDiv>
       </Stack>
+      {TaxDisclaimer}
     </Box>
   )
 }
