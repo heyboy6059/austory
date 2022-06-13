@@ -1,8 +1,8 @@
-import { FC, Dispatch, SetStateAction, useState } from "react"
-import Button from "@mui/material/Button"
-import Dialog from "@mui/material/Dialog"
-import DialogActions from "@mui/material/DialogActions"
-import DialogContent from "@mui/material/DialogContent"
+import { FC, Dispatch, SetStateAction } from 'react'
+import Button from '@mui/material/Button'
+import Dialog from '@mui/material/Dialog'
+import DialogActions from '@mui/material/DialogActions'
+import DialogContent from '@mui/material/DialogContent'
 
 interface Props {
   open: boolean
@@ -20,7 +20,7 @@ const ConfirmDialog: FC<Props> = ({
   rightLabel,
   leftAction,
   rightAction,
-  content,
+  content
 }) => {
   return (
     <div>

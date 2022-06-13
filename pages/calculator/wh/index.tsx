@@ -4,12 +4,14 @@ import Tabs from '@mui/material/Tabs'
 import Tab from '@mui/material/Tab'
 import { useTheme } from '@mui/material/styles'
 import Typography from '@mui/material/Typography'
+import InfoIcon from '@mui/icons-material/Info'
 import { FlexCenterDiv } from '../../../common/uiComponents'
 import { FcCalculator } from 'react-icons/fc'
 import CurrencyInput from 'react-currency-input-field'
 import TaxReturn from './taxReturn'
 import styled from 'styled-components'
 import Tax from './tax'
+import { COLOURS } from '../../../common/constants'
 
 export const LabelWrapper = styled.div`
   text-align: center;
@@ -26,6 +28,12 @@ export const KoreanWonLabel = styled.div`
   font-size: 12px;
   text-align: right;
   color: slategrey;
+`
+
+export const CustomInfoIcon = styled(InfoIcon)`
+  font-size: 15px;
+  color: ${COLOURS.BRIGHT_GREEN};
+  cursor: pointer;
 `
 
 function a11yProps(index: number) {

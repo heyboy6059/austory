@@ -9,6 +9,7 @@ import MenuItem from '@mui/material/MenuItem'
 import { FinancialYear, FinancialYears } from '../../../typing/enums'
 import { CustomCurrencyInput, KoreanWonLabel, LabelWrapper } from '.'
 import { calculateWHTax, currencyFormatter } from '../../../common/functions'
+import TaxInputBox from '../../../components/Calculator/TaxInputBox'
 
 const TaxReturn: FC = () => {
   const [gross, setGross] = useState(null)
@@ -24,49 +25,52 @@ const TaxReturn: FC = () => {
   return (
     <Box sx={{ width: '100%' }}>
       <Stack spacing={1}>
-        <GridDiv
-          style={{ gridTemplateColumns: '100px 1fr', alignItems: 'center' }}
-        >
-          <FlexCenterDiv>
-            <LabelWrapper>
-              <div>회계년도</div>
+        <TaxInputBox
+          labels={{
+            koreanTitle: '회계년도',
+            englishSubTitle: 'Financial Year'
+          }}
+          inputField={
+            <Select
+              labelId="tax-financial-year-select-label"
+              id="tax-financial-year-order-select"
+              value={financialYear}
+              onChange={(event: SelectChangeEvent) => {
+                const fy = event.target.value as FinancialYear
+                setFinancialYear(fy)
+              }}
+              size="small"
+              fullWidth
+              style={{ height: '30px' }}
+            >
+              {FinancialYears.map(fy => (
+                <MenuItem value={fy} key={fy}>
+                  {fy}
+                </MenuItem>
+              ))}
+            </Select>
+          }
+          infoTitle="회계년도 (Financial Year)"
+          infoContent={
+            <div>
               <div>
-                <small>Financial Year</small>
+                호주의 회계년도는 지난해 7월 1일 부터 올해 6월 30일까지 입니다.
               </div>
-            </LabelWrapper>
-          </FlexCenterDiv>
-          <Select
-            labelId="comment-order-select-label"
-            id="comment-order-select"
-            value={financialYear}
-            onChange={(event: SelectChangeEvent) => {
-              const fy = event.target.value as FinancialYear
-              setFinancialYear(fy)
-            }}
-            size="small"
-            style={{ height: '30px' }}
-          >
-            {FinancialYears.map(fy => (
-              <MenuItem value={fy} key={fy}>
-                {fy}
-              </MenuItem>
-            ))}
-          </Select>
-        </GridDiv>
-        <GridDiv style={{ gridTemplateColumns: '100px 1fr' }}>
-          <FlexCenterDiv>
-            <LabelWrapper>
-              <div>총 수입</div>
               <div>
-                <small>Gross Income</small>
+                <small>예) 2021-2022 = 2021년 7월 1일 - 2022년 6월 30일</small>
               </div>
-            </LabelWrapper>
-          </FlexCenterDiv>
-          <div>
+            </div>
+          }
+        />
+        <TaxInputBox
+          labels={{
+            koreanTitle: '총 수입',
+            englishSubTitle: 'Gross Income'
+          }}
+          inputField={
             <CustomCurrencyInput
-              id="validationCustom01"
-              name="input-1"
-              // className={`form-control ${className}`}
+              id="grossIncomeCurrencyInput"
+              name="grossIncomeCurrencyInput"
               value={gross}
               onValueChange={(
                 value
@@ -82,31 +86,22 @@ const TaxReturn: FC = () => {
               prefix="$"
               // step={1}
             />
-            <KoreanWonLabel>
-              {gross ? (
-                <>
-                  한화 약{currencyFormatter(gross * TEMP_KOR_AUS_RATE, 'KOR')}
-                </>
-              ) : (
-                ''
-              )}
-            </KoreanWonLabel>
-          </div>
-        </GridDiv>
-        <GridDiv style={{ gridTemplateColumns: '100px 1fr' }}>
-          <FlexCenterDiv>
-            <LabelWrapper>
-              <div>이미 낸 세금</div>
-              <div>
-                <small>Tax withheld</small>
-              </div>
-            </LabelWrapper>
-          </FlexCenterDiv>
-          <div>
+          }
+          koreanWon={gross}
+          infoTitle="총 수입 (Gross Income)"
+          infoContent={
+            <div>세금을 포함하고, 연금은 제외한 1년간의 총 수입</div>
+          }
+        />
+        <TaxInputBox
+          labels={{
+            koreanTitle: '이미 낸 세금',
+            englishSubTitle: 'Tax Withheld'
+          }}
+          inputField={
             <CustomCurrencyInput
-              id="validationCustom01"
-              name="input-1"
-              // className={`form-control ${className}`}
+              id="taxWithheldCurrencyInput"
+              name="taxWithheldCurrencyInput"
               value={taxWithheld}
               onValueChange={(
                 value
@@ -122,18 +117,13 @@ const TaxReturn: FC = () => {
               prefix="$"
               // step={1}
             />
-            <KoreanWonLabel>
-              {taxWithheld ? (
-                <>
-                  한화 약
-                  {currencyFormatter(taxWithheld * TEMP_KOR_AUS_RATE, 'KOR')}
-                </>
-              ) : (
-                ''
-              )}
-            </KoreanWonLabel>
-          </div>
-        </GridDiv>
+          }
+          koreanWon={taxWithheld}
+          infoTitle="이미 낸 세금 (Tax Withheld)"
+          infoContent={
+            <div>고용주가 급여 지급시 미리 뗴어내어 국세청에 낸 세금</div>
+          }
+        />
         <FlexCenterDiv style={{ margin: '25px 10px 0px 10px' }}>
           <Button variant="contained" onClick={() => estimateTaxAmount()}>
             계산하기
