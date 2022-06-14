@@ -134,14 +134,16 @@ const TaxReturn: FC = () => {
             계산하기
           </Button>
         </FlexCenterDiv>
-        <GridDiv
-        // style={{ gridTemplateColumns: '140px 1fr' }}
-        >
+        <GridDiv>
           <div>
             <FlexCenterDiv>
               <h1
                 style={{
-                  color: COLOURS.PRIMARY_BLUE,
+                  // surplus = blue / minus = red
+                  color:
+                    estimatedTaxReturnAmount >= 0
+                      ? COLOURS.PRIMARY_BLUE
+                      : COLOURS.HEART_RED,
                   marginBottom: '0px',
                   marginTop: '10px'
                 }}
@@ -175,7 +177,9 @@ const TaxReturn: FC = () => {
           </div>
           <FlexCenterDiv style={{ marginTop: '8px' }}>
             <LabelWrapper>
-              <div>예상 세금 환급액</div>
+              <div>
+                예상 세금 {estimatedTaxReturnAmount >= 0 ? '환급액' : '납부액'}
+              </div>
               <div>
                 <small>Estimated tax refund</small>
               </div>
