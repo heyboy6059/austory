@@ -1,6 +1,6 @@
 import firebase from 'firebase/compat/app'
 import { User as FirebaseUserAuth } from '@firebase/auth-types'
-import { NotificationMethod } from './enums'
+import { CalculatorLogType, NotificationMethod } from './enums'
 
 export type FirebaseDocumentSnapshot<T = firebase.firestore.DocumentData> =
   firebase.firestore.QueryDocumentSnapshot<T>
@@ -263,3 +263,15 @@ export type Category = Omit<
 export type CategoryOption = Pick<RawCategory, 'categoryId' | 'name'>
 
 export type PostType = 'inkrau' | 'community'
+
+export interface RawCalculatorLog {
+  calculatorLogId: string
+  type: CalculatorLogType
+  details: string
+  createdAt: FirestoreTimestamp
+  createdBy: string
+}
+
+export type CalculatorLog = Omit<RawCalculatorLog, 'createdAt'> & {
+  createdAt: number
+}

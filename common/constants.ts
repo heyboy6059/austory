@@ -55,6 +55,7 @@ export const FIRESTORE_POSTS = 'posts'
 export const FIRESTORE_USERS = 'users'
 export const FIRESTORE_COMMENTS = 'comments'
 export const FIRESTORE_CATEGORIES = 'categories'
+export const FIRESTORE_CALCULATOR_LOGS = 'calculatorLogs'
 
 export const GENERIC_KOREAN_ERROR_MESSAGE =
   '에러가 발생했습니다. 다시 시도해주세요.'
@@ -92,3 +93,5 @@ export const TEMP_KOR_AUS_RATE = 905
  */
 export const CONTENT_AD_SLOT_ID = '3559760421'
 export const CALCULATOR_AD_SLOT_ID = '1419401955'
+
+export const GUEST_UID = 'guest'

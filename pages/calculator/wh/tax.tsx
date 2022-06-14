@@ -1,19 +1,26 @@
 import Box from '@mui/material/Box'
-import { FC, useState, useCallback } from 'react'
+import { FC, useState, useCallback, useContext } from 'react'
 import { FlexCenterDiv, GridDiv } from '../../../common/uiComponents'
 import Stack from '@mui/material/Stack'
-import { COLOURS } from '../../../common/constants'
+import { COLOURS, GUEST_UID } from '../../../common/constants'
 import Button from '@mui/material/Button'
 import Select, { SelectChangeEvent } from '@mui/material/Select'
 import MenuItem from '@mui/material/MenuItem'
-import { FinancialYear, FinancialYears } from '../../../typing/enums'
+import {
+  CalculatorLogType,
+  FinancialYear,
+  FinancialYears
+} from '../../../typing/enums'
 import { CustomCurrencyInput, LabelWrapper, TaxDisclaimer } from '.'
 import { calculateWHTax } from '../../../common/functions'
 import TaxInputBox from '../../../components/Calculator/TaxInputBox'
+import { insertCalculatorLog } from '../../../common/insert'
+import { UserContext } from '../../../common/context'
+import dayjs from 'dayjs'
 
 const Tax: FC = () => {
+  const { user } = useContext(UserContext)
   const [gross, setGross] = useState(null)
-  //   const [taxWithheld, setTaxWithheld] = useState(null)
   const [estimatedTax, setEstimatedTax] = useState(0)
   const [estimatedActualIncome, setEstimatedActualIncome] = useState(0)
   const [financialYear, setFinancialYear] = useState(FinancialYear.FY_2020_2021)
@@ -22,7 +29,25 @@ const Tax: FC = () => {
     const taxReturnAmount = calculateWHTax(gross, false)
     setEstimatedTax(taxReturnAmount)
     setEstimatedActualIncome(gross - taxReturnAmount)
-  }, [gross])
+    try {
+      insertCalculatorLog(
+        user?.email || GUEST_UID,
+        CalculatorLogType.WH_TAX,
+        JSON.stringify({
+          user: user || GUEST_UID,
+          financialYear,
+          gross,
+          estimatedTax: taxReturnAmount,
+          estimatedActualIncome: gross - taxReturnAmount,
+          calculatedAt: dayjs().format()
+        }),
+        user?.uid || GUEST_UID
+      )
+    } catch (err) {
+      // no throwing error
+      console.error(`ERROR in insertCalculatorLog. ${err.message}`)
+    }
+  }, [financialYear, gross, user])
 
   return (
     <Box sx={{ width: '100%' }}>
@@ -58,8 +83,10 @@ const Tax: FC = () => {
               <div>
                 호주의 회계년도는 지난해 7월 1일 부터 올해 6월 30일까지 입니다.
               </div>
-              <div>
-                <small>예) 2021-2022 = 2021년 7월 1일 - 2022년 6월 30일</small>
+              <div style={{ paddingLeft: '8px' }}>
+                <small>
+                  예) FY 2021-2022 = 2021년 7월 1일 ~ 2022년 6월 30일
+                </small>
               </div>
             </div>
           }

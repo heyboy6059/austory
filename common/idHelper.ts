@@ -10,3 +10,7 @@ export const generateHeartDocumentId = (postId: string, uid: string) => {
 export const generatePostDocumentId = (email: string) => {
   return `post-${email.slice(0, 3)}${dayjs().unix()}`
 }
+
+export const generateCalculatorLogId = (email: string) => {
+  return `${email}-${dayjs().unix()}`
+}

@@ -22,3 +22,8 @@ export const FinancialYears = [
   FinancialYear.FY_2020_2021,
   FinancialYear.FY_2021_2022
 ]
+
+export enum CalculatorLogType {
+  WH_TAX_RETURN = 'whTaxReturn',
+  WH_TAX = 'whTax'
+}
