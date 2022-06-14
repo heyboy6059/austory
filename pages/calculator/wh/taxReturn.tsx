@@ -26,6 +26,7 @@ import TaxInputBox from '../../../components/Calculator/TaxInputBox'
 import { insertCalculatorLog } from '../../../common/insert'
 import { UserContext } from '../../../common/context'
 import dayjs from 'dayjs'
+import TipsAndUpdatesIcon from '@mui/icons-material/TipsAndUpdates'
 
 const TaxReturn: FC = () => {
   const { user } = useContext(UserContext)
@@ -158,7 +159,19 @@ const TaxReturn: FC = () => {
           koreanWon={taxWithheld}
           infoTitle="이미 낸 세금 (Tax Withheld)"
           infoContent={
-            <div>고용주가 급여 지급시 미리 뗴어내어 국세청에 낸 세금</div>
+            <div>
+              <div>고용주가 급여 지급시 미리 떼어내어 국세청에 낸 세금</div>
+              <FlexCenterDiv style={{ margin: '10px 4px 5px 8px', gap: '4px' }}>
+                <FlexCenterDiv>
+                  <TipsAndUpdatesIcon fontSize="small" color="warning" />
+                </FlexCenterDiv>
+                <FlexCenterDiv>
+                  <small>
+                    페이슬립(Payslip)에서 PAYG tax 부분을 확인해보세요.
+                  </small>
+                </FlexCenterDiv>
+              </FlexCenterDiv>
+            </div>
           }
         />
         <FlexCenterDiv style={{ margin: '25px 10px 0px 10px' }}>

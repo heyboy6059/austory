@@ -109,7 +109,7 @@ const WorkingHolidayCalculator: FC = () => {
       <FlexCenterDiv style={{ marginTop: '10px' }}>
         <FcCalculator fontSize={24} />
         <Typography variant="h6" sx={{ fontWeight: 500 }}>
-          워킹홀리데이 세금 계산기
+          워킹홀리데이 세금/환급 계산기
         </Typography>
       </FlexCenterDiv>
       <Tabs value={value} onChange={handleChange} variant="fullWidth" centered>
