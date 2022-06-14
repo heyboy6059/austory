@@ -13,6 +13,7 @@ import styled from 'styled-components'
 import Tax from './tax'
 import { CALCULATOR_AD_SLOT_ID, COLOURS } from '../../../common/constants'
 import AdSense from '../../../components/AdSense/AdSense'
+import Link from 'next/link'
 
 export const LabelWrapper = styled.div`
   text-align: center;
@@ -47,6 +48,17 @@ export const TaxDisclaimer = (
   >
     위 계산 금액은 개인의 현재 고용 상황과 재정 현황에 따라 약간씩 다를수
     있습니다. 참고용으로 사용해주세요.
+    <div>
+      자료출처:{' '}
+      <Link
+        href="https://www.ato.gov.au/rates/schedule-15---tax-table-for-working-holiday-makers/"
+        passHref
+      >
+        <a target="_blank">
+          ATO Schedule 15 – Tax table for working holiday makers
+        </a>
+      </Link>
+    </div>
   </div>
 )
 
