@@ -90,4 +90,5 @@ export const TEMP_KOR_AUS_RATE = 905
 /**
  * ADSENSE
  */
+export const CONTENT_AD_SLOT_ID = '3559760421'
 export const CALCULATOR_AD_SLOT_ID = '1419401955'

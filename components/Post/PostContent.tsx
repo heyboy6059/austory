@@ -9,16 +9,11 @@ import {
   SetStateAction
 } from 'react'
 import Paper from '@mui/material/Paper'
-// import AuthCheck from '../../components/AuthCheck'
-// import HeartButton from '../../components/HeartButton'
-import {
-  Post,
-  // FirebaseDocumentRef,
-  FirestoreTimestamp
-} from '../../typing/interfaces'
+import { Post, FirestoreTimestamp } from '../../typing/interfaces'
 import dayjs from 'dayjs'
 import {
   COLOURS,
+  CONTENT_AD_SLOT_ID,
   NUM_DATE_FORMAT,
   ROOT_INKRAU_URL
 } from '../../common/constants'
@@ -33,11 +28,9 @@ import {
   FlexCenterDiv,
   FlexSpaceBetween,
   FlexVerticalCenterDiv
-  // H2
 } from '../../common/uiComponents'
 import { PostContext, UserContext } from '../../common/context'
 import { firestore, increment, serverTimestamp } from '../../common/firebase'
-// import Linky from "react-linky"
 import Linkify from 'react-linkify'
 import Tooltip from '@mui/material/Tooltip'
 import ConfirmDialog from '../../components/Dialog/ConfirmDialog'
@@ -55,8 +48,7 @@ import Chip from '@mui/material/Chip'
 import AccountIconName from '../Account/AccountIconName'
 import Box from '@mui/material/Box'
 import styled from 'styled-components'
-
-// import { Editor, EditorState, ContentState } from "draft-js"
+import AdSense from '../AdSense/AdSense'
 
 const HtmlContentWrapper = styled.div`
   margin: 20px 5px 5px 5px;
@@ -171,39 +163,7 @@ const PostContent: FC<PostContentProps> = ({
     toast.success('게시물을 성공적으로 삭제했습니다.')
     router.push('/')
   }, [post, postRef, router, user])
-  // const [editorState, setEditorState] = useState(
-  //   EditorState.createWithContent(
-  //     ContentState.createFromBlockArray("<h1>HAHAHOHO</h1>")
-  //   )
-  // )
 
-  // const editorState =
-  // const contentState = ContentState.createFromText('<h1>HAHAHOHO</h1>')
-
-  // contentState.
-  // const editor = useRef(null)
-
-  // function focusEditor() {
-  //   editor.current.focus()
-  // }
-
-  // google adsense
-  useEffect(() => {
-    try {
-      ;(window['adsbygoogle'] = window['adsbygoogle'] || []).push({})
-      console.log('useEffect for google adsense')
-    } catch (err) {
-      console.log(err)
-    }
-  }, [])
-
-  // useEffect(() => {
-  //   if (window) {
-  //     console.log('innerWidth', window.innerWidth)
-  //   }
-  // }, [])
-
-  // console.log('innerWidth', window.innerWidth)
   return (
     <>
       <Metatags
@@ -415,23 +375,6 @@ const PostContent: FC<PostContentProps> = ({
             username={username}
           />
         </div>
-        {/* <TextWithLink text={post?.content} /> */}
-        {/* </ReactMarkdown> */}
-        {/* <Editor
-        editorState={editorState}
-        onChange={(editorState) => setEditorState(editorState)}
-      /> */}
-        <div>
-          {/* <AuthCheck
-          fallback={
-            <Link href="/enter" passHref>
-              <button>💗 Sign Up</button>
-            </Link>
-          }
-        >
-          <HeartButton postRef={postRef} heartCount={post.heartCount} />
-        </AuthCheck> */}
-        </div>
         {/**
          * POST CONTEXT FOR COMMENTS
          */}
@@ -450,20 +393,8 @@ const PostContent: FC<PostContentProps> = ({
           />
         )}
       </Paper>
-      {/* REVIEW: GOOGLE ADSENSE */}
       <Box style={{ marginTop: '10px' }}>
-        <ins
-          className="adsbygoogle"
-          style={{
-            display: 'inline-block',
-            textAlign: 'center',
-            width: '100%'
-          }}
-          data-ad-client="ca-pub-1805879168244149"
-          data-ad-slot="3559760421"
-          data-ad-format="auto"
-          data-full-width-responsive="true"
-        ></ins>
+        <AdSense adSlotId={CONTENT_AD_SLOT_ID} />
       </Box>
     </>
   )
