@@ -11,7 +11,8 @@ import CurrencyInput from 'react-currency-input-field'
 import TaxReturn from './taxReturn'
 import styled from 'styled-components'
 import Tax from './tax'
-import { COLOURS } from '../../../common/constants'
+import { CALCULATOR_AD_SLOT_ID, COLOURS } from '../../../common/constants'
+import AdSense from '../../../components/AdSense/AdSense'
 
 export const LabelWrapper = styled.div`
   text-align: center;
@@ -40,7 +41,7 @@ export const TaxDisclaimer = (
   <div
     style={{
       fontSize: '10px',
-      margin: '10px 5px',
+      margin: '10px 5px 0px 5px',
       color: COLOURS.TEXT_GREY
     }}
   >
@@ -123,6 +124,9 @@ const WorkingHolidayCalculator: FC = () => {
       <TabPanel value={value} index={1} dir={theme.direction}>
         <Tax />
       </TabPanel>
+      <div>
+        <AdSense adSlotId={CALCULATOR_AD_SLOT_ID} />
+      </div>
     </Box>
   )
 }

@@ -49,17 +49,6 @@ const AdSense: FC = () => {
             }}
           >
             <Box style={{ width: '100%' }}>
-              {/* <ins
-              className="adsbygoogle"
-              style={{
-                display: 'block',
-                textAlign: 'center'
-              }}
-              data-ad-client="ca-pub-1805879168244149"
-              data-ad-slot="3559760421"
-              data-ad-format="auto"
-              data-full-width-responsive="true"
-            ></ins> */}
               <ins
                 className="adsbygoogle"
                 style={{ display: 'block' }}
@@ -68,14 +57,6 @@ const AdSense: FC = () => {
                 data-ad-format="auto"
                 data-full-width-responsive="true"
               ></ins>
-              {/* <ins
-              className="adsbygoogle adbanner-customize"
-              style={{
-                display: 'block'
-              }}
-              data-ad-client="ca-pub-1805879168244149"
-              data-ad-slot="3559760421"
-            /> */}
             </Box>
           </div>
         </div>

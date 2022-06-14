@@ -86,3 +86,8 @@ export const WHTaxRates = {
 }
 
 export const TEMP_KOR_AUS_RATE = 905
+
+/**
+ * ADSENSE
+ */
+export const CALCULATOR_AD_SLOT_ID = '1419401955'
