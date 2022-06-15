@@ -6,7 +6,7 @@ import {
   GENERIC_KOREAN_ERROR_MESSAGE,
   POST_FEED_NUM_LIMIT
 } from '../common/constants'
-import { FlexCenterDiv } from '../common/uiComponents'
+import { FlexCenterDiv, FlexSpaceBetweenCenter } from '../common/uiComponents'
 
 import ScrollToTop from 'react-scroll-up'
 import ArrowCircleUpIcon from '@mui/icons-material/ArrowCircleUp'
@@ -22,6 +22,8 @@ import toast from 'react-hot-toast'
 
 import { useRouter } from 'next/router'
 import PostContent from '../components/Post/PostContent'
+import { Button } from '@mui/material'
+import { FcCalculator } from 'react-icons/fc'
 
 function a11yProps(index: number) {
   return {
@@ -215,31 +217,43 @@ const Home = ({ posts, postTypeFromQuery }) => {
           <>
             <Box sx={{ width: '100%' }}>
               <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-                <Tabs
-                  value={tabValue}
-                  onChange={handleChange}
-                  textColor="secondary"
-                  indicatorColor="secondary"
-                  aria-label="main menu tabs"
-                  style={{ minHeight: '0', padding: '0', height: '42px' }}
-                >
-                  <Tab
-                    label={<strong>커뮤니티</strong>}
-                    {...a11yProps(0)}
-                    style={{ padding: '15px' }}
-                    onClick={async () => {
-                      tabHandler('community')
-                    }}
-                  />
-                  <Tab
-                    label={<strong>인크라우 컨텐츠</strong>}
-                    {...a11yProps(1)}
-                    style={{ padding: '15px' }}
-                    onClick={async () => {
-                      tabHandler('inkrau')
-                    }}
-                  />
-                </Tabs>
+                <FlexSpaceBetweenCenter>
+                  <Tabs
+                    value={tabValue}
+                    onChange={handleChange}
+                    textColor="secondary"
+                    indicatorColor="secondary"
+                    aria-label="main menu tabs"
+                    style={{ minHeight: '0', padding: '0', height: '42px' }}
+                  >
+                    <Tab
+                      label={<strong>커뮤니티</strong>}
+                      {...a11yProps(0)}
+                      style={{ padding: '10px' }}
+                      onClick={async () => {
+                        tabHandler('community')
+                      }}
+                    />
+                    <Tab
+                      label={<strong>인크라우 컨텐츠</strong>}
+                      {...a11yProps(1)}
+                      style={{ padding: '10px 8px' }}
+                      onClick={async () => {
+                        tabHandler('inkrau')
+                      }}
+                    />
+                  </Tabs>
+                  <Button
+                    size="small"
+                    color="info"
+                    variant="outlined"
+                    onClick={() => router.push(`/calculator/wh`)}
+                    style={{ marginRight: '2px' }}
+                    startIcon={<FcCalculator />}
+                  >
+                    워홀 세금 계산기
+                  </Button>
+                </FlexSpaceBetweenCenter>
               </Box>
             </Box>
             <PostFeed
