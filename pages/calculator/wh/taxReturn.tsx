@@ -33,7 +33,7 @@ const TaxReturn: FC = () => {
   const [gross, setGross] = useState(null)
   const [taxWithheld, setTaxWithheld] = useState(null)
   const [estimatedTaxReturnAmount, setEstimatedTaxReturnAmount] = useState(0)
-  const [financialYear, setFinancialYear] = useState(FinancialYear.FY_2020_2021)
+  const [financialYear, setFinancialYear] = useState(FinancialYear.FY_2021_2022)
 
   const estimateTaxAmount = useCallback(() => {
     const taxReturnAmount = calculateWHTax(gross, true, taxWithheld)

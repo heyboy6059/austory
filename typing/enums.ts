@@ -19,8 +19,8 @@ export enum FinancialYear {
 }
 
 export const FinancialYears = [
-  FinancialYear.FY_2020_2021,
-  FinancialYear.FY_2021_2022
+  FinancialYear.FY_2021_2022,
+  FinancialYear.FY_2020_2021
 ]
 
 export enum CalculatorLogType {
