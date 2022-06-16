@@ -302,7 +302,7 @@ const CommentEditor: FC<Props> = ({
               onFocus={() => !initFocus && setInitFocus(true)}
             />
 
-            <FlexSpaceBetweenCenter style={{ margin: '8px 0px' }}>
+            <FlexSpaceBetweenCenter style={{ margin: '8px 0px', gap: '10px' }}>
               {!user ? (
                 <GridDiv
                 // style={{
@@ -344,7 +344,8 @@ const CommentEditor: FC<Props> = ({
               )}
               <FlexCenterDiv style={{ gap: '6px' }}>
                 <div
-                // style={{ fontSize: '14px', width: '38px' }}
+                  // style={{ fontSize: '14px', width: '38px' }}
+                  style={{ width: '48px' }}
                 >
                   <small
                     style={{
