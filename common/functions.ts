@@ -106,8 +106,9 @@ export const currencyFormatter = (value: number, country: 'KOR' | 'AUS') => {
 
 export const relabelDomainEmbeddedHtml = (html: string) => {
   const cleanHtml = html
-    .replaceAll('<span class="css-x1p5yj">+</span>', '')
-    .replaceAll('<span class="css-x1p5yj">-</span>', '')
+    // instead of replaceAll (not all browser supported yet)
+    .replace(/<span class="css-x1p5yj">\+<\/span>/gm, '')
+    .replace(/<span class="css-x1p5yj">-<\/span>/gm, '')
     .replace('Capital City', '주요 도시 <div>(Capital City)</div>')
     .replace('QoQ', '분기 변화 <div>(QoQ)</div>')
     .replace('YoY', '연간 변화 <div>(YoY)</div>')
