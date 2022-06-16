@@ -103,3 +103,15 @@ export const currencyFormatter = (value: number, country: 'KOR' | 'AUS') => {
     //maximumFractionDigits: 0, // (causes 2500.99 to be printed as $2,501)
   }).format(value)
 }
+
+export const relabelDomainEmbeddedHtml = (html: string) => {
+  const cleanHtml = html
+    .replaceAll('<span class="css-x1p5yj">+</span>', '')
+    .replaceAll('<span class="css-x1p5yj">-</span>', '')
+    .replace('Capital City', '주요 도시 <div>(Capital City)</div>')
+    .replace('QoQ', '분기 변화 <div>(QoQ)</div>')
+    .replace('YoY', '연간 변화 <div>(YoY)</div>')
+    .replace('National', '호주 평균')
+    .replace('Combined Capitals', '호주 평균')
+  return cleanHtml
+}
