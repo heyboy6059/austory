@@ -22,7 +22,8 @@ export enum Role {
   BUSINESS = 'Business',
   FREE_MAN = 'FreeMan',
   MYSTIC = 'Mystic',
-  BASE = 'Base'
+  BASE = 'Base',
+  GUEST = 'Guest'
 }
 
 export interface RoleItem {
@@ -66,6 +67,10 @@ export const FULL_ROLE_ITEMS_LIST: RoleItem[] = [
   {
     label: '인크라우',
     role: Role.ADMIN
+  },
+  {
+    label: '게스트',
+    role: Role.GUEST
   }
 ]
 export const ROLE_ITEMS_WITH_NULL_LIST: RoleItem[] = [
@@ -198,6 +203,8 @@ export type RawComment = {
   username: string
   coverUsername: string // only for admin purpose
   coverRole: Role // only for admin purpose
+  guestNickname: string
+  // guestPassCode: string // currently disabled
   level: number
   parentCommentId: string | null
   content: string

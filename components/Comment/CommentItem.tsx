@@ -124,7 +124,11 @@ const CommentItem: FC<Props> = ({
                * - temporarily cover the username / role
                */}
               <AccountIconName
-                username={comment.coverUsername || comment.username}
+                username={
+                  comment.coverUsername ||
+                  comment.guestNickname ||
+                  comment.username
+                }
                 role={comment.coverRole || comment.createdByRole}
               />
 
@@ -188,11 +192,11 @@ const CommentItem: FC<Props> = ({
                       color: COLOURS.TEXT_GREY
                     }}
                     onClick={() => {
-                      if (!username) {
-                        alert('로그인 후 댓글 작성이 가능 합니다.')
-                        // TODO: open login/sign up modal
-                        return
-                      }
+                      // if (!username) {
+                      //   alert('로그인 후 댓글 작성이 가능 합니다.')
+                      //   // TODO: open login/sign up modal
+                      //   return
+                      // }
                       setCommentEditorOpen(true)
                     }}
                   >
@@ -231,11 +235,11 @@ const CommentItem: FC<Props> = ({
                       color: COLOURS.TEXT_GREY
                     }}
                     onClick={() => {
-                      if (!username) {
-                        alert('로그인 후 댓글 작성이 가능 합니다.')
-                        // TODO: open login/sign up modal
-                        return
-                      }
+                      // if (!username) {
+                      //   alert('로그인 후 댓글 작성이 가능 합니다.')
+                      //   // TODO: open login/sign up modal
+                      //   return
+                      // }
                       setCommentEditorOpen(true)
                     }}
                   >

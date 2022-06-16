@@ -14,3 +14,7 @@ export const generatePostDocumentId = (email: string) => {
 export const generateCalculatorLogId = (email: string) => {
   return `${email}-${dayjs().unix()}`
 }
+
+export const generateGuestUid = (guestNickname: string) => {
+  return `guest_${guestNickname}`
+}

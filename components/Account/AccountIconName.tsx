@@ -9,6 +9,7 @@ import LocalAirportIcon from '@mui/icons-material/LocalAirport'
 import BusinessIcon from '@mui/icons-material/Business'
 import AirIcon from '@mui/icons-material/Air'
 import SkateboardingIcon from '@mui/icons-material/Skateboarding'
+import FaceIcon from '@mui/icons-material/Face'
 import { COLOURS } from '../../common/constants'
 import { Role } from '../../typing/interfaces'
 import Tooltip from '@mui/material/Tooltip'
@@ -88,6 +89,16 @@ const AccountIconName: FC<Props> = ({ username, role }) => {
             style={{
               fontSize: '18px',
               color: COLOURS.LIGHT_PURPLE,
+              marginTop: '0.5px'
+            }}
+          />
+        </Tooltip>
+      ) : role === Role.GUEST ? (
+        <Tooltip title="게스트" placement="bottom" arrow>
+          <FaceIcon
+            style={{
+              fontSize: '18px',
+              color: 'lightslategray',
               marginTop: '0.5px'
             }}
           />

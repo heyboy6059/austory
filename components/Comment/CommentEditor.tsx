@@ -10,7 +10,11 @@ import {
 import TextField from '@mui/material/TextField'
 import Button from '@mui/material/Button'
 import { COMMENT_CONTENT_MAX_COUNT } from '../../common/constants'
-import { FlexSpaceBetweenCenter } from '../../common/uiComponents'
+import {
+  FlexCenterDiv,
+  FlexSpaceBetweenCenter,
+  GridDiv
+} from '../../common/uiComponents'
 import {
   Comment,
   FirebaseCollectionRef,
@@ -19,7 +23,7 @@ import {
   Role,
   ROLE_ITEMS_WITH_NULL_LIST
 } from '../../typing/interfaces'
-import { generateCommentId } from '../../common/idHelper'
+import { generateCommentId, generateGuestUid } from '../../common/idHelper'
 import { firestore, increment, serverTimestamp } from '../../common/firebase'
 import { PostContext, UserContext } from '../../common/context'
 import toast from 'react-hot-toast'
@@ -74,6 +78,13 @@ const CommentEditor: FC<Props> = ({
   const [content, setContent] = useState(
     createMode ? '' : comment?.content || ''
   )
+  const [guestNickname, setGuestNickname] = useState(
+    createMode ? '' : comment?.guestNickname || ''
+  )
+  // const [guestPassCode, setGuestPassCode] = useState(
+  //   createMode ? '' : comment?.guestPassCode || ''
+  // )
+
   const [coverUsername, setCoverUsername] = useState(
     createMode ? '' : comment?.coverUsername || ''
   )
@@ -97,7 +108,7 @@ const CommentEditor: FC<Props> = ({
   // increase textField rows for initial click
   useEffect(() => {
     if (initFocus || !viewMode) {
-      setMultiRows(3)
+      setMultiRows(4)
     }
   }, [initFocus, viewMode])
 
@@ -117,7 +128,7 @@ const CommentEditor: FC<Props> = ({
             batch,
             commentCollectionRef,
             comment.commentId,
-            user.uid,
+            user?.uid || generateGuestUid(guestNickname),
             {
               content,
               coverRole,
@@ -140,43 +151,68 @@ const CommentEditor: FC<Props> = ({
         // REVIEW: is this check clean?
         if (!editMode || createMode) {
           console.log('Create comment')
-          const commentId = generateCommentId(user.email)
+          let commentId = ''
+          let usernameUid = ''
+          let createdBy = ''
+          let createdByRole = Role.GUEST
+          let updatedBy = ''
+          // GUEST
+          if (!user) {
+            commentId = generateCommentId(guestNickname)
+            usernameUid = generateGuestUid(guestNickname)
+            createdBy = generateGuestUid(guestNickname)
+            updatedBy = generateGuestUid(guestNickname)
+            createdByRole = Role.GUEST
+          }
+          // NORMAL USER
+          else {
+            commentId = generateCommentId(user.email)
+            usernameUid = username
+            createdBy = user.uid
+            createdByRole = user.role
+            updatedBy = user.uid
+          }
           const batch = firestore.batch()
           const newComment: RawComment = {
             commentId,
-            username,
+            username: usernameUid,
             // REVIEW: currently supports up to level 1
             level: level > 1 ? 2 : 1,
             parentCommentId: level === 1 ? null : comment.commentId, // TODO: sub comments
             content,
             coverUsername, // only for admin purpose
             coverRole, // only for admin purpose
+            guestNickname,
+            // guestPassCode,
             deleted: false,
             adminDeleted: false,
             adminDeletedReason: null,
-            createdBy: user.uid,
+            createdBy,
             createdAt: serverTimestamp() as FirestoreTimestamp,
-            createdByRole: user.role,
+            createdByRole,
             updatedBy: null,
             updatedAt: null
           }
 
           batch.set(commentCollectionRef.doc(commentId), newComment)
 
-          // add count 1 to current user
-          batchUpdateUsers(batch, user.uid, {
-            providedCommentCountTotal: increment(1)
-          })
+          // skip for guest
+          if (user) {
+            // add count 1 to current user
+            batchUpdateUsers(batch, user.uid, {
+              providedCommentCountTotal: increment(1)
+            })
 
-          const { uid: ownerUserId } = await getUidByUsername(post.username)
+            const { uid: ownerUserId } = await getUidByUsername(post.username)
 
-          // add count 1 to post owner
-          batchUpdateUsers(batch, ownerUserId, {
-            receivedCommentCountTotal: increment(1)
-          })
+            // add count 1 to post owner
+            batchUpdateUsers(batch, ownerUserId, {
+              receivedCommentCountTotal: increment(1)
+            })
+          }
 
           // add count 1 to post
-          batchUpdatePosts(batch, post.postId, user.uid, {
+          batchUpdatePosts(batch, post.postId, updatedBy, {
             commentCount: increment(1)
           })
 
@@ -198,6 +234,7 @@ const CommentEditor: FC<Props> = ({
           setContent('')
           setCoverUsername('')
           setCoverRole(null)
+          setGuestNickname('')
           toast.success('댓글이 성공적으로 등록 되었습니다.')
         }
       } catch (err) {
@@ -215,6 +252,8 @@ const CommentEditor: FC<Props> = ({
       setEditMode,
       username,
       level,
+      guestNickname,
+      // guestPassCode,
       post,
       createCallback
     ]
@@ -262,36 +301,91 @@ const CommentEditor: FC<Props> = ({
               }}
               onFocus={() => !initFocus && setInitFocus(true)}
             />
-            <FlexSpaceBetweenCenter style={{ margin: '6px' }}>
-              <div>
-                <small
-                  style={{
-                    color:
-                      content.length > COMMENT_CONTENT_MAX_COUNT - 1
-                        ? 'red'
-                        : 'black'
-                  }}
+
+            <FlexSpaceBetweenCenter style={{ margin: '8px 0px' }}>
+              {!user ? (
+                <GridDiv
+                // style={{
+                //   gridTemplateColumns: '140px 100px',
+                //   gap: '6px',
+                //   margin: '8px 0 0 0'
+                // }}
                 >
-                  {content.length} / {COMMENT_CONTENT_MAX_COUNT}
-                </small>
-              </div>
-              <div>
-                <Button
+                  <TextField
+                    id="guest-nickname"
+                    label="게스트 닉네임"
+                    size="small"
+                    value={guestNickname}
+                    onChange={e => {
+                      const value = e.target.value
+                      if (value?.length > 10) return null
+                      return viewMode ? null : setGuestNickname(value)
+                    }}
+                  />
+                  {/**
+                   * ENABLE THIS FOR EDIT/DELETE GUEST COMMENTS
+                   */}
+                  {/* <TextField
+                  id="guest-passcode"
+                  type="password"
+                  label="비밀코드"
                   size="small"
-                  color="info"
-                  variant="outlined"
-                  onClick={() => {
-                    if (!username) {
-                      alert('로그인 후 댓글 작성이 가능 합니다.')
-                      // TODO: open login/sign up modal
-                      return
-                    }
-                    createEditComment(content, coverUsername, coverRole)
+                  value={guestPassCode}
+                  onChange={e => {
+                    const value = e.target.value
+                    console.log('passcode', value)
+                    if (value?.length > 4) return null
+                    return viewMode ? null : setGuestPassCode(value)
                   }}
+                /> */}
+                </GridDiv>
+              ) : (
+                <div></div>
+              )}
+              <FlexCenterDiv style={{ gap: '6px' }}>
+                <div
+                // style={{ fontSize: '14px', width: '38px' }}
                 >
-                  등록
-                </Button>
-              </div>
+                  <small
+                    style={{
+                      color:
+                        content.length > COMMENT_CONTENT_MAX_COUNT - 1
+                          ? 'red'
+                          : 'black'
+                    }}
+                  >
+                    {content.length} / {COMMENT_CONTENT_MAX_COUNT}
+                  </small>
+                </div>
+                <div>
+                  <Button
+                    color="info"
+                    variant="outlined"
+                    onClick={() => {
+                      // if (!username) {
+                      //   alert('로그인 후 댓글 작성이 가능 합니다.')
+                      //   // TODO: open login/sign up modal
+                      //   return
+                      // }
+                      // if (!content || (!user && !guestNickname)) {
+                      //   alert('댓글 내용고')
+                      // }
+                      if (!content) {
+                        alert('댓글 내용이 없습니다.')
+                        return
+                      }
+
+                      if (!user && !guestNickname) {
+                        alert('게스트 닉네임이 없습니다.')
+                        return
+                      }
+                      createEditComment(content, coverUsername, coverRole)
+                    }}
+                  >
+                    등록
+                  </Button>
+                </div>
+              </FlexCenterDiv>
             </FlexSpaceBetweenCenter>
             {isAdmin && (
               <>
