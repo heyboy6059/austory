@@ -345,7 +345,7 @@ const CommentEditor: FC<Props> = ({
               <FlexCenterDiv style={{ gap: '6px' }}>
                 <div
                   // style={{ fontSize: '14px', width: '38px' }}
-                  style={{ width: '48px' }}
+                  style={{ width: '55px', textAlign: 'right' }}
                 >
                   <small
                     style={{
