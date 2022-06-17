@@ -57,38 +57,27 @@ export const calculateWHTax = (
   gross: number,
   taxReturnMode: boolean,
   taxWithheld?: number
-): number => {
-  let normalTax = 0
-
+) => {
+  let tax = 0
   if (gross <= WHTaxRates.upTo45000.rateAmountLimit) {
-    const tax = gross * WHTaxRates.upTo45000.rate
-    return taxReturnMode ? taxWithheld - tax : tax
+    tax = gross * WHTaxRates.upTo45000.rate
+  } else if (gross <= WHTaxRates.upTo120000.rateAmountLimit) {
+    tax =
+      WHTaxRates.upTo120000.previousMax +
+      (gross - WHTaxRates.upTo45000.rateAmountLimit) *
+        WHTaxRates.upTo120000.rate
+  } else if (gross <= WHTaxRates.upTo180000.rateAmountLimit) {
+    tax =
+      WHTaxRates.upTo180000.previousMax +
+      (gross - WHTaxRates.upTo120000.rateAmountLimit) *
+        WHTaxRates.upTo180000.rate
+  } else if (gross <= WHTaxRates.over180000.rateAmountLimit) {
+    tax =
+      WHTaxRates.over180000.previousMax +
+      (gross - WHTaxRates.upTo180000.rateAmountLimit) *
+        WHTaxRates.over180000.rate
   }
-
-  normalTax += WHTaxRates.upTo45000.rateAmountLimit * WHTaxRates.upTo45000.rate
-
-  if (
-    gross > WHTaxRates.upTo45000.rateAmountLimit &&
-    gross <= WHTaxRates.upTo120000.rateAmountLimit
-  ) {
-    const deductedGross = gross - WHTaxRates.upTo45000.rateAmountLimit
-    normalTax += deductedGross * WHTaxRates.upTo120000.rate
-  }
-
-  if (
-    gross > WHTaxRates.upTo120000.rateAmountLimit &&
-    gross <= WHTaxRates.upTo180000.rateAmountLimit
-  ) {
-    const deductedGross = gross - WHTaxRates.upTo120000.rateAmountLimit
-    normalTax += deductedGross * WHTaxRates.upTo180000.rate
-  }
-
-  if (gross > WHTaxRates.upTo180000.rateAmountLimit) {
-    const deductedGross = gross - WHTaxRates.upTo180000.rateAmountLimit
-    normalTax += deductedGross * WHTaxRates.upTo180000.rate
-  }
-
-  return taxReturnMode ? taxWithheld - normalTax : normalTax
+  return taxReturnMode ? taxWithheld - tax : tax
 }
 
 export const currencyFormatter = (value: number, country: 'KOR' | 'AUS') => {

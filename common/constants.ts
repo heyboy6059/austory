@@ -70,19 +70,23 @@ export const INKRAU_OFFICIAL_USER_ID = '7eBBo9hmZPgYIi3dws9derB0SYe2'
 export const WHTaxRates = {
   upTo45000: {
     rateAmountLimit: 45000,
-    rate: 0.15
+    rate: 0.15,
+    previousMax: 0
   },
   upTo120000: {
     rateAmountLimit: 120000,
-    rate: 0.325
+    rate: 0.325,
+    previousMax: 6750
   },
   upTo180000: {
     rateAmountLimit: 180000,
-    rate: 0.37
+    rate: 0.37,
+    previousMax: 31125
   },
   over180000: {
     rateAmountLimit: 99999999999,
-    rate: 0.45
+    rate: 0.45,
+    previousMax: 53325
   }
 }
 
