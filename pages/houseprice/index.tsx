@@ -3,7 +3,7 @@ import Tab from '@mui/material/Tab'
 import Tabs from '@mui/material/Tabs'
 import { FC, useState, SyntheticEvent } from 'react'
 import styled from 'styled-components'
-import { relabelDomainEmbeddedHtml } from '../common/functions'
+import { relabelDomainEmbeddedHtml } from '../../common/functions'
 import HouseIcon from '@mui/icons-material/House'
 import ApartmentIcon from '@mui/icons-material/Apartment'
 
