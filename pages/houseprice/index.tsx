@@ -1,11 +1,34 @@
 import Box from '@mui/material/Box'
 import Tab from '@mui/material/Tab'
 import Tabs from '@mui/material/Tabs'
-import { FC, useState, SyntheticEvent } from 'react'
+import {
+  FC,
+  useState,
+  SyntheticEvent,
+  useEffect,
+  useCallback,
+  useMemo
+} from 'react'
 import styled from 'styled-components'
 import { relabelDomainEmbeddedHtml } from '../../common/functions'
 import HouseIcon from '@mui/icons-material/House'
 import ApartmentIcon from '@mui/icons-material/Apartment'
+import {
+  getAllPropertyReportLabels,
+  getAllPropertyReports
+} from '../../common/get'
+import { PropertyReport, PropertyReportLabel } from '../../typing/interfaces'
+import { HousePriceReportType } from '../../typing/enums'
+import CircularProgress from '@mui/material/CircularProgress'
+import { FlexCenterDiv } from '../../common/uiComponents'
+import { FcHome } from 'react-icons/fc'
+import Typography from '@mui/material/Typography'
+import toast from 'react-hot-toast'
+import {
+  GENERIC_KOREAN_ERROR_MESSAGE,
+  ROOT_INKRAU_URL
+} from '../../common/constants'
+import Metatags from '../../components/Metatags'
 
 const LabelWrapper = styled.div`
   font-size: 12px;
@@ -49,86 +72,153 @@ const DomainTableWrapper = styled.div`
   }
 `
 
-const houseHtml = `<div class='embed_table'><table class="css-lf8x"><thead><tr class="css-4l54jr"><th class="css-kzs65o">Capital City</th><th class="css-kzs65o">Mar-22</th><th class="css-kzs65o">Dec-21</th><th class="css-kzs65o">Mar-21</th><th class="css-kzs65o">QoQ</th><th class="css-kzs65o">YoY</th></tr></thead><tbody><tr class="css-waa0b"><td class="css-kzs65o">Sydney</td><td class="css-kzs65o">$1,590,932 </td><td class="css-kzs65o">$1,588,423 </td><td class="css-kzs65o">$1,314,383 </td><td class="css-kzs65o"><div class="css-4knjz3"><span class="css-x1p5yj">+</span><span class="css-6nfh2o">0.2%</span><span><svg width="16" height="12" viewBox="0 0 16 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 0L16 12H0L8 0Z" fill="#30AF29"></path></svg></span></div></td><td class="css-kzs65o"><div class="css-4knjz3"><span class="css-x1p5yj">+</span><span class="css-6nfh2o">21.0%</span><span><svg width="16" height="12" viewBox="0 0 16 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 0L16 12H0L8 0Z" fill="#30AF29"></path></svg></span></div></td></tr><tr class="css-waa0b"><td class="css-kzs65o">Melbourne</td><td class="css-kzs65o">$1,092,144 </td><td class="css-kzs65o">$1,099,419 </td><td class="css-kzs65o">$981,401 </td><td class="css-kzs65o"><div class="css-4knjz3"><span class="css-x1p5yj">-</span><span class="css-6nfh2o">0.7%</span><span><svg width="16" height="12" viewBox="0 0 16 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 12L0 0L16 0L8 12Z" fill="#FF411B"></path></svg></span></div></td><td class="css-kzs65o"><div class="css-4knjz3"><span class="css-x1p5yj">+</span><span class="css-6nfh2o">11.3%</span><span><svg width="16" height="12" viewBox="0 0 16 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 0L16 12H0L8 0Z" fill="#30AF29"></path></svg></span></div></td></tr><tr class="css-waa0b"><td class="css-kzs65o">Brisbane</td><td class="css-kzs65o">$831,346 </td><td class="css-kzs65o">$806,117 </td><td class="css-kzs65o">$629,499 </td><td class="css-kzs65o"><div class="css-4knjz3"><span class="css-x1p5yj">+</span><span class="css-6nfh2o">3.1%</span><span><svg width="16" height="12" viewBox="0 0 16 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 0L16 12H0L8 0Z" fill="#30AF29"></path></svg></span></div></td><td class="css-kzs65o"><div class="css-4knjz3"><span class="css-x1p5yj">+</span><span class="css-6nfh2o">32.1%</span><span><svg width="16" height="12" viewBox="0 0 16 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 0L16 12H0L8 0Z" fill="#30AF29"></path></svg></span></div></td></tr><tr class="css-waa0b"><td class="css-kzs65o">Adelaide</td><td class="css-kzs65o">$750,084 </td><td class="css-kzs65o">$728,342 </td><td class="css-kzs65o">$585,384 </td><td class="css-kzs65o"><div class="css-4knjz3"><span class="css-x1p5yj">+</span><span class="css-6nfh2o">3.0%</span><span><svg width="16" height="12" viewBox="0 0 16 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 0L16 12H0L8 0Z" fill="#30AF29"></path></svg></span></div></td><td class="css-kzs65o"><div class="css-4knjz3"><span class="css-x1p5yj">+</span><span class="css-6nfh2o">28.1%</span><span><svg width="16" height="12" viewBox="0 0 16 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 0L16 12H0L8 0Z" fill="#30AF29"></path></svg></span></div></td></tr><tr class="css-waa0b"><td class="css-kzs65o">Canberra</td><td class="css-kzs65o">$1,124,952 </td><td class="css-kzs65o">$1,134,678 </td><td class="css-kzs65o">$929,201 </td><td class="css-kzs65o"><div class="css-4knjz3"><span class="css-x1p5yj">-</span><span class="css-6nfh2o">0.9%</span><span><svg width="16" height="12" viewBox="0 0 16 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 12L0 0L16 0L8 12Z" fill="#FF411B"></path></svg></span></div></td><td class="css-kzs65o"><div class="css-4knjz3"><span class="css-x1p5yj">+</span><span class="css-6nfh2o">21.1%</span><span><svg width="16" height="12" viewBox="0 0 16 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 0L16 12H0L8 0Z" fill="#30AF29"></path></svg></span></div></td></tr><tr class="css-waa0b"><td class="css-kzs65o">Perth</td><td class="css-kzs65o">$622,030 </td><td class="css-kzs65o">$612,926 </td><td class="css-kzs65o">$592,537 </td><td class="css-kzs65o"><div class="css-4knjz3"><span class="css-x1p5yj">+</span><span class="css-6nfh2o">1.5%</span><span><svg width="16" height="12" viewBox="0 0 16 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 0L16 12H0L8 0Z" fill="#30AF29"></path></svg></span></div></td><td class="css-kzs65o"><div class="css-4knjz3"><span class="css-x1p5yj">+</span><span class="css-6nfh2o">5.0%</span><span><svg width="16" height="12" viewBox="0 0 16 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 0L16 12H0L8 0Z" fill="#30AF29"></path></svg></span></div></td></tr><tr class="css-waa0b"><td class="css-kzs65o">Hobart</td><td class="css-kzs65o">$758,141 </td><td class="css-kzs65o">$727,099 </td><td class="css-kzs65o">$604,103 </td><td class="css-kzs65o"><div class="css-4knjz3"><span class="css-x1p5yj">+</span><span class="css-6nfh2o">4.3%</span><span><svg width="16" height="12" viewBox="0 0 16 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 0L16 12H0L8 0Z" fill="#30AF29"></path></svg></span></div></td><td class="css-kzs65o"><div class="css-4knjz3"><span class="css-x1p5yj">+</span><span class="css-6nfh2o">25.5%</span><span><svg width="16" height="12" viewBox="0 0 16 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 0L16 12H0L8 0Z" fill="#30AF29"></path></svg></span></div></td></tr><tr class="css-waa0b"><td class="css-kzs65o">Darwin</td><td class="css-kzs65o">$635,389 </td><td class="css-kzs65o">$647,156 </td><td class="css-kzs65o">$543,246 </td><td class="css-kzs65o"><div class="css-4knjz3"><span class="css-x1p5yj">-</span><span class="css-6nfh2o">1.8%</span><span><svg width="16" height="12" viewBox="0 0 16 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 12L0 0L16 0L8 12Z" fill="#FF411B"></path></svg></span></div></td><td class="css-kzs65o"><div class="css-4knjz3"><span class="css-x1p5yj">+</span><span class="css-6nfh2o">17.0%</span><span><svg width="16" height="12" viewBox="0 0 16 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 0L16 12H0L8 0Z" fill="#30AF29"></path></svg></span></div></td></tr><tr class="css-waa0b"><td class="css-kzs65o">National</td><td class="css-kzs65o">$1,069,289 </td><td class="css-kzs65o">$1,062,537 </td><td class="css-kzs65o">$902,829 </td><td class="css-kzs65o"><div class="css-4knjz3"><span class="css-x1p5yj">+</span><span class="css-6nfh2o">0.6%</span><span><svg width="16" height="12" viewBox="0 0 16 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 0L16 12H0L8 0Z" fill="#30AF29"></path></svg></span></div></td><td class="css-kzs65o"><div class="css-4knjz3"><span class="css-x1p5yj">+</span><span class="css-6nfh2o">18.4%</span><span><svg width="16" height="12" viewBox="0 0 16 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 0L16 12H0L8 0Z" fill="#30AF29"></path></svg></span></div></td></tr><tr class="css-waa0b"></tr></tbody></table><div class='table_source'>Source: <a href='https://www.domain.com.au/research/house-price-report/march-2022/#darwin?utm_source=web&amp;utm_medium=referral&amp;utm_campaign=tableembed' target="_blank">Domain</a></div></div>`
-// const embeddedHtml = `<div class='embed_table'><table class="css-lf8x"><thead><tr class="css-4l54jr"><th class="css-kzs65o">Capital City</th><th class="css-kzs65o">Dec-19</th><th class="css-kzs65o">Sep-19</th><th class="css-kzs65o">Dec-18</th><th class="css-kzs65o">QoQ</th><th class="css-kzs65o">YoY</th></tr></thead><tbody><tr class="css-waa0b"><td class="css-kzs65o">Sydney</td><td class="css-kzs65o">$1,142,212</td><td class="css-kzs65o">$1,081,013</td><td class="css-kzs65o">$1,069,139</td><td class="css-kzs65o"><div class="css-4knjz3"><span class="css-x1p5yj">+</span><span class="css-6nfh2o">5.7<!-- -->%</span><span><svg width="16" height="12" viewBox="0 0 16 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 0L16 12H0L8 0Z" fill="#30AF29"></path></svg></span></div></td><td class="css-kzs65o"><div class="css-4knjz3"><span class="css-x1p5yj">+</span><span class="css-6nfh2o">6.8<!-- -->%</span><span><svg width="16" height="12" viewBox="0 0 16 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 0L16 12H0L8 0Z" fill="#30AF29"></path></svg></span></div></td></tr><tr class="css-waa0b"><td class="css-kzs65o">Melbourne</td><td class="css-kzs65o">$901,951</td><td class="css-kzs65o">$858,745</td><td class="css-kzs65o">$830,074</td><td class="css-kzs65o"><div class="css-4knjz3"><span class="css-x1p5yj">+</span><span class="css-6nfh2o">5.0<!-- -->%</span><span><svg width="16" height="12" viewBox="0 0 16 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 0L16 12H0L8 0Z" fill="#30AF29"></path></svg></span></div></td><td class="css-kzs65o"><div class="css-4knjz3"><span class="css-x1p5yj">+</span><span class="css-6nfh2o">8.7<!-- -->%</span><span><svg width="16" height="12" viewBox="0 0 16 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 0L16 12H0L8 0Z" fill="#30AF29"></path></svg></span></div></td></tr><tr class="css-waa0b"><td class="css-kzs65o">Brisbane</td><td class="css-kzs65o">$577,664</td><td class="css-kzs65o">$570,524</td><td class="css-kzs65o">$569,230</td><td class="css-kzs65o"><div class="css-4knjz3"><span class="css-x1p5yj">+</span><span class="css-6nfh2o">1.3<!-- -->%</span><span><svg width="16" height="12" viewBox="0 0 16 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 0L16 12H0L8 0Z" fill="#30AF29"></path></svg></span></div></td><td class="css-kzs65o"><div class="css-4knjz3"><span class="css-x1p5yj">+</span><span class="css-6nfh2o">1.5<!-- -->%</span><span><svg width="16" height="12" viewBox="0 0 16 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 0L16 12H0L8 0Z" fill="#30AF29"></path></svg></span></div></td></tr><tr class="css-waa0b"><td class="css-kzs65o">Adelaide</td><td class="css-kzs65o">$542,947</td><td class="css-kzs65o">$536,186</td><td class="css-kzs65o">$536,961</td><td class="css-kzs65o"><div class="css-4knjz3"><span class="css-x1p5yj">+</span><span class="css-6nfh2o">1.3<!-- -->%</span><span><svg width="16" height="12" viewBox="0 0 16 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 0L16 12H0L8 0Z" fill="#30AF29"></path></svg></span></div></td><td class="css-kzs65o"><div class="css-4knjz3"><span class="css-x1p5yj">+</span><span class="css-6nfh2o">1.1<!-- -->%</span><span><svg width="16" height="12" viewBox="0 0 16 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 0L16 12H0L8 0Z" fill="#30AF29"></path></svg></span></div></td></tr><tr class="css-waa0b"><td class="css-kzs65o">Perth</td><td class="css-kzs65o">$537,013</td><td class="css-kzs65o">$533,153</td><td class="css-kzs65o">$547,268</td><td class="css-kzs65o"><div class="css-4knjz3"><span class="css-x1p5yj">+</span><span class="css-6nfh2o">0.7<!-- -->%</span><span><svg width="16" height="12" viewBox="0 0 16 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 0L16 12H0L8 0Z" fill="#30AF29"></path></svg></span></div></td><td class="css-kzs65o"><div class="css-4knjz3"><span class="css-x1p5yj">-</span><span class="css-6nfh2o">1.9<!-- -->%</span><span><svg width="16" height="12" viewBox="0 0 16 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 12L0 0L16 0L8 12Z" fill="#FF411B"></path></svg></span></div></td></tr><tr class="css-waa0b"><td class="css-kzs65o">Hobart</td><td class="css-kzs65o">$530,570</td><td class="css-kzs65o">$489,093</td><td class="css-kzs65o">$459,122</td><td class="css-kzs65o"><div class="css-4knjz3"><span class="css-x1p5yj">+</span><span class="css-6nfh2o">8.5<!-- -->%</span><span><svg width="16" height="12" viewBox="0 0 16 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 0L16 12H0L8 0Z" fill="#30AF29"></path></svg></span></div></td><td class="css-kzs65o"><div class="css-4knjz3"><span class="css-x1p5yj">+</span><span class="css-6nfh2o">15.6<!-- -->%</span><span><svg width="16" height="12" viewBox="0 0 16 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 0L16 12H0L8 0Z" fill="#30AF29"></path></svg></span></div></td></tr><tr class="css-waa0b"><td class="css-kzs65o">Canberra</td><td class="css-kzs65o">$788,621</td><td class="css-kzs65o">$734,852</td><td class="css-kzs65o">$748,115</td><td class="css-kzs65o"><div class="css-4knjz3"><span class="css-x1p5yj">+</span><span class="css-6nfh2o">7.3<!-- -->%</span><span><svg width="16" height="12" viewBox="0 0 16 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 0L16 12H0L8 0Z" fill="#30AF29"></path></svg></span></div></td><td class="css-kzs65o"><div class="css-4knjz3"><span class="css-x1p5yj">+</span><span class="css-6nfh2o">5.4<!-- -->%</span><span><svg width="16" height="12" viewBox="0 0 16 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 0L16 12H0L8 0Z" fill="#30AF29"></path></svg></span></div></td></tr><tr class="css-waa0b"><td class="css-kzs65o">Darwin</td><td class="css-kzs65o">$509,452</td><td class="css-kzs65o">$524,984</td><td class="css-kzs65o">$514,876</td><td class="css-kzs65o"><div class="css-4knjz3"><span class="css-x1p5yj">-</span><span class="css-6nfh2o">3.0<!-- -->%</span><span><svg width="16" height="12" viewBox="0 0 16 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 12L0 0L16 0L8 12Z" fill="#FF411B"></path></svg></span></div></td><td class="css-kzs65o"><div class="css-4knjz3"><span class="css-x1p5yj">-</span><span class="css-6nfh2o">1.1<!-- -->%</span><span><svg width="16" height="12" viewBox="0 0 16 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 12L0 0L16 0L8 12Z" fill="#FF411B"></path></svg></span></div></td></tr><tr class="css-waa0b"><td class="css-kzs65o">Combined Capitals</td><td class="css-kzs65o">$809,349</td><td class="css-kzs65o">$776,891</td><td class="css-kzs65o">$767,517</td><td class="css-kzs65o"><div class="css-4knjz3"><span class="css-x1p5yj">+</span><span class="css-6nfh2o">4.2<!-- -->%</span><span><svg width="16" height="12" viewBox="0 0 16 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 0L16 12H0L8 0Z" fill="#30AF29"></path></svg></span></div></td><td class="css-kzs65o"><div class="css-4knjz3"><span class="css-x1p5yj">+</span><span class="css-6nfh2o">5.5<!-- -->%</span><span><svg width="16" height="12" viewBox="0 0 16 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 0L16 12H0L8 0Z" fill="#30AF29"></path></svg></span></div></td></tr></tbody></table><div class='table_source'>Source: <a href='https://www.domain.com.au/research/house-price-report/december-2019/?utm_source=web&amp;utm_medium=referral&amp;utm_campaign=tableembed' target="_blank">Domain</a></div></div>`
-const cleanHouseHtml = relabelDomainEmbeddedHtml(houseHtml)
-// const embeddedHtml2 = `<div class='embed_table'><table class="css-lf8x"><thead><tr class="css-4l54jr"><th class="css-kzs65o">Houses</th><th class="css-kzs65o">Median</th><th class="css-kzs65o">YoY</th><th class="css-kzs65o">5-YR</th></tr></thead><tbody><tr class="css-waa0b"><td class="css-kzs65o">Abbotsford</td><td class="css-kzs65o">$2,845,000 </td><td class="css-kzs65o"><div class="css-4knjz3"><span class="css-x1p5yj"></span><span class="css-6nfh2o">NaN<!-- -->%</span><span></span></div></td><td class="css-kzs65o"><div class="css-4knjz3"><span class="css-x1p5yj"></span><span class="css-6nfh2o">NaN<!-- -->%</span><span></span></div></td></tr><tr class="css-waa0b"><td class="css-kzs65o">Aberdare</td><td class="css-kzs65o">$502,500 </td><td class="css-kzs65o"><div class="css-4knjz3"><span class="css-x1p5yj"></span><span class="css-6nfh2o">NaN<!-- -->%</span><span></span></div></td><td class="css-kzs65o"><div class="css-4knjz3"><span class="css-x1p5yj"></span><span class="css-6nfh2o">NaN<!-- -->%</span><span></span></div></td></tr><tr class="css-waa0b"><td class="css-kzs65o">Aberdeen</td><td class="css-kzs65o">$400,000 </td><td class="css-kzs65o"><div class="css-4knjz3"><span class="css-x1p5yj">+</span><span class="css-6nfh2o">10.5<!-- -->%</span><span><svg width="16" height="12" viewBox="0 0 16 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 0L16 12H0L8 0Z" fill="#30AF29"></path></svg></span></div></td><td class="css-kzs65o"><div class="css-4knjz3"><span class="css-x1p5yj"></span><span class="css-6nfh2o">NaN<!-- -->%</span><span></span></div></td></tr><tr class="css-waa0b"><td class="css-kzs65o">Aberglasslyn</td><td class="css-kzs65o">$677,500 </td><td class="css-kzs65o"><div class="css-4knjz3"><span class="css-x1p5yj">+</span><span class="css-6nfh2o">26.6<!-- -->%</span><span><svg width="16" height="12" viewBox="0 0 16 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 0L16 12H0L8 0Z" fill="#30AF29"></path></svg></span></div></td><td class="css-kzs65o"><div class="css-4knjz3"><span class="css-x1p5yj">+</span><span class="css-6nfh2o">52.2<!-- -->%</span><span><svg width="16" height="12" viewBox="0 0 16 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 0L16 12H0L8 0Z" fill="#30AF29"></path></svg></span></div></td></tr><tr class="css-waa0b"><td class="css-kzs65o">Acacia Gardens</td><td class="css-kzs65o">$1,162,000 </td><td class="css-kzs65o"><div class="css-4knjz3"><span class="css-x1p5yj">+</span><span class="css-6nfh2o">31.7<!-- -->%</span><span><svg width="16" height="12" viewBox="0 0 16 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 0L16 12H0L8 0Z" fill="#30AF29"></path></svg></span></div></td><td class="css-kzs65o"><div class="css-4knjz3"><span class="css-x1p5yj">+</span><span class="css-6nfh2o">42.0<!-- -->%</span><span><svg width="16" height="12" viewBox="0 0 16 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 0L16 12H0L8 0Z" fill="#30AF29"></path></svg></span></div></td></tr><tr class="css-waa0b"><td class="css-kzs65o">Adamstown</td><td class="css-kzs65o">$917,000 </td><td class="css-kzs65o"><div class="css-4knjz3"><span class="css-x1p5yj">+</span><span class="css-6nfh2o">23.1<!-- -->%</span><span><svg width="16" height="12" viewBox="0 0 16 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 0L16 12H0L8 0Z" fill="#30AF29"></path></svg></span></div></td><td class="css-kzs65o"><div class="css-4knjz3"><span class="css-x1p5yj">+</span><span class="css-6nfh2o">59.5<!-- -->%</span><span><svg width="16" height="12" viewBox="0 0 16 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 0L16 12H0L8 0Z" fill="#30AF29"></path></svg></span></div></td></tr><tr class="css-waa0b"><td class="css-kzs65o">Adamstown Heights</td><td class="css-kzs65o">$927,500 </td><td class="css-kzs65o"><div class="css-4knjz3"><span class="css-x1p5yj">+</span><span class="css-6nfh2o">15.2<!-- -->%</span><span><svg width="16" height="12" viewBox="0 0 16 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 0L16 12H0L8 0Z" fill="#30AF29"></path></svg></span></div></td><td class="css-kzs65o"><div class="css-4knjz3"><span class="css-x1p5yj">+</span><span class="css-6nfh2o">41.6<!-- -->%</span><span><svg width="16" height="12" viewBox="0 0 16 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 0L16 12H0L8 0Z" fill="#30AF29"></path></svg></span></div></td></tr><tr class="css-waa0b"><td class="css-kzs65o">Albion Park</td><td class="css-kzs65o">$750,000 </td><td class="css-kzs65o"><div class="css-4knjz3"><span class="css-x1p5yj">+</span><span class="css-6nfh2o">21.0<!-- -->%</span><span><svg width="16" height="12" viewBox="0 0 16 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 0L16 12H0L8 0Z" fill="#30AF29"></path></svg></span></div></td><td class="css-kzs65o"><div class="css-4knjz3"><span class="css-x1p5yj">+</span><span class="css-6nfh2o">37.6<!-- -->%</span><span><svg width="16" height="12" viewBox="0 0 16 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 0L16 12H0L8 0Z" fill="#30AF29"></path></svg></span></div></td></tr><tr class="css-waa0b"><td class="css-kzs65o">Albion Park Rail</td><td class="css-kzs65o">$710,000 </td><td class="css-kzs65o"><div class="css-4knjz3"><span class="css-x1p5yj">+</span><span class="css-6nfh2o">21.4<!-- -->%</span><span><svg width="16" height="12" viewBox="0 0 16 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 0L16 12H0L8 0Z" fill="#30AF29"></path></svg></span></div></td><td class="css-kzs65o"><div class="css-4knjz3"><span class="css-x1p5yj">+</span><span class="css-6nfh2o">45.7<!-- -->%</span><span><svg width="16" height="12" viewBox="0 0 16 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 0L16 12H0L8 0Z" fill="#30AF29"></path></svg></span></div></td></tr><tr class="css-waa0b"><td class="css-kzs65o">Albury</td><td class="css-kzs65o">$780,000 </td><td class="css-kzs65o"><div class="css-4knjz3"><span class="css-x1p5yj">+</span><span class="css-6nfh2o">25.6<!-- -->%</span><span><svg width="16" height="12" viewBox="0 0 16 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 0L16 12H0L8 0Z" fill="#30AF29"></path></svg></span></div></td><td class="css-kzs65o"><div class="css-4knjz3"><span class="css-x1p5yj">+</span><span class="css-6nfh2o">57.6<!-- -->%</span><span><svg width="16" height="12" viewBox="0 0 16 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 0L16 12H0L8 0Z" fill="#30AF29"></path></svg></span></div></td></tr></tbody></table><div class='table_source'>Source: <a href='https://www.domain.com.au/research/house-price-report/march-2022/#darwin?utm_source=web&utm_medium=referral&utm_campaign=tableembed?utm_source=web&amp;utm_medium=referral&amp;utm_campaign=tableembed' target="_blank">Domain</a></div></div>`
-const unitHtml = `<div class='embed_table'><table class="css-lf8x"><thead><tr class="css-4l54jr"><th class="css-kzs65o">Capital City</th><th class="css-kzs65o">Mar-22</th><th class="css-kzs65o">Dec-21</th><th class="css-kzs65o">Mar-21</th><th class="css-kzs65o">QoQ</th><th class="css-kzs65o">YoY</th></tr></thead><tbody><tr class="css-waa0b"><td class="css-kzs65o">Sydney</td><td class="css-kzs65o">$796,524 </td><td class="css-kzs65o">$806,302 </td><td class="css-kzs65o">$759,957 </td><td class="css-kzs65o"><div class="css-4knjz3"><span class="css-x1p5yj">-</span><span class="css-6nfh2o">1.2%</span><span><svg width="16" height="12" viewBox="0 0 16 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 12L0 0L16 0L8 12Z" fill="#FF411B"></path></svg></span></div></td><td class="css-kzs65o"><div class="css-4knjz3"><span class="css-x1p5yj">+</span><span class="css-6nfh2o">4.8%</span><span><svg width="16" height="12" viewBox="0 0 16 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 0L16 12H0L8 0Z" fill="#30AF29"></path></svg></span></div></td></tr><tr class="css-waa0b"><td class="css-kzs65o">Melbourne</td><td class="css-kzs65o">$578,775 </td><td class="css-kzs65o">$591,842 </td><td class="css-kzs65o">$570,096 </td><td class="css-kzs65o"><div class="css-4knjz3"><span class="css-x1p5yj">-</span><span class="css-6nfh2o">2.2%</span><span><svg width="16" height="12" viewBox="0 0 16 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 12L0 0L16 0L8 12Z" fill="#FF411B"></path></svg></span></div></td><td class="css-kzs65o"><div class="css-4knjz3"><span class="css-x1p5yj">+</span><span class="css-6nfh2o">1.5%</span><span><svg width="16" height="12" viewBox="0 0 16 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 0L16 12H0L8 0Z" fill="#30AF29"></path></svg></span></div></td></tr><tr class="css-waa0b"><td class="css-kzs65o">Brisbane</td><td class="css-kzs65o">$437,034 </td><td class="css-kzs65o">$423,791 </td><td class="css-kzs65o">$399,735 </td><td class="css-kzs65o"><div class="css-4knjz3"><span class="css-x1p5yj">+</span><span class="css-6nfh2o">3.1%</span><span><svg width="16" height="12" viewBox="0 0 16 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 0L16 12H0L8 0Z" fill="#30AF29"></path></svg></span></div></td><td class="css-kzs65o"><div class="css-4knjz3"><span class="css-x1p5yj">+</span><span class="css-6nfh2o">9.3%</span><span><svg width="16" height="12" viewBox="0 0 16 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 0L16 12H0L8 0Z" fill="#30AF29"></path></svg></span></div></td></tr><tr class="css-waa0b"><td class="css-kzs65o">Adelaide</td><td class="css-kzs65o">$376,977 </td><td class="css-kzs65o">$372,016 </td><td class="css-kzs65o">$343,331 </td><td class="css-kzs65o"><div class="css-4knjz3"><span class="css-x1p5yj">+</span><span class="css-6nfh2o">1.3%</span><span><svg width="16" height="12" viewBox="0 0 16 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 0L16 12H0L8 0Z" fill="#30AF29"></path></svg></span></div></td><td class="css-kzs65o"><div class="css-4knjz3"><span class="css-x1p5yj">+</span><span class="css-6nfh2o">9.8%</span><span><svg width="16" height="12" viewBox="0 0 16 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 0L16 12H0L8 0Z" fill="#30AF29"></path></svg></span></div></td></tr><tr class="css-waa0b"><td class="css-kzs65o">Canberra</td><td class="css-kzs65o">$564,984 </td><td class="css-kzs65o">$561,624 </td><td class="css-kzs65o">$518,818 </td><td class="css-kzs65o"><div class="css-4knjz3"><span class="css-x1p5yj">+</span><span class="css-6nfh2o">0.6%</span><span><svg width="16" height="12" viewBox="0 0 16 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 0L16 12H0L8 0Z" fill="#30AF29"></path></svg></span></div></td><td class="css-kzs65o"><div class="css-4knjz3"><span class="css-x1p5yj">+</span><span class="css-6nfh2o">8.9%</span><span><svg width="16" height="12" viewBox="0 0 16 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 0L16 12H0L8 0Z" fill="#30AF29"></path></svg></span></div></td></tr><tr class="css-waa0b"><td class="css-kzs65o">Perth</td><td class="css-kzs65o">$358,366 </td><td class="css-kzs65o">$369,834 </td><td class="css-kzs65o">$375,820 </td><td class="css-kzs65o"><div class="css-4knjz3"><span class="css-x1p5yj">-</span><span class="css-6nfh2o">3.1%</span><span><svg width="16" height="12" viewBox="0 0 16 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 12L0 0L16 0L8 12Z" fill="#FF411B"></path></svg></span></div></td><td class="css-kzs65o"><div class="css-4knjz3"><span class="css-x1p5yj">-</span><span class="css-6nfh2o">4.6%</span><span><svg width="16" height="12" viewBox="0 0 16 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 12L0 0L16 0L8 12Z" fill="#FF411B"></path></svg></span></div></td></tr><tr class="css-waa0b"><td class="css-kzs65o">Hobart</td><td class="css-kzs65o">$572,568 </td><td class="css-kzs65o">$585,856 </td><td class="css-kzs65o">$441,149 </td><td class="css-kzs65o"><div class="css-4knjz3"><span class="css-x1p5yj">-</span><span class="css-6nfh2o">2.3%</span><span><svg width="16" height="12" viewBox="0 0 16 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 12L0 0L16 0L8 12Z" fill="#FF411B"></path></svg></span></div></td><td class="css-kzs65o"><div class="css-4knjz3"><span class="css-x1p5yj">+</span><span class="css-6nfh2o">29.8%</span><span><svg width="16" height="12" viewBox="0 0 16 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 0L16 12H0L8 0Z" fill="#30AF29"></path></svg></span></div></td></tr><tr class="css-waa0b"><td class="css-kzs65o">Darwin</td><td class="css-kzs65o">$385,728 </td><td class="css-kzs65o">$387,530 </td><td class="css-kzs65o">$297,241 </td><td class="css-kzs65o"><div class="css-4knjz3"><span class="css-x1p5yj">-</span><span class="css-6nfh2o">0.5%</span><span><svg width="16" height="12" viewBox="0 0 16 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 12L0 0L16 0L8 12Z" fill="#FF411B"></path></svg></span></div></td><td class="css-kzs65o"><div class="css-4knjz3"><span class="css-x1p5yj">+</span><span class="css-6nfh2o">29.8%</span><span><svg width="16" height="12" viewBox="0 0 16 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 0L16 12H0L8 0Z" fill="#30AF29"></path></svg></span></div></td></tr><tr class="css-waa0b"><td class="css-kzs65o">National</td><td class="css-kzs65o">$616,942 </td><td class="css-kzs65o">$623,375 </td><td class="css-kzs65o">$590,444 </td><td class="css-kzs65o"><div class="css-4knjz3"><span class="css-x1p5yj">-</span><span class="css-6nfh2o">1.0%</span><span><svg width="16" height="12" viewBox="0 0 16 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 12L0 0L16 0L8 12Z" fill="#FF411B"></path></svg></span></div></td><td class="css-kzs65o"><div class="css-4knjz3"><span class="css-x1p5yj">+</span><span class="css-6nfh2o">4.5%</span><span><svg width="16" height="12" viewBox="0 0 16 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 0L16 12H0L8 0Z" fill="#30AF29"></path></svg></span></div></td></tr><tr class="css-waa0b"></tr></tbody></table><div class='table_source'>Source: <a href='https://www.domain.com.au/research/house-price-report/march-2022/?utm_source=web&amp;utm_medium=referral&amp;utm_campaign=tableembed' target="_blank">Domain</a></div></div>`
-const cleanUnitHtml = relabelDomainEmbeddedHtml(unitHtml)
-
 const EmbedTest: FC = () => {
-  const [value, setValue] = useState(0)
-  const [houseUnitTabValue, setHouseUnitTabValue] = useState(0)
-  const handleChange = (event: SyntheticEvent, newValue: number) => {
-    setValue(newValue)
+  const [loading, setLoading] = useState(false)
+  const [labelTabValue, setLabelTabValue] = useState('')
+  const [houseUnitTabValue, setHouseUnitTabValue] = useState(
+    HousePriceReportType.HOUSE
+  )
+  const handleLabelTab = (event: SyntheticEvent, newValue: string) => {
+    setLabelTabValue(newValue)
   }
-  const handleHouseUnitTab = (event: SyntheticEvent, newValue: number) => {
+  const handleHouseUnitTab = (
+    event: SyntheticEvent,
+    newValue: HousePriceReportType
+  ) => {
     setHouseUnitTabValue(newValue)
   }
 
+  const [allLabels, setAllLabels] = useState<PropertyReportLabel[]>([])
+  const [allPropertyReports, setAllPropertyReports] = useState<
+    PropertyReport[]
+  >([])
+
+  const getAllPropertyData = useCallback(async () => {
+    setLoading(true)
+    try {
+      const labels = await getAllPropertyReportLabels()
+      setLabelTabValue(labels[0].propertyReportLabelId)
+      setAllLabels(labels)
+      const reports = await getAllPropertyReports()
+      setAllPropertyReports(reports)
+    } catch (err) {
+      console.error(`Error in getAllPropertyData. ${err.message}`)
+      toast.error(GENERIC_KOREAN_ERROR_MESSAGE)
+    } finally {
+      setLoading(false)
+    }
+  }, [])
+
+  useEffect(() => {
+    console.log('getAllPropertyData in useEffect')
+    getAllPropertyData()
+  }, [getAllPropertyData])
+
+  const embedHtml = useMemo(() => {
+    if (allLabels && allPropertyReports) {
+      const embedHtml = allPropertyReports.find(
+        report =>
+          report.propertyReportId === `${labelTabValue}-${houseUnitTabValue}`
+      )?.embedHtml
+
+      if (!embedHtml) return ''
+      return relabelDomainEmbeddedHtml(embedHtml)
+    }
+    return ''
+  }, [allLabels, allPropertyReports, houseUnitTabValue, labelTabValue])
+
   return (
-    <div
-      style={{
-        width: '100vw',
-        maxWidth: '600px'
-      }}
-    >
-      <Box
+    <>
+      <Metatags
+        title={`인크라우 - 호주 부동산 가격 트랜드`}
+        description={`호주 지역별 부동산(하우스, 유닛) 가격 트랜드. 시드니, 멜번, 브리즈번, 아들레이드, 캔버라, 퍼스, 다윈, 호주 전역 부동산`}
+        type="article"
+        link={`${ROOT_INKRAU_URL}/houseprice`}
+      />
+      <div
         style={{
-          width: '100%'
+          width: '100vw',
+          maxWidth: '600px'
         }}
       >
-        <Tabs
-          value={value}
-          onChange={handleChange}
-          variant="scrollable"
-          scrollButtons="auto"
-          aria-label="scrollable auto tabs example"
-          textColor="secondary"
-          indicatorColor="secondary"
-        >
-          <Tab label="2022년 3월" />
-          <Tab label="2021년 12월" />
-          <Tab label="2021년 9월" />
-          <Tab label="2021년 6월" />
-          <Tab label="2021년 3월" />
-          <Tab label="2020년 12월" />
-          <Tab label="2020년 9월" />
-          <Tab label="2020년 6월" />
-          <Tab label="2020년 3월" />
-          <Tab label="2019년 12월" />
-        </Tabs>
-      </Box>
-      <Box style={{ width: '100%' }}>
-        <Tabs
-          value={houseUnitTabValue}
-          onChange={handleHouseUnitTab}
-          aria-label="icon position tabs example"
-          variant="fullWidth"
-          centered
-        >
-          <Tab icon={<HouseIcon />} iconPosition="start" label="하우스" />
-          <Tab icon={<ApartmentIcon />} iconPosition="start" label="유닛" />
-          {/* <Tab icon={<FavoriteIcon />} iconPosition="end" label="end" />
-  <Tab icon={<PersonPinIcon />} iconPosition="bottom" label="bottom" /> */}
-        </Tabs>
-      </Box>
-      <DomainTableWrapper>
-        {houseUnitTabValue ? (
-          <div dangerouslySetInnerHTML={{ __html: cleanUnitHtml }} />
+        <FlexCenterDiv style={{ marginTop: '10px', gap: '10px' }}>
+          <FcHome fontSize={24} />
+          <Typography variant="h6" sx={{ fontWeight: 700 }}>
+            부동산 가격 트랜드
+          </Typography>
+        </FlexCenterDiv>
+        {loading ? (
+          <FlexCenterDiv style={{ margin: '20px' }}>
+            <CircularProgress />
+          </FlexCenterDiv>
         ) : (
-          <div dangerouslySetInnerHTML={{ __html: cleanHouseHtml }} />
+          <>
+            <Box
+              style={{
+                width: '100%'
+              }}
+            >
+              <Tabs
+                value={labelTabValue}
+                onChange={handleLabelTab}
+                variant="scrollable"
+                scrollButtons="auto"
+                aria-label="property-report-label-tab"
+                textColor="secondary"
+                indicatorColor="secondary"
+              >
+                {allLabels.map(label => (
+                  <Tab
+                    label={label.korLabel}
+                    key={label.propertyReportLabelId}
+                    value={label.propertyReportLabelId}
+                  />
+                ))}
+              </Tabs>
+            </Box>
+            <Box style={{ width: '100%' }}>
+              <Tabs
+                value={houseUnitTabValue}
+                onChange={handleHouseUnitTab}
+                aria-label="house-unit-tab"
+                variant="fullWidth"
+                centered
+              >
+                <Tab
+                  icon={<HouseIcon />}
+                  iconPosition="start"
+                  label="하우스"
+                  value={HousePriceReportType.HOUSE}
+                />
+                <Tab
+                  icon={<ApartmentIcon />}
+                  iconPosition="start"
+                  label="유닛"
+                  value={HousePriceReportType.UNIT}
+                />
+              </Tabs>
+            </Box>
+            <DomainTableWrapper>
+              {embedHtml ? (
+                <div dangerouslySetInnerHTML={{ __html: embedHtml }} />
+              ) : (
+                <div>데이터가 없습니다.</div>
+              )}
+            </DomainTableWrapper>
+            <div>
+              <LabelWrapper>
+                <strong>데이터 출처:</strong> Domain, powered by APM
+              </LabelWrapper>
+              <LabelWrapper>
+                <strong>
+                  제공된 모든 부동산 가격은 중간값(Median) 입니다.
+                </strong>
+              </LabelWrapper>
+            </div>
+          </>
         )}
-      </DomainTableWrapper>
-      <div>
-        <LabelWrapper>
-          <strong>데이터 출처:</strong> Domain, powered by APM
-        </LabelWrapper>
-        <LabelWrapper>
-          <strong>제공된 모든 부동산 가격은 중간값(Median) 입니다.</strong>
-        </LabelWrapper>
       </div>
-    </div>
+    </>
   )
 }
 

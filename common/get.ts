@@ -8,6 +8,8 @@ import {
 import {
   FIRESTORE_CATEGORIES,
   FIRESTORE_FEATURE_DETAILS,
+  FIRESTORE_PROPERTY_REPORTS,
+  FIRESTORE_PROPERTY_REPORT_LABELS,
   FIRESTORE_USERNAMES,
   POST_FEED_NUM_LIMIT
 } from './constants'
@@ -16,7 +18,9 @@ import {
   featureDetailToJSON,
   firestore,
   fromMillis,
-  postQueryDocToJSON
+  postQueryDocToJSON,
+  propertyReportLabelToJSON,
+  propertyReportToJSON
 } from './firebase'
 import {
   collection,
@@ -97,4 +101,22 @@ export const getFeatureDetail = async (
 
   console.log({ snapshotDocs: querySnapshot.docs.map(e => e.data()) })
   return querySnapshot.docs.map(featureDetailToJSON)[0]
+}
+
+export const getAllPropertyReportLabels = async () => {
+  const querySnapshot = await firestore
+    .collection(FIRESTORE_PROPERTY_REPORT_LABELS)
+    .orderBy('createdAt')
+    .get()
+
+  return querySnapshot.docs.map(propertyReportLabelToJSON)
+}
+
+export const getAllPropertyReports = async () => {
+  const querySnapshot = await firestore
+    .collection(FIRESTORE_PROPERTY_REPORTS)
+    .orderBy('createdAt')
+    .get()
+
+  return querySnapshot.docs.map(propertyReportToJSON)
 }

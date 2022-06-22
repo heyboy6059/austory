@@ -31,3 +31,14 @@ export enum CalculatorLogType {
 export enum Feature {
   WH_TAX = 'whTax'
 }
+
+export enum PropertyReportType {
+  HOUSE_PRICE = 'housePrice'
+  // RENTAL = 'rental'
+  // SCHOOL_ZONES = 'schoolZones'
+}
+
+export enum HousePriceReportType {
+  HOUSE = 'house',
+  UNIT = 'unit'
+}

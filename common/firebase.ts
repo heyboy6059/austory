@@ -16,7 +16,11 @@ import {
   User,
   RawCategory,
   Category,
-  RawFeatureDetail
+  RawFeatureDetail,
+  PropertyReportLabel,
+  RawPropertyReportLabel,
+  RawPropertyReport,
+  PropertyReport
 } from '../typing/interfaces'
 import { QueryDocumentSnapshot } from 'firebase/firestore'
 
@@ -164,5 +168,25 @@ export const featureDetailToJSON = (
   return {
     ...featureDetailData,
     updatedAt: featureDetailData?.updatedAt?.toMillis() || 0
+  }
+}
+
+export const propertyReportLabelToJSON = (
+  propertyReportLabel: FirebaseDocumentSnapshot<RawPropertyReportLabel>
+): PropertyReportLabel => {
+  const propertyReportData = propertyReportLabel.data()
+  return {
+    ...propertyReportData,
+    createdAt: propertyReportData?.createdAt?.toMillis() || 0
+  }
+}
+
+export const propertyReportToJSON = (
+  propertyReport: FirebaseDocumentSnapshot<RawPropertyReport>
+): PropertyReport => {
+  const propertyReportData = propertyReport.data()
+  return {
+    ...propertyReportData,
+    createdAt: propertyReportData?.createdAt?.toMillis() || 0
   }
 }

@@ -1,4 +1,5 @@
 import { WHTaxRates } from './constants'
+// import { parse } from 'node-html-parser'
 
 export const generateExcerpt = (strContent: string, maxLength: number) => {
   if (!strContent) return ''
@@ -103,5 +104,15 @@ export const relabelDomainEmbeddedHtml = (html: string) => {
     .replace('YoY', '연간 변화 <div>(YoY)</div>')
     .replace('National', '호주 평균')
     .replace('Combined Capitals', '호주 평균')
+  // .replace(
+  //   /<td class="css-kzs65o">\$/gm,
+  //   '<td class="currency" id="currency-test">$'
+  // )
+
+  // const htmlDoc = parse(cleanHtml)
+  // const selector = htmlDoc.querySelector('#currency-test')
+  // console.log('innerHtml', selector.innerHTML)
+  // selector.set_content('<div>Successful!</div>')
+  // return htmlDoc.toString()
   return cleanHtml
 }

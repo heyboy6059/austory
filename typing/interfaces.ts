@@ -1,6 +1,12 @@
 import firebase from 'firebase/compat/app'
 import { User as FirebaseUserAuth } from '@firebase/auth-types'
-import { CalculatorLogType, Feature, NotificationMethod } from './enums'
+import {
+  CalculatorLogType,
+  HousePriceReportType,
+  NotificationMethod,
+  PropertyReportType,
+  Feature
+} from './enums'
 
 export type FirebaseDocumentSnapshot<T = firebase.firestore.DocumentData> =
   firebase.firestore.QueryDocumentSnapshot<T>
@@ -300,4 +306,27 @@ export interface RawFeatureDetail {
 
 export type FeatureDetail = Omit<RawFeatureDetail, 'updatedAt'> & {
   updatedAt: number | null
+}
+export interface RawPropertyReportLabel {
+  propertyReportLabelId: string
+  propertyReportType: PropertyReportType
+  label: string
+  korLabel: string
+  createdAt: FirestoreTimestamp
+}
+
+export type PropertyReportLabel = Omit<RawPropertyReportLabel, 'createdAt'> & {
+  createdAt: number | null
+}
+
+export interface RawPropertyReport {
+  propertyReportId: string
+  propertyReportLabelId: string
+  type: HousePriceReportType
+  embedHtml: string
+  createdAt: FirestoreTimestamp
+}
+
+export type PropertyReport = Omit<RawPropertyReport, 'createdAt'> & {
+  createdAt: number | null
 }
