@@ -1,4 +1,5 @@
 import firebase from 'firebase/compat/app'
+import { Feature } from '../typing/enums'
 import {
   FirestoreTimestamp,
   Post,
@@ -10,6 +11,7 @@ import {
 } from '../typing/interfaces'
 import {
   FIRESTORE_CATEGORIES,
+  FIRESTORE_FEATURE_DETAILS,
   FIRESTORE_POSTS,
   FIRESTORE_USERS
 } from './constants'
@@ -149,4 +151,40 @@ export const batchUpdateCategoryCounts = (
       updatedAt: serverTimestamp() as FirestoreTimestamp
     })
   })
+}
+
+export const updateFeatureDetail = async (
+  feature: Feature,
+  viewCount?: number,
+  submitCount?: number
+) => {
+  const featureDetailsRef = firestore
+    .collection(FIRESTORE_FEATURE_DETAILS)
+    .doc(feature)
+
+  if (viewCount && submitCount) {
+    await featureDetailsRef.update({
+      viewCountTotal: increment(viewCount),
+      submitCountTotal: increment(submitCount),
+      updatedAt: serverTimestamp() as FirestoreTimestamp
+    })
+  } else {
+    if (viewCount) {
+      await featureDetailsRef.update({
+        viewCountTotal: increment(viewCount),
+        updatedAt: serverTimestamp() as FirestoreTimestamp
+      })
+    }
+    if (submitCount) {
+      await featureDetailsRef.update({
+        submitCountTotal: increment(submitCount),
+        updatedAt: serverTimestamp() as FirestoreTimestamp
+      })
+    }
+  }
+  console.log(
+    `updated feature details. ${viewCount ? 'viewCount' : ''} ${
+      submitCount ? 'submitCount' : ''
+    }`
+  )
 }

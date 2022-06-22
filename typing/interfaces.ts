@@ -1,6 +1,6 @@
 import firebase from 'firebase/compat/app'
 import { User as FirebaseUserAuth } from '@firebase/auth-types'
-import { CalculatorLogType, NotificationMethod } from './enums'
+import { CalculatorLogType, Feature, NotificationMethod } from './enums'
 
 export type FirebaseDocumentSnapshot<T = firebase.firestore.DocumentData> =
   firebase.firestore.QueryDocumentSnapshot<T>
@@ -281,4 +281,23 @@ export interface RawCalculatorLog {
 
 export type CalculatorLog = Omit<RawCalculatorLog, 'createdAt'> & {
   createdAt: number
+}
+
+export interface RawFeatureView {
+  featureViewId: string
+  feature: Feature
+  viewValue: number
+  createdAt: FirestoreTimestamp
+  // createdBy: string
+}
+
+export interface RawFeatureDetail {
+  featureId: Feature
+  viewCountTotal: number
+  submitCountTotal?: number
+  updatedAt: FirestoreTimestamp
+}
+
+export type FeatureDetail = Omit<RawFeatureDetail, 'updatedAt'> & {
+  updatedAt: number | null
 }

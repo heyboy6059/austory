@@ -8,6 +8,7 @@ import Select, { SelectChangeEvent } from '@mui/material/Select'
 import MenuItem from '@mui/material/MenuItem'
 import {
   CalculatorLogType,
+  Feature,
   FinancialYear,
   FinancialYears
 } from '../../../typing/enums'
@@ -17,6 +18,7 @@ import TaxInputBox from '../../../components/Calculator/TaxInputBox'
 import { insertCalculatorLog } from '../../../common/insert'
 import { UserContext } from '../../../common/context'
 import dayjs from 'dayjs'
+import { updateFeatureDetail } from '../../../common/update'
 
 const Tax: FC = () => {
   const { user } = useContext(UserContext)
@@ -43,6 +45,9 @@ const Tax: FC = () => {
         }),
         user?.uid || GUEST_UID
       )
+
+      // update submit count
+      updateFeatureDetail(Feature.WH_TAX, null, 1)
     } catch (err) {
       // no throwing error
       console.error(`ERROR in insertCalculatorLog. ${err.message}`)

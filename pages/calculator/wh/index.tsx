@@ -1,11 +1,14 @@
-import { FC, useState, SyntheticEvent } from 'react'
+import { FC, useState, SyntheticEvent, useEffect, useContext } from 'react'
 import Box from '@mui/material/Box'
 import Tabs from '@mui/material/Tabs'
 import Tab from '@mui/material/Tab'
 import { useTheme } from '@mui/material/styles'
 import Typography from '@mui/material/Typography'
 import InfoIcon from '@mui/icons-material/Info'
-import { FlexCenterDiv } from '../../../common/uiComponents'
+import {
+  FlexCenterDiv,
+  FlexVerticalCenterDiv
+} from '../../../common/uiComponents'
 import { FcCalculator } from 'react-icons/fc'
 import CurrencyInput from 'react-currency-input-field'
 import TaxReturn from './taxReturn'
@@ -14,6 +17,13 @@ import Tax from './tax'
 import { CALCULATOR_AD_SLOT_ID, COLOURS } from '../../../common/constants'
 import AdSense from '../../../components/AdSense/AdSense'
 import Link from 'next/link'
+import { Feature } from '../../../typing/enums'
+import { insertFeatureView } from '../../../common/insert'
+import { updateFeatureDetail } from '../../../common/update'
+// import { AiOutlineEye } from 'react-icons/ai'
+import { HiCursorClick } from 'react-icons/hi'
+import { getFeatureDetail } from '../../../common/get'
+import { UserContext } from '../../../common/context'
 
 export const LabelWrapper = styled.div`
   text-align: center;
@@ -99,13 +109,68 @@ function TabPanel(props: TabPanelProps) {
 const WorkingHolidayCalculator: FC = () => {
   const theme = useTheme()
   const [value, setValue] = useState(0)
-
   const handleChange = (event: SyntheticEvent, newValue: number) => {
     setValue(newValue)
   }
 
+  const { isAdmin } = useContext(UserContext)
+
+  const [viewCountTotal, setViewCountTotal] = useState(0)
+  const [submitCountTotal, setSubmitCountTotal] = useState(0)
+
+  console.log({ viewCountTotal })
+  useEffect(() => {
+    insertFeatureView(Feature.WH_TAX)
+    updateFeatureDetail(Feature.WH_TAX, 1)
+    console.log('inserted feature view counts in useEffect')
+  }, [])
+
+  const getFeatureDetailCounts = async () => {
+    const featureDetail = await getFeatureDetail(Feature.WH_TAX)
+    if (featureDetail.viewCountTotal) {
+      setViewCountTotal(featureDetail.viewCountTotal)
+    }
+    if (featureDetail.submitCountTotal) {
+      setSubmitCountTotal(featureDetail.submitCountTotal)
+    }
+  }
+  useEffect(() => {
+    getFeatureDetailCounts()
+  }, [])
+
   return (
     <Box sx={{ width: '100%' }}>
+      {isAdmin ? (
+        <FlexCenterDiv style={{ justifyContent: 'right', gap: '10px' }}>
+          {/* <FlexVerticalCenterDiv>
+        <AiOutlineEye
+          fontSize={18}
+          style={{
+            marginRight: '1px',
+            marginTop: '1px',
+            color: COLOURS.PRIMARY_SPACE_GREY
+          }}
+        />
+        <span style={{ color: COLOURS.SECONDARY_SPACE_GREY }}>
+          {viewCountTotal}
+        </span>
+      </FlexVerticalCenterDiv> */}
+          <FlexVerticalCenterDiv>
+            <HiCursorClick
+              fontSize={18}
+              style={{
+                color: COLOURS.PRIMARY_SPACE_GREY
+              }}
+            />
+            <span style={{ color: COLOURS.SECONDARY_SPACE_GREY }}>
+              {submitCountTotal}
+            </span>
+          </FlexVerticalCenterDiv>
+        </FlexCenterDiv>
+      ) : (
+        <></>
+      )}
+
       <FlexCenterDiv style={{ marginTop: '10px' }}>
         <FcCalculator fontSize={24} />
         <Typography variant="h6" sx={{ fontWeight: 500 }}>

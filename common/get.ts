@@ -1,11 +1,19 @@
-import { Category, Post, PostType, RawPost } from '../typing/interfaces'
+import {
+  Category,
+  FeatureDetail,
+  Post,
+  PostType,
+  RawPost
+} from '../typing/interfaces'
 import {
   FIRESTORE_CATEGORIES,
+  FIRESTORE_FEATURE_DETAILS,
   FIRESTORE_USERNAMES,
   POST_FEED_NUM_LIMIT
 } from './constants'
 import {
   categoryToJSON,
+  featureDetailToJSON,
   firestore,
   fromMillis,
   postQueryDocToJSON
@@ -20,6 +28,7 @@ import {
   QueryDocumentSnapshot,
   startAfter
 } from 'firebase/firestore'
+import { Feature } from '../typing/enums'
 
 export const getUidByUsername = async (
   username: string
@@ -76,4 +85,16 @@ export const getPostsByType = async (
   const querySnapshot = await getDocs(q)
   const docs = querySnapshot.docs as QueryDocumentSnapshot<RawPost>[]
   return docs.map(postQueryDocToJSON)
+}
+
+export const getFeatureDetail = async (
+  feature: Feature
+): Promise<FeatureDetail> => {
+  const querySnapshot = await firestore
+    .collection(FIRESTORE_FEATURE_DETAILS)
+    .where('featureId', '==', feature)
+    .get()
+
+  console.log({ snapshotDocs: querySnapshot.docs.map(e => e.data()) })
+  return querySnapshot.docs.map(featureDetailToJSON)[0]
 }

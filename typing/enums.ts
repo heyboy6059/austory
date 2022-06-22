@@ -27,3 +27,7 @@ export enum CalculatorLogType {
   WH_TAX_RETURN = 'whTaxReturn',
   WH_TAX = 'whTax'
 }
+
+export enum Feature {
+  WH_TAX = 'whTax'
+}

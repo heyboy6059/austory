@@ -15,7 +15,8 @@ import {
   RawUser,
   User,
   RawCategory,
-  Category
+  Category,
+  RawFeatureDetail
 } from '../typing/interfaces'
 import { QueryDocumentSnapshot } from 'firebase/firestore'
 
@@ -154,3 +155,14 @@ export const categoryToJSON = (
   }
 }
 // TODO: generalize all dataToJSON functions
+
+export const featureDetailToJSON = (
+  featureDetail: FirebaseDocumentSnapshot<RawFeatureDetail>
+) => {
+  const featureDetailData = featureDetail.data()
+  // console.log({ featureDetailData })
+  return {
+    ...featureDetailData,
+    updatedAt: featureDetailData?.updatedAt?.toMillis() || 0
+  }
+}

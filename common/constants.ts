@@ -56,6 +56,8 @@ export const FIRESTORE_USERS = 'users'
 export const FIRESTORE_COMMENTS = 'comments'
 export const FIRESTORE_CATEGORIES = 'categories'
 export const FIRESTORE_CALCULATOR_LOGS = 'calculatorLogs'
+export const FIRESTORE_FEATURE_VIEWS = 'featureViews'
+export const FIRESTORE_FEATURE_DETAILS = 'featureDetails'
 
 export const GENERIC_KOREAN_ERROR_MESSAGE =
   '에러가 발생했습니다. 다시 시도해주세요.'
