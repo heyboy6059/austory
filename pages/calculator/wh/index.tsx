@@ -118,7 +118,6 @@ const WorkingHolidayCalculator: FC = () => {
   const [viewCountTotal, setViewCountTotal] = useState(0)
   const [submitCountTotal, setSubmitCountTotal] = useState(0)
 
-  console.log({ viewCountTotal })
   useEffect(() => {
     insertFeatureView(Feature.WH_TAX)
     updateFeatureDetail(Feature.WH_TAX, 1)
