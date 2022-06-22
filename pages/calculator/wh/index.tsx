@@ -14,16 +14,21 @@ import CurrencyInput from 'react-currency-input-field'
 import TaxReturn from './taxReturn'
 import styled from 'styled-components'
 import Tax from './tax'
-import { CALCULATOR_AD_SLOT_ID, COLOURS } from '../../../common/constants'
+import {
+  CALCULATOR_AD_SLOT_ID,
+  COLOURS,
+  ROOT_INKRAU_URL
+} from '../../../common/constants'
 import AdSense from '../../../components/AdSense/AdSense'
 import Link from 'next/link'
 import { Feature } from '../../../typing/enums'
 import { insertFeatureView } from '../../../common/insert'
 import { updateFeatureDetail } from '../../../common/update'
-// import { AiOutlineEye } from 'react-icons/ai'
+import { AiOutlineEye } from 'react-icons/ai'
 import { HiCursorClick } from 'react-icons/hi'
 import { getFeatureDetail } from '../../../common/get'
 import { UserContext } from '../../../common/context'
+import Metatags from '../../../components/Metatags'
 
 export const LabelWrapper = styled.div`
   text-align: center;
@@ -138,72 +143,85 @@ const WorkingHolidayCalculator: FC = () => {
   }, [])
 
   return (
-    <Box sx={{ width: '100%' }}>
-      {isAdmin ? (
-        <FlexCenterDiv style={{ justifyContent: 'right', gap: '10px' }}>
-          {/* <FlexVerticalCenterDiv>
-        <AiOutlineEye
-          fontSize={18}
-          style={{
-            marginRight: '1px',
-            marginTop: '1px',
-            color: COLOURS.PRIMARY_SPACE_GREY
-          }}
-        />
-        <span style={{ color: COLOURS.SECONDARY_SPACE_GREY }}>
-          {viewCountTotal}
-        </span>
-      </FlexVerticalCenterDiv> */}
-          <FlexVerticalCenterDiv>
-            <HiCursorClick
-              fontSize={18}
-              style={{
-                color: COLOURS.PRIMARY_SPACE_GREY
-              }}
-            />
-            <span style={{ color: COLOURS.SECONDARY_SPACE_GREY }}>
-              {submitCountTotal}
-            </span>
-          </FlexVerticalCenterDiv>
-        </FlexCenterDiv>
-      ) : (
-        <></>
-      )}
+    <>
+      <Metatags
+        title={`인크라우 - 호주 워홀 세금/환급 계산기`}
+        description={`호주 워킹 홀리데이 세금 환급 계산기`}
+        type="article"
+        link={`${ROOT_INKRAU_URL}/calculator/wh`}
+      />
+      <Box sx={{ width: '100%' }}>
+        {isAdmin ? (
+          <FlexCenterDiv style={{ justifyContent: 'right', gap: '10px' }}>
+            <FlexVerticalCenterDiv>
+              <AiOutlineEye
+                fontSize={18}
+                style={{
+                  marginRight: '1px',
+                  marginTop: '1px',
+                  color: COLOURS.PRIMARY_SPACE_GREY
+                }}
+              />
+              <span style={{ color: COLOURS.SECONDARY_SPACE_GREY }}>
+                {viewCountTotal}
+              </span>
+            </FlexVerticalCenterDiv>
+            <FlexVerticalCenterDiv>
+              <HiCursorClick
+                fontSize={18}
+                style={{
+                  color: COLOURS.PRIMARY_SPACE_GREY
+                }}
+              />
+              <span style={{ color: COLOURS.SECONDARY_SPACE_GREY }}>
+                {submitCountTotal}
+              </span>
+            </FlexVerticalCenterDiv>
+          </FlexCenterDiv>
+        ) : (
+          <></>
+        )}
 
-      <FlexCenterDiv style={{ marginTop: '10px' }}>
-        <FcCalculator fontSize={24} />
-        <Typography variant="h6" sx={{ fontWeight: 500 }}>
-          워킹홀리데이 세금/환급 계산기
-        </Typography>
-      </FlexCenterDiv>
-      <Tabs value={value} onChange={handleChange} variant="fullWidth" centered>
-        <Tab
-          label={
-            <Typography sx={{ fontWeight: 'bold' }}>
-              환급<small style={{ fontSize: '10px' }}>(Tax Return)</small>
-            </Typography>
-          }
-          {...a11yProps(0)}
-        />
-        <Tab
-          label={
-            <Typography sx={{ fontWeight: 'bold' }}>
-              세금<small style={{ fontSize: '10px' }}>(Tax)</small>
-            </Typography>
-          }
-          {...a11yProps(1)}
-        />
-      </Tabs>
-      <TabPanel value={value} index={0} dir={theme.direction}>
-        <TaxReturn />
-      </TabPanel>
-      <TabPanel value={value} index={1} dir={theme.direction}>
-        <Tax />
-      </TabPanel>
-      <div>
-        <AdSense adSlotId={CALCULATOR_AD_SLOT_ID} />
-      </div>
-    </Box>
+        <FlexCenterDiv style={{ marginTop: '10px' }}>
+          <FcCalculator fontSize={24} />
+          <Typography variant="h6" sx={{ fontWeight: 700 }}>
+            워킹홀리데이 세금/환급 계산기
+          </Typography>
+        </FlexCenterDiv>
+        <Tabs
+          value={value}
+          onChange={handleChange}
+          variant="fullWidth"
+          centered
+        >
+          <Tab
+            label={
+              <Typography sx={{ fontWeight: 'bold' }}>
+                환급<small style={{ fontSize: '10px' }}>(Tax Return)</small>
+              </Typography>
+            }
+            {...a11yProps(0)}
+          />
+          <Tab
+            label={
+              <Typography sx={{ fontWeight: 'bold' }}>
+                세금<small style={{ fontSize: '10px' }}>(Tax)</small>
+              </Typography>
+            }
+            {...a11yProps(1)}
+          />
+        </Tabs>
+        <TabPanel value={value} index={0} dir={theme.direction}>
+          <TaxReturn />
+        </TabPanel>
+        <TabPanel value={value} index={1} dir={theme.direction}>
+          <Tax />
+        </TabPanel>
+        <div>
+          <AdSense adSlotId={CALCULATOR_AD_SLOT_ID} />
+        </div>
+      </Box>
+    </>
   )
 }
 
