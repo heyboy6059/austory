@@ -239,7 +239,7 @@ const EmbedTest: FC = () => {
             </div>
           </>
         )}
-        <div>
+        <div style={{ marginTop: '4px' }}>
           <AdSense adSlotId={HOUSE_PRICE_AD_SLOT_ID} />
         </div>
       </div>
