@@ -1,5 +1,6 @@
-import { WHTaxRates } from './constants'
-// import { parse } from 'node-html-parser'
+import { TEMP_KOR_AUS_RATE, WHTaxRates } from './constants'
+import { parse } from 'node-html-parser'
+import { numToKorean, FormatOptions } from 'num-to-korean'
 
 export const generateExcerpt = (strContent: string, maxLength: number) => {
   if (!strContent) return ''
@@ -95,24 +96,64 @@ export const currencyFormatter = (value: number, country: 'KOR' | 'AUS') => {
 }
 
 export const relabelDomainEmbeddedHtml = (html: string) => {
+  const currentValueId = 'currency-value'
   const cleanHtml = html
     // instead of replaceAll (not all browser supported yet)
     .replace(/<span class="css-x1p5yj">\+<\/span>/gm, '')
     .replace(/<span class="css-x1p5yj">-<\/span>/gm, '')
-    .replace('Capital City', '주요 도시 <div>(Capital City)</div>')
-    .replace('QoQ', '분기 변화 <div>(QoQ)</div>')
-    .replace('YoY', '연간 변화 <div>(YoY)</div>')
+    .replace(
+      'Capital City',
+      '주요 도시 <div style="font-size:12px;">(Capital City)</div>'
+    )
+    .replace('QoQ', '분기 변화 <div style="font-size:12px;">(QoQ)</div>')
+    .replace('YoY', '연간 변화 <div style="font-size:12px;">(YoY)</div>')
     .replace('National', '호주 평균')
     .replace('Combined Capitals', '호주 평균')
-  // .replace(
-  //   /<td class="css-kzs65o">\$/gm,
-  //   '<td class="currency" id="currency-test">$'
-  // )
+    .replace(
+      /<td class="css-kzs65o">\$/gm,
+      `<td class="currency" id=${currentValueId}>$`
+    )
+    .replace(
+      /<td class="css-kzs65o">snr<\/td>/gm,
+      '<td class="css-kzs65o">-</td>'
+    )
+    .replace(
+      /<span class="css-6nfh2o">NaN%<\/span>/gm,
+      '<span class="css-6nfh2o">-</span>'
+    )
 
-  // const htmlDoc = parse(cleanHtml)
-  // const selector = htmlDoc.querySelector('#currency-test')
-  // console.log('innerHtml', selector.innerHTML)
-  // selector.set_content('<div>Successful!</div>')
-  // return htmlDoc.toString()
-  return cleanHtml
+  const htmlDoc = parse(cleanHtml)
+
+  // select all currency values
+  const selectors = htmlDoc.querySelectorAll(`#${currentValueId}`)
+
+  // add korean won values
+  selectors.forEach(selector => {
+    const strValue = selector.innerHTML
+      .replace('$', '')
+      .replace(/\,/gm, '')
+      .match(/[0-9]+/g)[0]
+
+    const intValue = parseInt(strValue)
+
+    let korWonValue = intValue * TEMP_KOR_AUS_RATE
+    const korWonStrValue = korWonValue?.toString()
+
+    if (korWonStrValue?.length > 4) {
+      const firstPart = korWonStrValue.slice(0, korWonStrValue.length - 4)
+      korWonValue = Number(firstPart + '0000')
+    }
+
+    // update selector
+    selector.set_content(`
+    <div>
+    <div style="font-size:16px;"><strong>${selector.innerHTML}</strong></div>
+    <div style="font-size:10px;color:grey;white-space:nowrap;">약 ${numToKorean(
+      korWonValue,
+      FormatOptions.MIXED
+    )}원</div>
+    </div>`)
+  })
+
+  return htmlDoc.toString()
 }

@@ -41,7 +41,21 @@ const DomainTableWrapper = styled.div`
   justify-content: center;
   font-size: 16px;
   table {
+    width: 100%;
     padding: 5px 10px;
+    border-spacing: 0px;
+    text-align: center;
+  }
+  thead {
+    tr {
+      background: #e0e0e0;
+    }
+    th {
+      padding: 10px 4px;
+    }
+  }
+  tr:nth-child(even) {
+    background: #e8e8e8;
   }
   tr {
     box-shadow: inset 0 -1px #e9e6ef;
@@ -52,7 +66,7 @@ const DomainTableWrapper = styled.div`
       display: none;
     }
     td {
-      padding: 12px 8px;
+      padding: 12px 10px;
     }
     td:nth-child(3) {
       display: none;
@@ -63,7 +77,7 @@ const DomainTableWrapper = styled.div`
   }
   .css-4knjz3 {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     gap: 6px;
   }
   .table_source {
@@ -183,6 +197,9 @@ const EmbedTest: FC = () => {
                 aria-label="house-unit-tab"
                 variant="fullWidth"
                 centered
+                sx={{
+                  height: '60px'
+                }}
               >
                 <Tab
                   icon={<HouseIcon />}
@@ -200,12 +217,15 @@ const EmbedTest: FC = () => {
             </Box>
             <DomainTableWrapper>
               {embedHtml ? (
-                <div dangerouslySetInnerHTML={{ __html: embedHtml }} />
+                <div
+                  dangerouslySetInnerHTML={{ __html: embedHtml }}
+                  style={{ width: '100%' }}
+                />
               ) : (
                 <div>데이터가 없습니다.</div>
               )}
             </DomainTableWrapper>
-            <div>
+            <div style={{ padding: '0px 10px' }}>
               <LabelWrapper>
                 <strong>데이터 출처:</strong> Domain, powered by APM
               </LabelWrapper>
