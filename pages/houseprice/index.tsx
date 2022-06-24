@@ -42,7 +42,7 @@ const DomainTableWrapper = styled.div`
   font-size: 16px;
   table {
     width: 100%;
-    padding: 5px 10px;
+    padding: 5px;
     border-spacing: 0px;
     text-align: center;
   }
