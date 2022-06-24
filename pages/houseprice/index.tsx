@@ -26,9 +26,11 @@ import Typography from '@mui/material/Typography'
 import toast from 'react-hot-toast'
 import {
   GENERIC_KOREAN_ERROR_MESSAGE,
+  HOUSE_PRICE_AD_SLOT_ID,
   ROOT_INKRAU_URL
 } from '../../common/constants'
 import Metatags from '../../components/Metatags'
+import AdSense from '../../components/AdSense/AdSense'
 
 const LabelWrapper = styled.div`
   font-size: 12px;
@@ -144,8 +146,8 @@ const EmbedTest: FC = () => {
   return (
     <>
       <Metatags
-        title={`인크라우 - 호주 부동산 가격 트랜드`}
-        description={`호주 지역별 부동산(하우스, 유닛) 가격 트랜드. 시드니, 멜번, 브리즈번, 아들레이드, 캔버라, 퍼스, 다윈, 호주 전역 부동산`}
+        title={`인크라우 - 호주 부동산 가격 트랜드 리포트`}
+        description={`호주 지역별 부동산(하우스, 유닛) 가격 트랜드 리포트. 시드니, 멜번, 브리즈번, 아들레이드, 캔버라, 퍼스, 다윈, 호주 전역 부동산`}
         type="article"
         link={`${ROOT_INKRAU_URL}/houseprice`}
       />
@@ -158,7 +160,7 @@ const EmbedTest: FC = () => {
         <FlexCenterDiv style={{ marginTop: '10px', gap: '10px' }}>
           <FcHome fontSize={24} />
           <Typography variant="h6" sx={{ fontWeight: 700 }}>
-            부동산 가격 트랜드
+            부동산 가격 트랜드 리포트
           </Typography>
         </FlexCenterDiv>
         {loading ? (
@@ -237,6 +239,9 @@ const EmbedTest: FC = () => {
             </div>
           </>
         )}
+        <div>
+          <AdSense adSlotId={HOUSE_PRICE_AD_SLOT_ID} />
+        </div>
       </div>
     </>
   )
