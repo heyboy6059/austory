@@ -199,20 +199,27 @@ const EmbedTest: FC = () => {
                 aria-label="house-unit-tab"
                 variant="fullWidth"
                 centered
-                sx={{
-                  height: '60px'
-                }}
               >
                 <Tab
-                  icon={<HouseIcon />}
-                  iconPosition="start"
-                  label="하우스"
+                  label={
+                    <FlexCenterDiv style={{ gap: '6px' }}>
+                      <HouseIcon />
+                      <span>
+                        <strong>하우스</strong>
+                      </span>
+                    </FlexCenterDiv>
+                  }
                   value={HousePriceReportType.HOUSE}
                 />
                 <Tab
-                  icon={<ApartmentIcon />}
-                  iconPosition="start"
-                  label="유닛"
+                  label={
+                    <FlexCenterDiv style={{ gap: '6px' }}>
+                      <ApartmentIcon />
+                      <span>
+                        <strong>유닛</strong>
+                      </span>
+                    </FlexCenterDiv>
+                  }
                   value={HousePriceReportType.UNIT}
                 />
               </Tabs>
