@@ -29,6 +29,9 @@ import { UserContext } from '../../../common/context'
 import dayjs from 'dayjs'
 import TipsAndUpdatesIcon from '@mui/icons-material/TipsAndUpdates'
 import { updateFeatureDetail } from '../../../common/update'
+import TableChartIcon from '@mui/icons-material/TableChart'
+import Tooltip from '@mui/material/Tooltip'
+import WhTaxRateDialog from '../../../components/Dialog/WhTaxRateDialog'
 
 const TaxReturn: FC = () => {
   const { user } = useContext(UserContext)
@@ -36,7 +39,7 @@ const TaxReturn: FC = () => {
   const [taxWithheld, setTaxWithheld] = useState(null)
   const [estimatedTaxReturnAmount, setEstimatedTaxReturnAmount] = useState(0)
   const [financialYear, setFinancialYear] = useState(FinancialYear.FY_2021_2022)
-
+  const [taxRateTableOpen, setTaxRateTableOpen] = useState(false)
   const estimateTaxAmount = useCallback(() => {
     const taxReturnAmount = calculateWHTax(gross, true, taxWithheld)
     setEstimatedTaxReturnAmount(taxReturnAmount)
@@ -71,24 +74,35 @@ const TaxReturn: FC = () => {
             englishSubTitle: 'Financial Year'
           }}
           inputField={
-            <Select
-              labelId="tax-financial-year-select-label"
-              id="tax-financial-year-order-select"
-              value={financialYear}
-              onChange={(event: SelectChangeEvent) => {
-                const fy = event.target.value as FinancialYear
-                setFinancialYear(fy)
-              }}
-              size="small"
-              fullWidth
-              style={{ height: '30px' }}
-            >
-              {FinancialYears.map(fy => (
-                <MenuItem value={fy} key={fy}>
-                  {fy}
-                </MenuItem>
-              ))}
-            </Select>
+            <GridDiv style={{ gridTemplateColumns: '1fr 40px', gap: '4px' }}>
+              <Select
+                labelId="tax-financial-year-select-label"
+                id="tax-financial-year-order-select"
+                value={financialYear}
+                onChange={(event: SelectChangeEvent) => {
+                  const fy = event.target.value as FinancialYear
+                  setFinancialYear(fy)
+                }}
+                size="small"
+                fullWidth
+                style={{ height: '40px', backgroundColor: 'white' }}
+              >
+                {FinancialYears.map(fy => (
+                  <MenuItem value={fy} key={fy}>
+                    {fy}
+                  </MenuItem>
+                ))}
+              </Select>
+              <FlexCenterDiv>
+                <Tooltip title="소득세율표" placement="bottom" arrow>
+                  <TableChartIcon
+                    fontSize="medium"
+                    color="primary"
+                    onClick={() => setTaxRateTableOpen(true)}
+                  />
+                </Tooltip>
+              </FlexCenterDiv>
+            </GridDiv>
           }
           infoTitle="회계년도 (Financial Year)"
           infoContent={
@@ -237,6 +251,14 @@ const TaxReturn: FC = () => {
         </GridDiv>
       </Stack>
       {TaxDisclaimer}
+      {taxRateTableOpen && (
+        <WhTaxRateDialog
+          open={taxRateTableOpen}
+          setOpen={setTaxRateTableOpen}
+          financialYear={financialYear}
+          // content="test"
+        />
+      )}
     </Box>
   )
 }

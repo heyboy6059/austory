@@ -73,7 +73,7 @@ const Tax: FC = () => {
               }}
               size="small"
               fullWidth
-              style={{ height: '30px' }}
+              style={{ height: '40px', backgroundColor: 'white' }}
             >
               {FinancialYears.map(fy => (
                 <MenuItem value={fy} key={fy}>
