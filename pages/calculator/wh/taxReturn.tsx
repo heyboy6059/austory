@@ -256,7 +256,6 @@ const TaxReturn: FC = () => {
           open={taxRateTableOpen}
           setOpen={setTaxRateTableOpen}
           financialYear={financialYear}
-          // content="test"
         />
       )}
     </Box>
