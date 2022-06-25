@@ -39,6 +39,18 @@ export interface RoleItem {
 
 export const ROLE_ITEMS_LIST: RoleItem[] = [
   {
+    label: '일반인',
+    role: Role.BASE
+  },
+  {
+    label: '워홀러',
+    role: Role.WORKING_HOLIDAY
+  },
+  {
+    label: '학생',
+    role: Role.STUDENT
+  },
+  {
     label: '직장인',
     role: Role.WORKER
   },
@@ -47,20 +59,8 @@ export const ROLE_ITEMS_LIST: RoleItem[] = [
     role: Role.BUSINESS
   },
   {
-    label: '학생',
-    role: Role.STUDENT
-  },
-  {
-    label: '워홀러',
-    role: Role.WORKING_HOLIDAY
-  },
-  {
     label: '자유인',
     role: Role.FREE_MAN
-  },
-  {
-    label: '일반인',
-    role: Role.BASE
   }
 ]
 
