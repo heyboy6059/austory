@@ -543,7 +543,8 @@ const TaxReturn: FC = () => {
                     {currencyFormatter(
                       estimatedTaxReturnAmount * TEMP_KOR_AUS_RATE,
                       'KOR'
-                    )}
+                    )}{' '}
+                    원
                   </>
                 ) : (
                   // <span style={{ color: 'white' }}>0</span>
