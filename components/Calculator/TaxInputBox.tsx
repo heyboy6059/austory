@@ -57,7 +57,7 @@ const TaxInputBox: FC<Props> = ({
                 원
               </>
             ) : (
-              ''
+              <div style={{ height: '18px' }}></div>
             )}
           </KoreanWonLabel>
         </div>
