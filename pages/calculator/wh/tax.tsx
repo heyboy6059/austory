@@ -20,7 +20,7 @@ import { UserContext } from '../../../common/context'
 import dayjs from 'dayjs'
 import { updateFeatureDetail } from '../../../common/update'
 import Tooltip from '@mui/material/Tooltip'
-import TableChartIcon from '@mui/icons-material/TableChart'
+import TableViewIcon from '@mui/icons-material/TableView'
 import WhTaxRateDialog from '../../../components/Dialog/WhTaxRateDialog'
 
 const Tax: FC = () => {
@@ -88,9 +88,10 @@ const Tax: FC = () => {
               </Select>
               <FlexCenterDiv>
                 <Tooltip title="소득세율표" placement="bottom" arrow>
-                  <TableChartIcon
+                  <TableViewIcon
                     fontSize="medium"
                     color="primary"
+                    style={{ cursor: 'pointer' }}
                     onClick={() => setTaxRateTableOpen(true)}
                   />
                 </Tooltip>

@@ -95,6 +95,17 @@ export const currencyFormatter = (value: number, country: 'KOR' | 'AUS') => {
   }).format(value)
 }
 
+export const roundUpKoreanWonValue = (koreanWon: number) => {
+  const korWonStrValue = koreanWon?.toString()
+
+  // round up last 3 digits
+  if (korWonStrValue?.length > 4) {
+    const firstPart = korWonStrValue.slice(0, korWonStrValue.length - 4)
+    return Number(firstPart + '0000')
+  }
+  return koreanWon
+}
+
 export const relabelDomainEmbeddedHtml = (html: string) => {
   const currentValueId = 'currency-value'
   const cleanHtml = html
@@ -137,12 +148,9 @@ export const relabelDomainEmbeddedHtml = (html: string) => {
     const intValue = parseInt(strValue)
 
     let korWonValue = intValue * TEMP_KOR_AUS_RATE
-    const korWonStrValue = korWonValue?.toString()
 
-    if (korWonStrValue?.length > 4) {
-      const firstPart = korWonStrValue.slice(0, korWonStrValue.length - 4)
-      korWonValue = Number(firstPart + '0000')
-    }
+    // round up
+    korWonValue = roundUpKoreanWonValue(korWonValue)
 
     // update selector
     selector.set_content(`

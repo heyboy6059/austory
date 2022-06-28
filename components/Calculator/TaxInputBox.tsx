@@ -1,6 +1,6 @@
 import { FC, useState } from 'react'
 import { TEMP_KOR_AUS_RATE } from '../../common/constants'
-import { currencyFormatter } from '../../common/functions'
+import { roundUpKoreanWonValue } from '../../common/functions'
 import { FlexCenterDiv, GridDiv } from '../../common/uiComponents'
 import {
   CustomInfoIcon,
@@ -8,6 +8,7 @@ import {
   LabelWrapper
 } from '../../pages/calculator/wh'
 import InfoDialog from '../Dialog/InfoDialog'
+import { numToKorean, FormatOptions } from 'num-to-korean'
 
 interface Props {
   labels: {
@@ -49,7 +50,11 @@ const TaxInputBox: FC<Props> = ({
             {koreanWon ? (
               <>
                 한화 약{' '}
-                {currencyFormatter(koreanWon * TEMP_KOR_AUS_RATE, 'KOR')}
+                {numToKorean(
+                  roundUpKoreanWonValue(koreanWon * TEMP_KOR_AUS_RATE),
+                  FormatOptions.MIXED
+                )}{' '}
+                원
               </>
             ) : (
               ''

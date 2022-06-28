@@ -29,7 +29,7 @@ import { UserContext } from '../../../common/context'
 import dayjs from 'dayjs'
 import TipsAndUpdatesIcon from '@mui/icons-material/TipsAndUpdates'
 import { updateFeatureDetail } from '../../../common/update'
-import TableChartIcon from '@mui/icons-material/TableChart'
+import TableViewIcon from '@mui/icons-material/TableView'
 import Tooltip from '@mui/material/Tooltip'
 import WhTaxRateDialog from '../../../components/Dialog/WhTaxRateDialog'
 
@@ -95,9 +95,10 @@ const TaxReturn: FC = () => {
               </Select>
               <FlexCenterDiv>
                 <Tooltip title="소득세율표" placement="bottom" arrow>
-                  <TableChartIcon
+                  <TableViewIcon
                     fontSize="medium"
                     color="primary"
+                    style={{ cursor: 'pointer' }}
                     onClick={() => setTaxRateTableOpen(true)}
                   />
                 </Tooltip>
