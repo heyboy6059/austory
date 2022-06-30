@@ -97,6 +97,7 @@ export const getFeatureDetail = async (
   const querySnapshot = await firestore
     .collection(FIRESTORE_FEATURE_DETAILS)
     .where('featureId', '==', feature)
+    .limit(1)
     .get()
 
   console.log({ snapshotDocs: querySnapshot.docs.map(e => e.data()) })

@@ -7,7 +7,8 @@ import {
   SyntheticEvent,
   useEffect,
   useCallback,
-  useMemo
+  useMemo,
+  useContext
 } from 'react'
 import styled from 'styled-components'
 import { relabelDomainEmbeddedHtml } from '../../common/functions'
@@ -15,22 +16,28 @@ import HouseIcon from '@mui/icons-material/House'
 import ApartmentIcon from '@mui/icons-material/Apartment'
 import {
   getAllPropertyReportLabels,
-  getAllPropertyReports
+  getAllPropertyReports,
+  getFeatureDetail
 } from '../../common/get'
 import { PropertyReport, PropertyReportLabel } from '../../typing/interfaces'
-import { HousePriceReportType } from '../../typing/enums'
+import { Feature, HousePriceReportType } from '../../typing/enums'
 import CircularProgress from '@mui/material/CircularProgress'
-import { FlexCenterDiv } from '../../common/uiComponents'
+import { FlexCenterDiv, FlexVerticalCenterDiv } from '../../common/uiComponents'
 import { FcHome } from 'react-icons/fc'
 import Typography from '@mui/material/Typography'
 import toast from 'react-hot-toast'
 import {
+  COLOURS,
   GENERIC_KOREAN_ERROR_MESSAGE,
   HOUSE_PRICE_AD_SLOT_ID,
   ROOT_INKRAU_URL
 } from '../../common/constants'
 import Metatags from '../../components/Metatags'
 import AdSense from '../../components/AdSense/AdSense'
+import { insertFeatureView } from '../../common/insert'
+import { updateFeatureDetail } from '../../common/update'
+import { UserContext } from '../../common/context'
+import { AiOutlineEye } from 'react-icons/ai'
 
 const LabelWrapper = styled.div`
   font-size: 12px;
@@ -88,12 +95,14 @@ const DomainTableWrapper = styled.div`
   }
 `
 
-const EmbedTest: FC = () => {
+const HousePrice: FC = () => {
+  const { isAdmin } = useContext(UserContext)
   const [loading, setLoading] = useState(false)
   const [labelTabValue, setLabelTabValue] = useState('')
   const [houseUnitTabValue, setHouseUnitTabValue] = useState(
     HousePriceReportType.HOUSE
   )
+  const [viewCountTotal, setViewCountTotal] = useState(0)
   const handleLabelTab = (event: SyntheticEvent, newValue: string) => {
     setLabelTabValue(newValue)
   }
@@ -123,6 +132,21 @@ const EmbedTest: FC = () => {
     } finally {
       setLoading(false)
     }
+  }, [])
+
+  const featureCountHandler = useCallback(async () => {
+    await insertFeatureView(Feature.HOUSE_RICE)
+    await updateFeatureDetail(Feature.HOUSE_RICE, 1)
+    const featureDetail = await getFeatureDetail(Feature.HOUSE_RICE)
+    if (featureDetail.viewCountTotal) {
+      setViewCountTotal(featureDetail.viewCountTotal)
+    }
+  }, [])
+
+  useEffect(() => {
+    featureCountHandler()
+    console.log('featureCountHandler in useEffect')
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   useEffect(() => {
@@ -157,6 +181,31 @@ const EmbedTest: FC = () => {
           maxWidth: '600px'
         }}
       >
+        {isAdmin ? (
+          <FlexCenterDiv
+            style={{
+              justifyContent: 'right',
+              gap: '10px',
+              marginRight: '10px'
+            }}
+          >
+            <FlexVerticalCenterDiv>
+              <AiOutlineEye
+                fontSize={18}
+                style={{
+                  marginRight: '1px',
+                  marginTop: '1px',
+                  color: COLOURS.PRIMARY_SPACE_GREY
+                }}
+              />
+              <span style={{ color: COLOURS.SECONDARY_SPACE_GREY }}>
+                {viewCountTotal}
+              </span>
+            </FlexVerticalCenterDiv>
+          </FlexCenterDiv>
+        ) : (
+          <></>
+        )}
         <FlexCenterDiv style={{ marginTop: '10px', gap: '10px' }}>
           <FcHome fontSize={24} />
           <Typography variant="h6" sx={{ fontWeight: 700 }}>
@@ -254,4 +303,4 @@ const EmbedTest: FC = () => {
   )
 }
 
-export default EmbedTest
+export default HousePrice

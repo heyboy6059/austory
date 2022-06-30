@@ -29,7 +29,8 @@ export enum CalculatorLogType {
 }
 
 export enum Feature {
-  WH_TAX = 'whTax'
+  WH_TAX = 'whTax',
+  HOUSE_RICE = 'housePrice'
 }
 
 export enum PropertyReportType {
