@@ -29,6 +29,7 @@ import { HiCursorClick } from 'react-icons/hi'
 import { getFeatureDetail } from '../../../common/get'
 import { UserContext } from '../../../common/context'
 import Metatags from '../../../components/Metatags'
+import Chip from '@mui/material/Chip'
 
 export const LabelWrapper = styled.div`
   text-align: center;
@@ -54,25 +55,37 @@ export const CustomInfoIcon = styled(InfoIcon)`
 `
 
 export const TaxDisclaimer = (
-  <div
-    style={{
-      fontSize: '10px',
-      margin: '10px 5px 0px 5px',
-      color: COLOURS.TEXT_GREY
-    }}
-  >
-    위 계산 금액은 개인의 현재 고용 상황과 재정 현황에 따라 약간씩 다를수
-    있습니다. 참고용으로 사용해주세요.
-    <div>
-      자료출처:{' '}
-      <Link
-        href="https://www.ato.gov.au/rates/schedule-15---tax-table-for-working-holiday-makers/"
-        passHref
-      >
-        <a target="_blank">
-          ATO Schedule 15 – Tax table for working holiday makers
-        </a>
-      </Link>
+  <div>
+    <FlexCenterDiv style={{ marginTop: '15px' }}>
+      <Chip
+        label="호주 국세청(ATO) 세금 관련 한국어 안내"
+        component="a"
+        href="https://www.ato.gov.au/General/Other-languages/In-detail/Korean/Tax-and-super-in-Australia---what-you-need-to-know---Korean/?anchor=Lodgingyourfirsttaxreturn1#Lodgingyourfirsttaxreturn1"
+        variant="outlined"
+        target="_blank"
+        clickable
+      />
+    </FlexCenterDiv>
+    <div
+      style={{
+        fontSize: '10px',
+        margin: '10px 5px 0px 5px',
+        color: COLOURS.TEXT_GREY
+      }}
+    >
+      위 계산 금액은 개인의 현재 고용 상황과 재정 현황에 따라 약간씩 다를수
+      있습니다. 참고용으로 사용해주세요.
+      <div>
+        자료출처:{' '}
+        <Link
+          href="https://www.ato.gov.au/rates/schedule-15---tax-table-for-working-holiday-makers/"
+          passHref
+        >
+          <a target="_blank">
+            ATO Schedule 15 – Tax table for working holiday makers
+          </a>
+        </Link>
+      </div>
     </div>
   </div>
 )
