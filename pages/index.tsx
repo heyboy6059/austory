@@ -22,8 +22,9 @@ import toast from 'react-hot-toast'
 
 import { useRouter } from 'next/router'
 import PostContent from '../components/Post/PostContent'
-import { Button } from '@mui/material'
+import { Button, Tooltip } from '@mui/material'
 import { FcCalculator } from 'react-icons/fc'
+import { FcHome } from 'react-icons/fc'
 
 function a11yProps(index: number) {
   return {
@@ -216,7 +217,12 @@ const Home = ({ posts, postTypeFromQuery }) => {
            */
           <>
             <Box sx={{ width: '100%' }}>
-              <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+              <Box
+                sx={{
+                  // borderBottom: 1,
+                  borderColor: 'divider'
+                }}
+              >
                 <FlexSpaceBetweenCenter>
                   <Tabs
                     value={tabValue}
@@ -225,11 +231,13 @@ const Home = ({ posts, postTypeFromQuery }) => {
                     indicatorColor="secondary"
                     aria-label="main menu tabs"
                     style={{ minHeight: '0', padding: '0', height: '42px' }}
+                    variant="scrollable"
+                    scrollButtons="auto"
                   >
                     <Tab
                       label={<strong>커뮤니티</strong>}
                       {...a11yProps(0)}
-                      style={{ padding: '10px' }}
+                      style={{ padding: '10px 2px' }}
                       onClick={async () => {
                         tabHandler('community')
                       }}
@@ -237,22 +245,45 @@ const Home = ({ posts, postTypeFromQuery }) => {
                     <Tab
                       label={<strong>인크라우 컨텐츠</strong>}
                       {...a11yProps(1)}
-                      style={{ padding: '10px 8px' }}
+                      style={{ padding: '10px 2px' }}
                       onClick={async () => {
                         tabHandler('inkrau')
                       }}
                     />
                   </Tabs>
-                  <Button
-                    size="small"
-                    color="info"
-                    variant="outlined"
-                    onClick={() => router.push(`/calculator/wh`)}
-                    style={{ marginRight: '2px' }}
-                    startIcon={<FcCalculator />}
-                  >
-                    워홀 세금 계산기
-                  </Button>
+
+                  <FlexCenterDiv style={{ gap: '2px' }}>
+                    <Tooltip title="워홀 세금 계산기" placement="bottom" arrow>
+                      <Button
+                        size="small"
+                        color="info"
+                        variant="outlined"
+                        onClick={() => router.push(`/calculator/wh`)}
+                      >
+                        <FlexCenterDiv style={{ gap: '2px' }}>
+                          <FcCalculator />
+                          워홀 세금
+                        </FlexCenterDiv>
+                      </Button>
+                    </Tooltip>
+                    <Tooltip
+                      title="부동산 가격 트랜드 리포트"
+                      placement="bottom"
+                      arrow
+                    >
+                      <Button
+                        size="small"
+                        color="info"
+                        variant="outlined"
+                        onClick={() => router.push(`/houseprice`)}
+                      >
+                        <FlexCenterDiv style={{ gap: '2px' }}>
+                          <FcHome />
+                          부동산
+                        </FlexCenterDiv>
+                      </Button>
+                    </Tooltip>
+                  </FlexCenterDiv>
                 </FlexSpaceBetweenCenter>
               </Box>
             </Box>
