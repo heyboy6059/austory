@@ -2,7 +2,11 @@ import Box from '@mui/material/Box'
 import { FC, useState, useCallback, useContext } from 'react'
 import { FlexCenterDiv, GridDiv } from '../../../common/uiComponents'
 import Stack from '@mui/material/Stack'
-import { COLOURS, GUEST_UID } from '../../../common/constants'
+import {
+  COLOURS,
+  GUEST_UID,
+  TEMP_KOR_AUS_RATE
+} from '../../../common/constants'
 import Button from '@mui/material/Button'
 import Select, { SelectChangeEvent } from '@mui/material/Select'
 import MenuItem from '@mui/material/MenuItem'
@@ -12,8 +16,16 @@ import {
   FinancialYear,
   FinancialYears
 } from '../../../typing/enums'
-import { CustomCurrencyInput, LabelWrapper, TaxDisclaimer } from '.'
-import { calculateWHTax } from '../../../common/functions'
+import {
+  CustomCurrencyInput,
+  KoreanWonLabel,
+  LabelWrapper,
+  TaxDisclaimer
+} from '.'
+import {
+  calculateWHTax,
+  roundUpKoreanWonValue
+} from '../../../common/functions'
 import TaxInputBox from '../../../components/Calculator/TaxInputBox'
 import { insertCalculatorLog } from '../../../common/insert'
 import { UserContext } from '../../../common/context'
@@ -22,6 +34,7 @@ import { updateFeatureDetail } from '../../../common/update'
 import Tooltip from '@mui/material/Tooltip'
 import TableViewIcon from '@mui/icons-material/TableView'
 import WhTaxRateDialog from '../../../components/Dialog/WhTaxRateDialog'
+import { numToKorean, FormatOptions } from 'num-to-korean'
 
 const Tax: FC = () => {
   const { user } = useContext(UserContext)
@@ -164,6 +177,16 @@ const Tax: FC = () => {
             </h1>
           </FlexCenterDiv>
           <FlexCenterDiv>
+            <KoreanWonLabel style={{ textAlign: 'center' }}>
+              {estimatedTax
+                ? `한화 약 ${numToKorean(
+                    roundUpKoreanWonValue(estimatedTax * TEMP_KOR_AUS_RATE),
+                    FormatOptions.MIXED
+                  )}원`
+                : ''}
+            </KoreanWonLabel>
+          </FlexCenterDiv>
+          <FlexCenterDiv>
             <LabelWrapper>
               <div>예상 세금</div>
               <div>
@@ -186,6 +209,18 @@ const Tax: FC = () => {
                 currency: 'USD'
               }).format(estimatedActualIncome)}
             </h1>
+          </FlexCenterDiv>
+          <FlexCenterDiv>
+            <KoreanWonLabel style={{ textAlign: 'center' }}>
+              {estimatedActualIncome
+                ? `한화 약 ${numToKorean(
+                    roundUpKoreanWonValue(
+                      estimatedActualIncome * TEMP_KOR_AUS_RATE
+                    ),
+                    FormatOptions.MIXED
+                  )}원`
+                : ''}
+            </KoreanWonLabel>
           </FlexCenterDiv>
           <FlexCenterDiv>
             <LabelWrapper>

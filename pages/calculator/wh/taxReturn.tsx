@@ -22,7 +22,10 @@ import {
   LabelWrapper,
   TaxDisclaimer
 } from '.'
-import { calculateWHTax, currencyFormatter } from '../../../common/functions'
+import {
+  calculateWHTax,
+  roundUpKoreanWonValue
+} from '../../../common/functions'
 import TaxInputBox from '../../../components/Calculator/TaxInputBox'
 import { insertCalculatorLog } from '../../../common/insert'
 import { UserContext } from '../../../common/context'
@@ -35,6 +38,7 @@ import WhTaxRateDialog from '../../../components/Dialog/WhTaxRateDialog'
 import AddCircleIcon from '@mui/icons-material/AddCircle'
 import Menu from '@mui/material/Menu'
 import CancelIcon from '@mui/icons-material/Cancel'
+import { numToKorean, FormatOptions } from 'num-to-korean'
 
 const TaxReturn: FC = () => {
   const { user } = useContext(UserContext)
@@ -124,6 +128,19 @@ const TaxReturn: FC = () => {
     }
   }, [deductionMenu, extraIncomeMenu, financialYear, gross, taxWithheld, user])
 
+  const korValueHandler = (dollarValue: number) => {
+    const negative = dollarValue < 0
+    const absDollarValue = Math.abs(dollarValue)
+    // negative
+    if (dollarValue < 0) {
+    }
+    const koreanWon = numToKorean(
+      roundUpKoreanWonValue(absDollarValue * TEMP_KOR_AUS_RATE),
+      FormatOptions.MIXED
+    )
+
+    return negative ? `-${koreanWon}` : koreanWon
+  }
   return (
     <Box sx={{ width: '100%' }}>
       <Stack spacing={1}>
@@ -538,14 +555,7 @@ const TaxReturn: FC = () => {
             <FlexCenterDiv>
               <KoreanWonLabel style={{ textAlign: 'center' }}>
                 {estimatedTaxReturnAmount ? (
-                  <>
-                    한화 약{' '}
-                    {currencyFormatter(
-                      estimatedTaxReturnAmount * TEMP_KOR_AUS_RATE,
-                      'KOR'
-                    )}{' '}
-                    원
-                  </>
+                  <>한화 약 {korValueHandler(estimatedTaxReturnAmount)} 원</>
                 ) : (
                   // <span style={{ color: 'white' }}>0</span>
                   ''
@@ -562,7 +572,10 @@ const TaxReturn: FC = () => {
                 </strong>
               </div>
               <div>
-                <small>Estimated tax refund</small>
+                <small>
+                  Estimated{' '}
+                  {estimatedTaxReturnAmount >= 0 ? 'tax refund' : 'tax payment'}{' '}
+                </small>
               </div>
             </LabelWrapper>
           </FlexCenterDiv>
