@@ -121,6 +121,38 @@ export const relabelDomainEmbeddedHtml = (html: string) => {
     .replace('National', '호주 평균')
     .replace('Combined Capitals', '호주 평균')
     .replace(
+      /<td class="css-kzs65o">Sydney<\/td>/gm,
+      '<td class="css-kzs65o" style="line-height:18px;"><div>시드니</div><div><small>Sydney</small></div></td>'
+    )
+    .replace(
+      /<td class="css-kzs65o">Melbourne<\/td>/gm,
+      '<td class="css-kzs65o" style="line-height:18px;"><div>멜번</div><div><small>Melbourne</small></div></td>'
+    )
+    .replace(
+      /<td class="css-kzs65o">Brisbane<\/td>/gm,
+      '<td class="css-kzs65o" style="line-height:18px;"><div>브리즈번</div><div><small>Brisbane</small></div></td>'
+    )
+    .replace(
+      /<td class="css-kzs65o">Adelaide<\/td>/gm,
+      '<td class="css-kzs65o" style="line-height:18px;"><div>애들레이드</div><div><small>Adelaide</small></div></td>'
+    )
+    .replace(
+      /<td class="css-kzs65o">Canberra<\/td>/gm,
+      '<td class="css-kzs65o" style="line-height:18px;"><div>캔버라</div><div><small>Canberra</small></div></td>'
+    )
+    .replace(
+      /<td class="css-kzs65o">Perth<\/td>/gm,
+      '<td class="css-kzs65o" style="line-height:18px;"><div>퍼스</div><div><small>Perth</small></div></td>'
+    )
+    .replace(
+      /<td class="css-kzs65o">Hobart<\/td>/gm,
+      '<td class="css-kzs65o" style="line-height:18px;"><div>호바트</div><div><small>Hobart</small></div></td>'
+    )
+    .replace(
+      /<td class="css-kzs65o">Darwin<\/td>/gm,
+      '<td class="css-kzs65o" style="line-height:18px;"><div>다윈</div><div><small>Darwin</small></div></td>'
+    )
+    .replace(
       /<td class="css-kzs65o">\$/gm,
       `<td class="currency" id=${currentValueId}>$`
     )
@@ -132,6 +164,8 @@ export const relabelDomainEmbeddedHtml = (html: string) => {
       /<span class="css-6nfh2o">NaN%<\/span>/gm,
       '<span class="css-6nfh2o">-</span>'
     )
+
+  //<td class="css-kzs65o">Sydney</td>
 
   const htmlDoc = parse(cleanHtml)
 
