@@ -60,7 +60,7 @@ const DomainTableWrapper = styled.div`
       background: #e0e0e0;
     }
     th {
-      padding: 10px 4px;
+      padding: 10px 2px;
     }
   }
   tr:nth-child(even) {
@@ -75,7 +75,7 @@ const DomainTableWrapper = styled.div`
       display: none;
     }
     td {
-      padding: 12px 10px;
+      padding: 12px 4px;
     }
     td:nth-child(3) {
       display: none;
