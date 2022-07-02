@@ -45,7 +45,7 @@ const TaxReturn: FC = () => {
   const [gross, setGross] = useState(null)
   const [taxWithheld, setTaxWithheld] = useState(null)
   const [estimatedTaxReturnAmount, setEstimatedTaxReturnAmount] = useState(0)
-  const [financialYear, setFinancialYear] = useState(FinancialYear.FY_2021_2022)
+  const [financialYear, setFinancialYear] = useState(FinancialYear.FY_2022_2023)
   const [taxRateTableOpen, setTaxRateTableOpen] = useState(false)
 
   enum AddMenuItem {

@@ -15,10 +15,12 @@ export enum CommentOrder {
 
 export enum FinancialYear {
   FY_2020_2021 = '2020-2021',
-  FY_2021_2022 = '2021-2022'
+  FY_2021_2022 = '2021-2022',
+  FY_2022_2023 = '2022-2023'
 }
 
 export const FinancialYears = [
+  FinancialYear.FY_2022_2023,
   FinancialYear.FY_2021_2022,
   FinancialYear.FY_2020_2021
 ]
