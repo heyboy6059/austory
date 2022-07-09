@@ -35,6 +35,7 @@ const TopCategoryMenu: NextPage<Props> = ({
             ? 'filled'
             : 'outlined'
         }
+        style={{ cursor: 'pointer', borderRadius: '14px' }}
         onClick={() => {
           if (!(selectedTopCategoryMenu === TopCategoryTab.ALL)) {
             setSelectedTopCategoryMenu(TopCategoryTab.ALL)
@@ -59,13 +60,17 @@ const TopCategoryMenu: NextPage<Props> = ({
               >
                 <Chip
                   label={topCategory.korLabel}
-                  style={{ margin: '0 5px', cursor: 'pointer' }}
+                  color="info"
+                  style={{
+                    margin: '0 5px',
+                    cursor: 'pointer',
+                    borderRadius: '14px'
+                  }}
                   variant={
                     selectedTopCategoryMenu === topCategory.topCategoryMenu
                       ? 'filled'
                       : 'outlined'
                   }
-                  color="primary"
                 />
               </HorizontalScrollItem>
             )
