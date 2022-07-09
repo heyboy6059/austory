@@ -1,4 +1,11 @@
-import { FC, useState, SyntheticEvent, useEffect, useContext } from 'react'
+import {
+  FC,
+  useState,
+  SyntheticEvent,
+  useEffect,
+  useContext,
+  useCallback
+} from 'react'
 import Box from '@mui/material/Box'
 import Tabs from '@mui/material/Tabs'
 import Tab from '@mui/material/Tab'
@@ -21,7 +28,7 @@ import {
 } from '../../../common/constants'
 import AdSense from '../../../components/AdSense/AdSense'
 import Link from 'next/link'
-import { Feature } from '../../../typing/enums'
+import { Feature, MainMenuTab } from '../../../typing/enums'
 import { insertFeatureView } from '../../../common/insert'
 import { updateFeatureDetail } from '../../../common/update'
 import { AiOutlineEye } from 'react-icons/ai'
@@ -30,6 +37,7 @@ import { getFeatureDetail } from '../../../common/get'
 import { UserContext } from '../../../common/context'
 import Metatags from '../../../components/Metatags'
 import Chip from '@mui/material/Chip'
+import { useMainMenu } from '../../../components/Context/MainMenu'
 
 export const LabelWrapper = styled.div`
   text-align: center;
@@ -127,6 +135,7 @@ function TabPanel(props: TabPanelProps) {
 const WorkingHolidayCalculator: FC = () => {
   const theme = useTheme()
   const [value, setValue] = useState(0)
+  const { selectedMainMenuTab, setSelectedMainMenuTab } = useMainMenu()
   const handleChange = (event: SyntheticEvent, newValue: number) => {
     setValue(newValue)
   }
@@ -136,13 +145,9 @@ const WorkingHolidayCalculator: FC = () => {
   const [viewCountTotal, setViewCountTotal] = useState(0)
   const [submitCountTotal, setSubmitCountTotal] = useState(0)
 
-  useEffect(() => {
+  const featureCountHandler = useCallback(async () => {
     insertFeatureView(Feature.WH_TAX)
-    updateFeatureDetail(Feature.WH_TAX, 1)
-    console.log('inserted feature view counts in useEffect')
-  }, [])
-
-  const getFeatureDetailCounts = async () => {
+    await updateFeatureDetail(Feature.WH_TAX, 1)
     const featureDetail = await getFeatureDetail(Feature.WH_TAX)
     if (featureDetail.viewCountTotal) {
       setViewCountTotal(featureDetail.viewCountTotal)
@@ -150,9 +155,16 @@ const WorkingHolidayCalculator: FC = () => {
     if (featureDetail.submitCountTotal) {
       setSubmitCountTotal(featureDetail.submitCountTotal)
     }
-  }
+  }, [])
+
   useEffect(() => {
-    getFeatureDetailCounts()
+    if (selectedMainMenuTab !== MainMenuTab.WH_TAX_CAL) {
+      console.log('update mainMenuTab WH_TAX_CAL in useEffect')
+      setSelectedMainMenuTab(MainMenuTab.WH_TAX_CAL)
+    }
+    featureCountHandler()
+    console.log('featureCountHandler in useEffect')
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return (
@@ -168,25 +180,35 @@ const WorkingHolidayCalculator: FC = () => {
           <FlexCenterDiv style={{ justifyContent: 'right', gap: '10px' }}>
             <FlexVerticalCenterDiv>
               <AiOutlineEye
-                fontSize={18}
+                fontSize={14}
                 style={{
                   marginRight: '1px',
                   marginTop: '1px',
                   color: COLOURS.PRIMARY_SPACE_GREY
                 }}
               />
-              <span style={{ color: COLOURS.SECONDARY_SPACE_GREY }}>
+              <span
+                style={{
+                  fontSize: '12px',
+                  color: COLOURS.SECONDARY_SPACE_GREY
+                }}
+              >
                 {viewCountTotal}
               </span>
             </FlexVerticalCenterDiv>
             <FlexVerticalCenterDiv>
               <HiCursorClick
-                fontSize={18}
+                fontSize={14}
                 style={{
                   color: COLOURS.PRIMARY_SPACE_GREY
                 }}
               />
-              <span style={{ color: COLOURS.SECONDARY_SPACE_GREY }}>
+              <span
+                style={{
+                  fontSize: '12px',
+                  color: COLOURS.SECONDARY_SPACE_GREY
+                }}
+              >
                 {submitCountTotal}
               </span>
             </FlexVerticalCenterDiv>

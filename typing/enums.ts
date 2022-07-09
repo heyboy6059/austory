@@ -45,3 +45,46 @@ export enum HousePriceReportType {
   HOUSE = 'house',
   UNIT = 'unit'
 }
+
+export enum MainMenuTab {
+  COMMUNITY = 'Community',
+  HOUSE_PRICE = 'HousePrice',
+  WH_TAX_CAL = 'whTaxCal'
+}
+
+export enum TopCategoryTab {
+  ALL = 'All',
+  POPULAR = 'Popular',
+  OFFICIAL = 'Official',
+  DEAL = 'Deal',
+  AUS_NEWS = 'AusNews',
+  QUESTION = 'Question'
+}
+
+export const topCategoryMenuList = [
+  {
+    topCategoryMenu: TopCategoryTab.ALL,
+    korLabel: 'ALL'
+  },
+  // TODO: implement popular posts
+  // {
+  //   topCategoryMenu: TopCategoryTab.POPULAR,
+  //   korLabel: '인기글'
+  // },
+  {
+    topCategoryMenu: TopCategoryTab.OFFICIAL,
+    korLabel: '인크라우 공식'
+  },
+  {
+    topCategoryMenu: TopCategoryTab.DEAL,
+    korLabel: 'DEAL'
+  },
+  {
+    topCategoryMenu: TopCategoryTab.QUESTION,
+    korLabel: '질문'
+  },
+  {
+    topCategoryMenu: TopCategoryTab.AUS_NEWS,
+    korLabel: '호주 뉴스'
+  }
+]

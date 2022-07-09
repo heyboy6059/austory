@@ -275,6 +275,22 @@ export type Category = Omit<
 
 export type CategoryOption = Pick<RawCategory, 'categoryId' | 'name'>
 
+export interface RawTopCategory {
+  categoryTopId: string
+  name: string
+  sort: number
+  disabled: boolean
+  createdAt: FirestoreTimestamp
+}
+
+export type TopCategory = Omit<RawTopCategory, 'createdAt'> & {
+  createdAt: number
+}
+
+export type ExtendedTopCategory = TopCategory & {
+  selected: boolean
+}
+
 export type PostType = 'inkrau' | 'community'
 
 export interface RawCalculatorLog {

@@ -20,7 +20,7 @@ import {
   getFeatureDetail
 } from '../../common/get'
 import { PropertyReport, PropertyReportLabel } from '../../typing/interfaces'
-import { Feature, HousePriceReportType } from '../../typing/enums'
+import { Feature, HousePriceReportType, MainMenuTab } from '../../typing/enums'
 import CircularProgress from '@mui/material/CircularProgress'
 import { FlexCenterDiv, FlexVerticalCenterDiv } from '../../common/uiComponents'
 import { FcHome } from 'react-icons/fc'
@@ -38,6 +38,7 @@ import { insertFeatureView } from '../../common/insert'
 import { updateFeatureDetail } from '../../common/update'
 import { UserContext } from '../../common/context'
 import { AiOutlineEye } from 'react-icons/ai'
+import { useMainMenu } from '../../components/Context/MainMenu'
 
 const LabelWrapper = styled.div`
   font-size: 12px;
@@ -97,6 +98,7 @@ const DomainTableWrapper = styled.div`
 
 const HousePrice: FC = () => {
   const { isAdmin } = useContext(UserContext)
+  const { selectedMainMenuTab, setSelectedMainMenuTab } = useMainMenu()
   const [loading, setLoading] = useState(false)
   const [labelTabValue, setLabelTabValue] = useState('')
   const [houseUnitTabValue, setHouseUnitTabValue] = useState(
@@ -135,7 +137,7 @@ const HousePrice: FC = () => {
   }, [])
 
   const featureCountHandler = useCallback(async () => {
-    await insertFeatureView(Feature.HOUSE_RICE)
+    insertFeatureView(Feature.HOUSE_RICE)
     await updateFeatureDetail(Feature.HOUSE_RICE, 1)
     const featureDetail = await getFeatureDetail(Feature.HOUSE_RICE)
     if (featureDetail.viewCountTotal) {
@@ -144,8 +146,12 @@ const HousePrice: FC = () => {
   }, [])
 
   useEffect(() => {
-    featureCountHandler()
+    if (selectedMainMenuTab !== MainMenuTab.HOUSE_PRICE) {
+      setSelectedMainMenuTab(MainMenuTab.HOUSE_PRICE)
+      console.log('update mainMenuTab HOUSE_PRICE in useEffect')
+    }
     console.log('featureCountHandler in useEffect')
+    featureCountHandler()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -181,36 +187,41 @@ const HousePrice: FC = () => {
           maxWidth: '600px'
         }}
       >
-        {isAdmin ? (
-          <FlexCenterDiv
-            style={{
-              justifyContent: 'right',
-              gap: '10px',
-              marginRight: '10px'
-            }}
-          >
-            <FlexVerticalCenterDiv>
-              <AiOutlineEye
-                fontSize={18}
-                style={{
-                  marginRight: '1px',
-                  marginTop: '1px',
-                  color: COLOURS.PRIMARY_SPACE_GREY
-                }}
-              />
-              <span style={{ color: COLOURS.SECONDARY_SPACE_GREY }}>
-                {viewCountTotal}
-              </span>
-            </FlexVerticalCenterDiv>
-          </FlexCenterDiv>
-        ) : (
-          <></>
-        )}
         <FlexCenterDiv style={{ marginTop: '10px', gap: '10px' }}>
           <FcHome fontSize={24} />
           <Typography variant="h6" sx={{ fontWeight: 700 }}>
             부동산 가격 트랜드 리포트
           </Typography>
+          {isAdmin ? (
+            <FlexCenterDiv
+              style={{
+                justifyContent: 'right',
+                gap: '10px',
+                marginRight: '10px'
+              }}
+            >
+              <FlexVerticalCenterDiv>
+                <AiOutlineEye
+                  fontSize={14}
+                  style={{
+                    marginRight: '1px',
+                    marginTop: '1px',
+                    color: COLOURS.PRIMARY_SPACE_GREY
+                  }}
+                />
+                <span
+                  style={{
+                    fontSize: '12px',
+                    color: COLOURS.SECONDARY_SPACE_GREY
+                  }}
+                >
+                  {viewCountTotal}
+                </span>
+              </FlexVerticalCenterDiv>
+            </FlexCenterDiv>
+          ) : (
+            <></>
+          )}
         </FlexCenterDiv>
         {loading ? (
           <FlexCenterDiv style={{ margin: '20px' }}>
@@ -247,6 +258,7 @@ const HousePrice: FC = () => {
                 onChange={handleHouseUnitTab}
                 aria-label="house-unit-tab"
                 variant="fullWidth"
+                style={{ minHeight: '0', padding: '0', height: '44px' }}
                 centered
               >
                 <Tab
@@ -265,7 +277,7 @@ const HousePrice: FC = () => {
                     <FlexCenterDiv style={{ gap: '6px' }}>
                       <ApartmentIcon />
                       <span>
-                        <strong>유닛</strong>
+                        <strong>유닛/아파트</strong>
                       </span>
                     </FlexCenterDiv>
                   }

@@ -2,11 +2,12 @@ import {
   Category,
   FeatureDetail,
   Post,
-  PostType,
-  RawPost
+  RawPost,
+  TopCategory
 } from '../typing/interfaces'
 import {
   FIRESTORE_CATEGORIES,
+  FIRESTORE_CATEGORIES_TOP,
   FIRESTORE_FEATURE_DETAILS,
   FIRESTORE_PROPERTY_REPORTS,
   FIRESTORE_PROPERTY_REPORT_LABELS,
@@ -20,7 +21,8 @@ import {
   fromMillis,
   postQueryDocToJSON,
   propertyReportLabelToJSON,
-  propertyReportToJSON
+  propertyReportToJSON,
+  topCategoryToJSON
 } from './firebase'
 import {
   collection,
@@ -32,7 +34,7 @@ import {
   QueryDocumentSnapshot,
   startAfter
 } from 'firebase/firestore'
-import { Feature } from '../typing/enums'
+import { Feature, TopCategoryTab } from '../typing/enums'
 
 export const getUidByUsername = async (
   username: string
@@ -56,23 +58,55 @@ export const getAllCategories = async (): Promise<Category[]> => {
   return querySnapshot.docs.map(categoryToJSON)
 }
 
-export const getPostsByType = async (
-  postType: PostType,
+export const getAllTopCategories = async (): Promise<TopCategory[]> => {
+  const querySnapshot = await firestore
+    .collection(FIRESTORE_CATEGORIES_TOP)
+    .where('disabled', '==', false)
+    .orderBy('sort')
+    .get()
+  return querySnapshot.docs.map(topCategoryToJSON)
+}
+
+export const getPostsByTopCategory = async (
+  topCategoryTab: TopCategoryTab,
   lastPost?: Post
 ): Promise<Post[]> => {
   const queryConstraints = []
   queryConstraints.push(where('deleted', '==', false))
 
-  if (postType === 'inkrau') {
+  // 인크라우
+  if (topCategoryTab === TopCategoryTab.OFFICIAL) {
     queryConstraints.push(where('isInkrauOfficial', '==', true))
   }
 
-  if (postType === 'community') {
-    queryConstraints.push(where('isInkrauOfficial', '==', false))
+  if (topCategoryTab === TopCategoryTab.QUESTION) {
+    queryConstraints.push(
+      where('categories', 'array-contains', {
+        categoryId: 'category-question',
+        name: '질문'
+      })
+    )
+  }
+
+  if (topCategoryTab === TopCategoryTab.DEAL) {
+    queryConstraints.push(
+      where('categories', 'array-contains', {
+        categoryId: 'category-deal',
+        name: 'DEAL'
+      })
+    )
+  }
+
+  if (topCategoryTab === TopCategoryTab.AUS_NEWS) {
+    queryConstraints.push(
+      where('categories', 'array-contains', {
+        categoryId: 'category-aus-news',
+        name: '호주 뉴스'
+      })
+    )
   }
 
   queryConstraints.push(orderBy('createdAt', 'desc'))
-
   if (lastPost) {
     const cursor =
       typeof lastPost.createdAt === 'number'
@@ -88,7 +122,8 @@ export const getPostsByType = async (
   const q = query(collection(firestore, 'posts'), ...queryConstraints)
   const querySnapshot = await getDocs(q)
   const docs = querySnapshot.docs as QueryDocumentSnapshot<RawPost>[]
-  return docs.map(postQueryDocToJSON)
+  const filteredDocs = docs.map(postQueryDocToJSON)
+  return filteredDocs
 }
 
 export const getFeatureDetail = async (

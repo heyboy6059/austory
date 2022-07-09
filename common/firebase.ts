@@ -20,7 +20,9 @@ import {
   PropertyReportLabel,
   RawPropertyReportLabel,
   RawPropertyReport,
-  PropertyReport
+  PropertyReport,
+  RawTopCategory,
+  TopCategory
 } from '../typing/interfaces'
 import { QueryDocumentSnapshot } from 'firebase/firestore'
 
@@ -156,6 +158,16 @@ export const categoryToJSON = (
     ...categoryData,
     createdAt: categoryData?.createdAt?.toMillis() || 0,
     updatedAt: categoryData?.updatedAt?.toMillis() || 0
+  }
+}
+
+export const topCategoryToJSON = (
+  category: FirebaseDocumentSnapshot<RawTopCategory>
+): TopCategory => {
+  const categoryData = category.data()
+  return {
+    ...categoryData,
+    createdAt: categoryData?.createdAt?.toMillis() || 0
   }
 }
 // TODO: generalize all dataToJSON functions
