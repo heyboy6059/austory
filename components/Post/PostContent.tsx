@@ -13,7 +13,7 @@ import { Post, FirestoreTimestamp } from '../../typing/interfaces'
 import dayjs from 'dayjs'
 import {
   COLOURS,
-  CONTENT_AD_SLOT_ID,
+  COMMENT_END_AD_SLOT_ID,
   NUM_DATE_FORMAT,
   ROOT_INKRAU_URL
 } from '../../common/constants'
@@ -394,7 +394,7 @@ const PostContent: FC<PostContentProps> = ({
         )}
       </Paper>
       <Box style={{ marginTop: '10px' }}>
-        <AdSense adSlotId={CONTENT_AD_SLOT_ID} />
+        <AdSense adSlotId={COMMENT_END_AD_SLOT_ID} />
       </Box>
     </>
   )
