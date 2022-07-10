@@ -54,9 +54,9 @@ const PostFeed: FC<{
                       setSelectedScrollPosition={setSelectedScrollPosition}
                     />
                     {(index + 1) % 10 === 0 ? (
-                      <div>
+                      <FlexCenterDiv>
                         <AdSense adSlotId={MAIN_FEED_AD_SLOT_ID} />
-                      </div>
+                      </FlexCenterDiv>
                     ) : (
                       <></>
                     )}
