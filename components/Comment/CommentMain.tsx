@@ -21,8 +21,6 @@ import toast from 'react-hot-toast'
 import Select, { SelectChangeEvent } from '@mui/material/Select'
 import MenuItem from '@mui/material/MenuItem'
 import { CommentOrder } from '../../typing/enums'
-import AdSense from '../AdSense/AdSense'
-import { COMMENT_TOP_HORIZONTAL_AD_SLOT_ID } from '../../common/constants'
 
 interface Props {
   postRef: FirebaseDocumentRef
@@ -91,13 +89,15 @@ const CommentMain: FC<Props> = ({ postRef }) => {
 
   return (
     <div>
+      {/* 
+      REVIEW: size issue
       {comments.length > 1 ? (
         <div style={{ maxHeight: '150px' }}>
           <AdSense adSlotId={COMMENT_TOP_HORIZONTAL_AD_SLOT_ID} />
         </div>
       ) : (
         <></>
-      )}
+      )} */}
       <FlexSpaceBetweenCenter>
         <FlexCenterDiv style={{ gap: '10px' }}>
           <div>{comments.length}개의 댓글</div>
