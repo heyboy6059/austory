@@ -6,6 +6,8 @@ import { UserContext } from '../../common/context'
 import InfiniteScroll from 'react-infinite-scroller'
 import { FlexCenterDiv } from '../../common/uiComponents'
 import CircularProgress from '@mui/material/CircularProgress'
+import AdSense from '../AdSense/AdSense'
+import { MAIN_FEED_AD_SLOT_ID } from '../../common/constants'
 
 // TODO: posts interface
 const PostFeed: FC<{
@@ -38,28 +40,29 @@ const PostFeed: FC<{
         }
       >
         {posts
-          ? isAdmin
-            ? posts.map(post => (
-                <PostItem
-                  post={post}
-                  key={post.postId}
-                  ownerUser={ownerUser}
-                  setSelectedPost={setSelectedPost}
-                  setSelectedScrollPosition={setSelectedScrollPosition}
-                />
-              ))
-            : // filter test posts out for non admin users
-              posts
-                .filter(p => !p.isTest)
-                .map(post => (
-                  <PostItem
-                    post={post}
-                    key={post.postId}
-                    ownerUser={ownerUser}
-                    setSelectedPost={setSelectedPost}
-                    setSelectedScrollPosition={setSelectedScrollPosition}
-                  />
-                ))
+          ? posts
+              // filter test posts out for non admin users
+              .filter(p => (isAdmin ? true : !p.isTest))
+              .map((post, index) => {
+                return (
+                  <>
+                    <PostItem
+                      post={post}
+                      key={post.postId}
+                      ownerUser={ownerUser}
+                      setSelectedPost={setSelectedPost}
+                      setSelectedScrollPosition={setSelectedScrollPosition}
+                    />
+                    {(index + 1) % 10 === 0 ? (
+                      <div>
+                        <AdSense adSlotId={MAIN_FEED_AD_SLOT_ID} />
+                      </div>
+                    ) : (
+                      <></>
+                    )}
+                  </>
+                )
+              })
           : null}
       </InfiniteScroll>
     </Box>

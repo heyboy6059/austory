@@ -103,5 +103,6 @@ export const TEMP_KOR_AUS_RATE = 894
 export const CONTENT_AD_SLOT_ID = '3559760421'
 export const CALCULATOR_AD_SLOT_ID = '1419401955'
 export const HOUSE_PRICE_AD_SLOT_ID = '9806519249'
+export const MAIN_FEED_AD_SLOT_ID = '2044007891'
 
 export const GUEST_UID = 'guest'
