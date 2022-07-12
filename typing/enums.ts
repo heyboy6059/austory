@@ -58,7 +58,8 @@ export enum TopCategoryTab {
   OFFICIAL = 'Official',
   DEAL = 'Deal',
   AUS_NEWS = 'AusNews',
-  QUESTION = 'Question'
+  QUESTION = 'Question',
+  INFO = 'Info'
 }
 
 export const topCategoryMenuList = [
@@ -71,20 +72,24 @@ export const topCategoryMenuList = [
   //   topCategoryMenu: TopCategoryTab.POPULAR,
   //   korLabel: '인기글'
   // },
-  {
-    topCategoryMenu: TopCategoryTab.OFFICIAL,
-    korLabel: '인크라우 공식'
-  },
+  // {
+  //   topCategoryMenu: TopCategoryTab.OFFICIAL,
+  //   korLabel: '인크라우 공식'
+  // },
   {
     topCategoryMenu: TopCategoryTab.DEAL,
     korLabel: 'DEAL'
   },
   {
-    topCategoryMenu: TopCategoryTab.QUESTION,
-    korLabel: '질문'
-  },
-  {
     topCategoryMenu: TopCategoryTab.AUS_NEWS,
     korLabel: '호주 뉴스'
+  },
+  {
+    topCategoryMenu: TopCategoryTab.INFO,
+    korLabel: '정보'
   }
+  // {
+  //   topCategoryMenu: TopCategoryTab.QUESTION,
+  //   korLabel: '질문'
+  // },
 ]

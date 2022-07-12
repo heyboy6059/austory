@@ -311,12 +311,12 @@ export default function Navbar() {
             }}
           >
             <FlexCenterDiv
-              onClick={
-                // reload the page when user is in home page
-                typeof window !== 'undefined' && location.pathname === '/'
-                  ? () => location.reload()
-                  : null
-              }
+            // onClick={
+            //   // reload the page when user is in home page
+            //   typeof window !== 'undefined' && location.pathname === '/'
+            //     ? () => location.reload()
+            //     : null
+            // }
             >
               <Link href={`/`} passHref>
                 <a>

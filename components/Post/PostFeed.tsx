@@ -45,10 +45,9 @@ const PostFeed: FC<{
               .filter(p => (isAdmin ? true : !p.isTest))
               .map((post, index) => {
                 return (
-                  <>
+                  <div key={post.postId}>
                     <PostItem
                       post={post}
-                      key={post.postId}
                       ownerUser={ownerUser}
                       setSelectedPost={setSelectedPost}
                       setSelectedScrollPosition={setSelectedScrollPosition}
@@ -60,7 +59,7 @@ const PostFeed: FC<{
                     ) : (
                       <></>
                     )}
-                  </>
+                  </div>
                 )
               })
           : null}

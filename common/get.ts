@@ -75,9 +75,9 @@ export const getPostsByTopCategory = async (
   queryConstraints.push(where('deleted', '==', false))
 
   // 인크라우
-  if (topCategoryTab === TopCategoryTab.OFFICIAL) {
-    queryConstraints.push(where('isInkrauOfficial', '==', true))
-  }
+  // if (topCategoryTab === TopCategoryTab.OFFICIAL) {
+  //   queryConstraints.push(where('isInkrauOfficial', '==', true))
+  // }
 
   if (topCategoryTab === TopCategoryTab.QUESTION) {
     queryConstraints.push(
@@ -102,6 +102,15 @@ export const getPostsByTopCategory = async (
       where('categories', 'array-contains', {
         categoryId: 'category-aus-news',
         name: '호주 뉴스'
+      })
+    )
+  }
+
+  if (topCategoryTab === TopCategoryTab.INFO) {
+    queryConstraints.push(
+      where('categories', 'array-contains', {
+        categoryId: 'category-info',
+        name: '정보'
       })
     )
   }
