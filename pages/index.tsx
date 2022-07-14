@@ -2,9 +2,10 @@ import { useState, useEffect, useCallback } from 'react'
 import Head from 'next/head'
 import { Post } from '../typing/interfaces'
 import { getPostsByTopCategory } from '../common/get'
-import { TopCategoryTab } from '../typing/enums'
+import { MainMenuTab, TopCategoryTab } from '../typing/enums'
 import TopCategoryMenu from '../components/Main/TopCategoryMenu'
 import Community from '../components/Main/Community'
+import { useMainMenu } from '../components/Context/MainMenu'
 
 export const getServerSideProps = async context => {
   context
@@ -15,6 +16,7 @@ export const getServerSideProps = async context => {
 }
 
 const Home = ({ posts }) => {
+  const { selectedMainMenuTab, setSelectedMainMenuTab } = useMainMenu()
   const [communityTabPosts, setCommunityTabPosts] = useState<Post[]>(posts)
 
   const [selectedTopCategoryMenu, setSelectedTopCategoryMenu] =
@@ -35,6 +37,14 @@ const Home = ({ posts }) => {
       updateCommunityTabPosts(selectedTopCategoryMenu)
     }
   }, [selectedTopCategoryMenu, updateCommunityTabPosts])
+
+  useEffect(() => {
+    if (selectedMainMenuTab !== MainMenuTab.COMMUNITY) {
+      setSelectedMainMenuTab(MainMenuTab.COMMUNITY)
+      console.log('update mainMenuTab COMMUNITY in useEffect')
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   return (
     <div>
