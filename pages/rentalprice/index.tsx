@@ -200,7 +200,7 @@ const RentalPrice: FC = () => {
         <FlexCenterDiv style={{ marginTop: '10px', gap: '10px' }}>
           <FcOrganization fontSize={24} />
           <Typography variant="h6" sx={{ fontWeight: 700 }}>
-            렌트 가격 트랜드 리포트
+            렌트 주당 가격 트랜드 리포트
           </Typography>
           {isAdmin ? (
             <FlexCenterDiv
