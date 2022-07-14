@@ -51,6 +51,7 @@ export enum HousePriceReportType {
 export enum MainMenuTab {
   COMMUNITY = 'Community',
   HOUSE_PRICE = 'HousePrice',
+  RENTAL_PRICE = 'RentalPrice',
   WH_TAX_CAL = 'whTaxCal'
 }
 

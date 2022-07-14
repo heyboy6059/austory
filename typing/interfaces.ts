@@ -336,6 +336,7 @@ export type PropertyReportLabel = Omit<RawPropertyReportLabel, 'createdAt'> & {
 }
 
 export interface RawPropertyReport {
+  propertyReportType: PropertyReportType
   propertyReportId: string
   propertyReportLabelId: string
   type: HousePriceReportType

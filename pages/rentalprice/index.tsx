@@ -28,7 +28,7 @@ import {
 } from '../../typing/enums'
 import CircularProgress from '@mui/material/CircularProgress'
 import { FlexCenterDiv, FlexVerticalCenterDiv } from '../../common/uiComponents'
-import { FcHome } from 'react-icons/fc'
+import { FcOrganization } from 'react-icons/fc'
 import Typography from '@mui/material/Typography'
 import toast from 'react-hot-toast'
 import {
@@ -101,12 +101,11 @@ const DomainTableWrapper = styled.div`
   }
 `
 
-const HousePrice: FC = () => {
+const RentalPrice: FC = () => {
   const { isAdmin } = useContext(UserContext)
   const { selectedMainMenuTab, setSelectedMainMenuTab } = useMainMenu()
   const [loading, setLoading] = useState(false)
   const [labelTabValue, setLabelTabValue] = useState('')
-  console.log({ labelTabValue })
   const [houseUnitTabValue, setHouseUnitTabValue] = useState(
     HousePriceReportType.HOUSE
   )
@@ -126,9 +125,6 @@ const HousePrice: FC = () => {
     PropertyReport[]
   >([])
 
-  console.log({ allLabels })
-  console.log({ allPropertyReports })
-
   const getAllPropertyData = useCallback(async () => {
     setLoading(true)
     try {
@@ -138,7 +134,9 @@ const HousePrice: FC = () => {
       const sortedLabels = labels.sort((a, b) => b.createdAt - a.createdAt)
       setLabelTabValue(sortedLabels[0].propertyReportLabelId)
       setAllLabels(sortedLabels)
-      const reports = await getAllPropertyReports()
+      const reports = await getAllPropertyReports(
+        PropertyReportType.RENTAL_PRICE
+      )
       setAllPropertyReports(reports)
     } catch (err) {
       console.error(`Error in getAllPropertyData. ${err.message}`)
@@ -148,22 +146,22 @@ const HousePrice: FC = () => {
     }
   }, [])
 
-  //   const featureCountHandler = useCallback(async () => {
-  //     insertFeatureView(Feature.RENTAL_PRICE)
-  //     await updateFeatureDetail(Feature.RENTAL_PRICE, 1)
-  //     const featureDetail = await getFeatureDetail(Feature.RENTAL_PRICE)
-  //     if (featureDetail.viewCountTotal) {
-  //       setViewCountTotal(featureDetail.viewCountTotal)
-  //     }
-  //   }, [])
+  const featureCountHandler = useCallback(async () => {
+    insertFeatureView(Feature.RENTAL_PRICE)
+    await updateFeatureDetail(Feature.RENTAL_PRICE, 1)
+    const featureDetail = await getFeatureDetail(Feature.RENTAL_PRICE)
+    if (featureDetail.viewCountTotal) {
+      setViewCountTotal(featureDetail.viewCountTotal)
+    }
+  }, [])
 
   useEffect(() => {
-    if (selectedMainMenuTab !== MainMenuTab.HOUSE_PRICE) {
-      setSelectedMainMenuTab(MainMenuTab.HOUSE_PRICE)
-      console.log('update mainMenuTab HOUSE_PRICE in useEffect')
+    if (selectedMainMenuTab !== MainMenuTab.RENTAL_PRICE) {
+      setSelectedMainMenuTab(MainMenuTab.RENTAL_PRICE)
+      console.log('update mainMenuTab RENTAL_PRICE in useEffect')
     }
     console.log('featureCountHandler in useEffect')
-    // featureCountHandler()
+    featureCountHandler()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -185,7 +183,6 @@ const HousePrice: FC = () => {
     return ''
   }, [allLabels, allPropertyReports, houseUnitTabValue, labelTabValue])
 
-  console.log({ embedHtml })
   return (
     <>
       <Metatags
@@ -201,7 +198,7 @@ const HousePrice: FC = () => {
         }}
       >
         <FlexCenterDiv style={{ marginTop: '10px', gap: '10px' }}>
-          <FcHome fontSize={24} />
+          <FcOrganization fontSize={24} />
           <Typography variant="h6" sx={{ fontWeight: 700 }}>
             렌트 가격 트랜드 리포트
           </Typography>
@@ -326,4 +323,4 @@ const HousePrice: FC = () => {
   )
 }
 
-export default HousePrice
+export default RentalPrice
