@@ -76,7 +76,7 @@ const MainMenu: FC = () => {
                 </FlexCenterDiv>
               }
               {...a11yProps(0)}
-              style={{ padding: '10px 10px' }}
+              style={{ padding: '10px 4px' }}
               value={MainMenuTab.COMMUNITY}
               onClick={() => router.push(`/`)}
             />
@@ -90,7 +90,7 @@ const MainMenu: FC = () => {
                 </FlexCenterDiv>
               }
               {...a11yProps(2)}
-              style={{ padding: '10px 6px' }}
+              style={{ padding: '10px 4px' }}
               value={MainMenuTab.WH_TAX_CAL}
               onClick={() => router.push(`/calculator/wh`)}
             />
@@ -104,7 +104,7 @@ const MainMenu: FC = () => {
                 </FlexCenterDiv>
               }
               {...a11yProps(1)}
-              style={{ padding: '10px 6px' }}
+              style={{ padding: '10px 4px' }}
               value={MainMenuTab.HOUSE_PRICE}
               onClick={() => router.push(`/houseprice`)}
             />
@@ -118,7 +118,7 @@ const MainMenu: FC = () => {
                 </FlexCenterDiv>
               }
               {...a11yProps(1)}
-              style={{ padding: '10px 6px' }}
+              style={{ padding: '10px 4px' }}
               value={MainMenuTab.RENTAL_PRICE}
               onClick={() => router.push(`/rentalprice`)}
             />
