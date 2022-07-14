@@ -1,11 +1,13 @@
 import { FC } from 'react'
+// import { insertPropertyReportLabelData, insertPropertyReportData } from '../common/insert'
 
 const PlayGround: FC = () => {
   return (
     <div>
       <button
         onClick={() => {
-          return null
+          // insertPropertyReportData()
+          // return null
         }}
       >
         TEST

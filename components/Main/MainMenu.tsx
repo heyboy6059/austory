@@ -47,12 +47,26 @@ const MainMenu: FC = () => {
             variant="scrollable"
             scrollButtons="auto"
           >
+            {/* <Tab
+              label={
+                <FlexCenterDiv style={{ gap: '4px' }}>
+                  <FcCollaboration fontSize={17} />
+                  <div>
+                    <strong>호주 데이터</strong>
+                  </div>
+                </FlexCenterDiv>
+              }
+              {...a11yProps(0)}
+              style={{ padding: '10px 10px' }}
+              value={MainMenuTab.COMMUNITY}
+              onClick={() => router.push(`/`)}
+            /> */}
             <Tab
               label={
                 <FlexCenterDiv style={{ gap: '4px' }}>
                   <FcCollaboration fontSize={17} />
                   <div>
-                    <strong>커뮤니티</strong>
+                    <strong>호주 소식</strong>
                   </div>
                 </FlexCenterDiv>
               }

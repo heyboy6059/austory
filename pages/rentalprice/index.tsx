@@ -106,6 +106,7 @@ const HousePrice: FC = () => {
   const { selectedMainMenuTab, setSelectedMainMenuTab } = useMainMenu()
   const [loading, setLoading] = useState(false)
   const [labelTabValue, setLabelTabValue] = useState('')
+  console.log({ labelTabValue })
   const [houseUnitTabValue, setHouseUnitTabValue] = useState(
     HousePriceReportType.HOUSE
   )
@@ -125,14 +126,18 @@ const HousePrice: FC = () => {
     PropertyReport[]
   >([])
 
+  console.log({ allLabels })
+  console.log({ allPropertyReports })
+
   const getAllPropertyData = useCallback(async () => {
     setLoading(true)
     try {
       const labels = await getAllPropertyReportLabels(
-        PropertyReportType.HOUSE_PRICE
+        PropertyReportType.RENTAL_PRICE
       )
-      setLabelTabValue(labels[0].propertyReportLabelId)
-      setAllLabels(labels)
+      const sortedLabels = labels.sort((a, b) => b.createdAt - a.createdAt)
+      setLabelTabValue(sortedLabels[0].propertyReportLabelId)
+      setAllLabels(sortedLabels)
       const reports = await getAllPropertyReports()
       setAllPropertyReports(reports)
     } catch (err) {
@@ -143,14 +148,14 @@ const HousePrice: FC = () => {
     }
   }, [])
 
-  const featureCountHandler = useCallback(async () => {
-    insertFeatureView(Feature.HOUSE_RICE)
-    await updateFeatureDetail(Feature.HOUSE_RICE, 1)
-    const featureDetail = await getFeatureDetail(Feature.HOUSE_RICE)
-    if (featureDetail.viewCountTotal) {
-      setViewCountTotal(featureDetail.viewCountTotal)
-    }
-  }, [])
+  //   const featureCountHandler = useCallback(async () => {
+  //     insertFeatureView(Feature.RENTAL_PRICE)
+  //     await updateFeatureDetail(Feature.RENTAL_PRICE, 1)
+  //     const featureDetail = await getFeatureDetail(Feature.RENTAL_PRICE)
+  //     if (featureDetail.viewCountTotal) {
+  //       setViewCountTotal(featureDetail.viewCountTotal)
+  //     }
+  //   }, [])
 
   useEffect(() => {
     if (selectedMainMenuTab !== MainMenuTab.HOUSE_PRICE) {
@@ -158,7 +163,7 @@ const HousePrice: FC = () => {
       console.log('update mainMenuTab HOUSE_PRICE in useEffect')
     }
     console.log('featureCountHandler in useEffect')
-    featureCountHandler()
+    // featureCountHandler()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -180,13 +185,14 @@ const HousePrice: FC = () => {
     return ''
   }, [allLabels, allPropertyReports, houseUnitTabValue, labelTabValue])
 
+  console.log({ embedHtml })
   return (
     <>
       <Metatags
-        title={`인크라우 - 호주 부동산 가격 트랜드 리포트`}
-        description={`호주 지역별 부동산(하우스, 유닛) 가격 트랜드 리포트. 시드니, 멜번, 브리즈번, 아들레이드, 캔버라, 퍼스, 다윈, 호주 전역 부동산`}
+        title={`인크라우 - 호주 부동산 렌트 가격 트랜드 리포트`}
+        description={`호주 지역별 부동산(하우스, 유닛) 렌트 가격 트랜드 리포트. 시드니, 멜번, 브리즈번, 아들레이드, 캔버라, 퍼스, 다윈, 호주 전역 부동산`}
         type="article"
-        link={`${ROOT_INKRAU_URL}/houseprice`}
+        link={`${ROOT_INKRAU_URL}/rentalprice`}
       />
       <div
         style={{
@@ -197,7 +203,7 @@ const HousePrice: FC = () => {
         <FlexCenterDiv style={{ marginTop: '10px', gap: '10px' }}>
           <FcHome fontSize={24} />
           <Typography variant="h6" sx={{ fontWeight: 700 }}>
-            부동산 가격 트랜드 리포트
+            렌트 가격 트랜드 리포트
           </Typography>
           {isAdmin ? (
             <FlexCenterDiv
@@ -307,9 +313,7 @@ const HousePrice: FC = () => {
                 <strong>데이터 출처:</strong> Domain, powered by APM
               </LabelWrapper>
               <LabelWrapper>
-                <strong>
-                  제공된 모든 부동산 가격은 중간값(Median) 입니다.
-                </strong>
+                <strong>제공된 모든 렌트 가격은 중간값(Median) 입니다.</strong>
               </LabelWrapper>
             </div>
           </>

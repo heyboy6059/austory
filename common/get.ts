@@ -34,7 +34,7 @@ import {
   QueryDocumentSnapshot,
   startAfter
 } from 'firebase/firestore'
-import { Feature, TopCategoryTab } from '../typing/enums'
+import { Feature, PropertyReportType, TopCategoryTab } from '../typing/enums'
 
 export const getUidByUsername = async (
   username: string
@@ -148,10 +148,13 @@ export const getFeatureDetail = async (
   return querySnapshot.docs.map(featureDetailToJSON)[0]
 }
 
-export const getAllPropertyReportLabels = async () => {
+export const getAllPropertyReportLabels = async (
+  propertyReportType: PropertyReportType
+) => {
   const querySnapshot = await firestore
     .collection(FIRESTORE_PROPERTY_REPORT_LABELS)
     .orderBy('createdAt')
+    .where('propertyReportType', '==', propertyReportType)
     .get()
 
   return querySnapshot.docs.map(propertyReportLabelToJSON)

@@ -3,7 +3,7 @@ import { ROOT_INKRAU_URL } from '../common/constants'
 
 export default function Metatags({
   title = 'inKRAU 인크라우',
-  description = '앞서가는 일잘러들의 호주 커뮤니티',
+  description = '데이터로 이해하는 호주',
   image = 'https://www.inkrau.com/content_link_default_banner.png',
   imgAlt = 'inKRAU image',
   type = 'article',

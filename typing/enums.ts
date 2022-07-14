@@ -32,11 +32,13 @@ export enum CalculatorLogType {
 
 export enum Feature {
   WH_TAX = 'whTax',
-  HOUSE_RICE = 'housePrice'
+  HOUSE_RICE = 'housePrice',
+  RENTAL_PRICE = 'rentalPrice'
 }
 
 export enum PropertyReportType {
-  HOUSE_PRICE = 'housePrice'
+  HOUSE_PRICE = 'housePrice',
+  RENTAL_PRICE = 'rentalPrice'
   // RENTAL = 'rental'
   // SCHOOL_ZONES = 'schoolZones'
 }
