@@ -133,7 +133,9 @@ const HousePrice: FC = () => {
       )
       setLabelTabValue(labels[0].propertyReportLabelId)
       setAllLabels(labels)
-      const reports = await getAllPropertyReports()
+      const reports = await getAllPropertyReports(
+        PropertyReportType.HOUSE_PRICE
+      )
       setAllPropertyReports(reports)
     } catch (err) {
       console.error(`Error in getAllPropertyData. ${err.message}`)

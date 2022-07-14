@@ -160,9 +160,12 @@ export const getAllPropertyReportLabels = async (
   return querySnapshot.docs.map(propertyReportLabelToJSON)
 }
 
-export const getAllPropertyReports = async () => {
+export const getAllPropertyReports = async (
+  propertyReportType: PropertyReportType
+) => {
   const querySnapshot = await firestore
     .collection(FIRESTORE_PROPERTY_REPORTS)
+    .where('propertyReportType', '==', propertyReportType)
     .orderBy('createdAt')
     .get()
 
