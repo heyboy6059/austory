@@ -3,7 +3,12 @@ import Tab from '@mui/material/Tab'
 import Tabs from '@mui/material/Tabs'
 import { useRouter } from 'next/router'
 import { FC, SyntheticEvent } from 'react'
-import { FcCalculator, FcHome, FcCollaboration } from 'react-icons/fc'
+import {
+  FcCalculator,
+  FcHome,
+  FcCollaboration,
+  FcOrganization
+} from 'react-icons/fc'
 import {
   FlexCenterDiv,
   FlexSpaceBetweenCenter
@@ -78,6 +83,20 @@ const MainMenu: FC = () => {
             <Tab
               label={
                 <FlexCenterDiv style={{ gap: '4px' }}>
+                  <FcCalculator fontSize={17} />
+                  <div>
+                    <strong>워홀 세금 계산기</strong>
+                  </div>
+                </FlexCenterDiv>
+              }
+              {...a11yProps(2)}
+              style={{ padding: '10px 6px' }}
+              value={MainMenuTab.WH_TAX_CAL}
+              onClick={() => router.push(`/calculator/wh`)}
+            />
+            <Tab
+              label={
+                <FlexCenterDiv style={{ gap: '4px' }}>
                   <FcHome fontSize={17} />
                   <div>
                     <strong>부동산 트랜드</strong>
@@ -92,16 +111,16 @@ const MainMenu: FC = () => {
             <Tab
               label={
                 <FlexCenterDiv style={{ gap: '4px' }}>
-                  <FcCalculator fontSize={17} />
+                  <FcOrganization fontSize={17} />
                   <div>
-                    <strong>워홀 세금 계산기</strong>
+                    <strong>렌트 트랜드</strong>
                   </div>
                 </FlexCenterDiv>
               }
-              {...a11yProps(2)}
+              {...a11yProps(1)}
               style={{ padding: '10px 6px' }}
-              value={MainMenuTab.WH_TAX_CAL}
-              onClick={() => router.push(`/calculator/wh`)}
+              value={MainMenuTab.RENTAL_PRICE}
+              onClick={() => router.push(`/rentalprice`)}
             />
           </Tabs>
         </FlexSpaceBetweenCenter>
