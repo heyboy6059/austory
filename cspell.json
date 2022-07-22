@@ -6,11 +6,12 @@
     "language": "en",
     // words - list of words to be always considered correct
     "words": [
-        "ADSENSE",
         "adsbygoogle",
+        "ADSENSE",
         "appspot",
         "austory",
         "COLOURS",
+        "countryiso",
         "danpark",
         "firebaseapp",
         "firebasestorage",
@@ -18,19 +19,22 @@
         "fromMillis",
         "FXZVL0QDVQ",
         "googleusercontent",
+        "houseprice",
         "inkrau",
         "kebabcase",
+        "lastupdated",
         "linkify",
         "Metatags",
+        "passcode",
+        "rentalprice",
         "resizer",
         "scroller",
+        "sourceid",
+        "sourcename",
         "Swipeable",
         "toMillis",
         "Uids",
-        "vercel",
-        "passcode",
-        "houseprice",
-        "rentalprice"
+        "vercel"
     ],
     // flagWords - list of words to be always considered incorrect
     // This is useful for offensive words and common spelling errors.

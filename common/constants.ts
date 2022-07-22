@@ -61,6 +61,7 @@ export const FIRESTORE_FEATURE_VIEWS = 'featureViews'
 export const FIRESTORE_FEATURE_DETAILS = 'featureDetails'
 export const FIRESTORE_PROPERTY_REPORT_LABELS = 'propertyReportLabels'
 export const FIRESTORE_PROPERTY_REPORTS = 'propertyReports'
+export const FIRESTORE_AUS_KOR_DATASET = 'ausKorDataset'
 
 export const GENERIC_KOREAN_ERROR_MESSAGE =
   '에러가 발생했습니다. 다시 시도해주세요.'
