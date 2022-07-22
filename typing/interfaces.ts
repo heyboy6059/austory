@@ -7,6 +7,7 @@ import {
   PropertyReportType,
   Feature
 } from './enums'
+import { AusKorData } from './data'
 
 export type FirebaseDocumentSnapshot<T = firebase.firestore.DocumentData> =
   firebase.firestore.QueryDocumentSnapshot<T>
@@ -346,4 +347,9 @@ export interface RawPropertyReport {
 
 export type PropertyReport = Omit<RawPropertyReport, 'createdAt'> & {
   createdAt: number | null
+}
+
+export interface AusKorDataset {
+  createdAt: number // unix time
+  ausKorDataList: AusKorData[]
 }
