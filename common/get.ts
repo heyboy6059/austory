@@ -1,4 +1,5 @@
 import {
+  AusKorDataset,
   Category,
   FeatureDetail,
   Post,
@@ -6,6 +7,7 @@ import {
   TopCategory
 } from '../typing/interfaces'
 import {
+  FIRESTORE_AUS_KOR_DATASET,
   FIRESTORE_CATEGORIES,
   FIRESTORE_CATEGORIES_TOP,
   FIRESTORE_FEATURE_DETAILS,
@@ -170,4 +172,14 @@ export const getAllPropertyReports = async (
     .get()
 
   return querySnapshot.docs.map(propertyReportToJSON)
+}
+
+export const getLatestAusKorDataset = async (): Promise<AusKorDataset> => {
+  const querySnapshot = await firestore
+    .collection(FIRESTORE_AUS_KOR_DATASET)
+    .orderBy('createdAt', 'desc')
+    .limit(1)
+    .get()
+
+  return querySnapshot.docs[0].data() as AusKorDataset
 }
