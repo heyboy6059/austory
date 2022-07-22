@@ -1,4 +1,4 @@
-import { RawFeatureView } from './../typing/interfaces'
+import { AusKorDataset, RawFeatureView } from './../typing/interfaces'
 import { firestore, serverTimestamp } from '../common/firebase'
 import {
   CalculatorLogType,
@@ -7,7 +7,11 @@ import {
   PropertyReportType
 } from '../typing/enums'
 import { FirestoreTimestamp, RawCalculatorLog } from '../typing/interfaces'
-import { FIRESTORE_CALCULATOR_LOGS, FIRESTORE_FEATURE_VIEWS } from './constants'
+import {
+  FIRESTORE_AUS_KOR_DATASET,
+  FIRESTORE_CALCULATOR_LOGS,
+  FIRESTORE_FEATURE_VIEWS
+} from './constants'
 import { generateCalculatorLogId, generateFeatureViewId } from './idHelper'
 
 export const insertCalculatorLog = async (
@@ -79,4 +83,12 @@ export const insertPropertyReportData = async () => {
     embedHtml,
     createdAt
   })
+}
+
+export const insertAusKorDataset = async (ausKorDataset: AusKorDataset) => {
+  const ausKorDatasetId = `ausKorDataset-${Date.now()}`
+  const ref = firestore
+    .collection(FIRESTORE_AUS_KOR_DATASET)
+    .doc(ausKorDatasetId)
+  await ref.set(ausKorDataset)
 }
