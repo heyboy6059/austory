@@ -5,6 +5,7 @@ import {
   AusKorData,
   DataDefinition,
   DataGroupName,
+  DataSourceType,
   UnitType,
   WorldBankDataList,
   WorldBankDataMetadata
@@ -14,6 +15,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const logPrefix = `[AusKorData]`
   console.log(`${logPrefix} == BEGIN ==`)
 
+  // TODO: tidy up the sorts
   const worldBankDataDefinitionList: DataDefinition[] = [
     {
       dataGroupName: DataGroupName.DEMOGRAPHIC,
@@ -23,7 +25,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       indicator: 'SP.POP.TOTL',
       sort: 100,
       unitType: UnitType.PEOPLE,
-      isHighlight: true
+      isHighlight: true,
+      dataSourceType: DataSourceType.WORLD_BANK
     },
     {
       dataGroupName: DataGroupName.ECONOMY,
@@ -33,7 +36,52 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       indicator: 'NY.GDP.MKTP.CD',
       sort: 200,
       unitType: UnitType.CURRENCY,
-      isHighlight: true
+      isHighlight: true,
+      dataSourceType: DataSourceType.WORLD_BANK
+    },
+    {
+      dataGroupName: DataGroupName.ECONOMY,
+      dataLabelEng: 'GDP per capita',
+      dataLabelKor: '1인당 GDP',
+      dataDesc: '',
+      indicator: 'NY.GDP.PCAP.CD',
+      sort: 300,
+      unitType: UnitType.CURRENCY,
+      isHighlight: true,
+      dataSourceType: DataSourceType.WORLD_BANK
+    },
+    {
+      dataGroupName: DataGroupName.ECONOMY,
+      dataLabelEng: 'GDP growth',
+      dataLabelKor: 'GDP 성장률',
+      dataDesc: '',
+      indicator: 'NY.GDP.MKTP.KD.ZG',
+      sort: 300,
+      unitType: UnitType.PERCENTAGE,
+      isHighlight: true,
+      dataSourceType: DataSourceType.WORLD_BANK
+    },
+    {
+      dataGroupName: DataGroupName.SOCIAL,
+      dataLabelEng: 'Net migration',
+      dataLabelKor: '총 이민자 수',
+      dataDesc: '',
+      indicator: 'SM.POP.NETM',
+      sort: 400,
+      unitType: UnitType.PEOPLE,
+      isHighlight: true,
+      dataSourceType: DataSourceType.WORLD_BANK
+    },
+    {
+      dataGroupName: DataGroupName.DEMOGRAPHIC,
+      dataLabelEng: 'Population growth',
+      dataLabelKor: '인구 성장률',
+      dataDesc: '',
+      indicator: 'SP.POP.GROW',
+      sort: 500,
+      unitType: UnitType.PERCENTAGE_FLOAT,
+      isHighlight: true,
+      dataSourceType: DataSourceType.WORLD_BANK
     },
     {
       dataGroupName: DataGroupName.SOCIAL,
@@ -42,9 +90,32 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       dataLabelKor: '여성 국회의원 비율',
       dataDesc: '',
       indicator: 'SG.GEN.PARL.ZS',
-      sort: 300,
+      sort: 600,
       unitType: UnitType.PERCENTAGE,
-      isHighlight: true
+      isHighlight: true,
+      dataSourceType: DataSourceType.WORLD_BANK
+    },
+    {
+      dataGroupName: DataGroupName.ECONOMY,
+      dataLabelEng: 'Inflation, consumer prices',
+      dataLabelKor: '인플레이션',
+      dataDesc: '',
+      indicator: 'FP.CPI.TOTL.ZG',
+      sort: 600,
+      unitType: UnitType.PERCENTAGE,
+      isHighlight: true,
+      dataSourceType: DataSourceType.WORLD_BANK
+    },
+    {
+      dataGroupName: DataGroupName.ENVIRONMENT,
+      dataLabelEng: 'CO2 emissions (metric tons per capita)',
+      dataLabelKor: '이산화탄소 배출양',
+      dataDesc: '톤/인구 1명당',
+      indicator: 'EN.ATM.CO2E.PC',
+      sort: 600,
+      unitType: UnitType.TON_PER_CAPITA,
+      isHighlight: true,
+      dataSourceType: DataSourceType.WORLD_BANK
     }
   ]
 
@@ -70,7 +141,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     const dataList = worldBankData[1] as WorldBankDataList
 
     const ausDataListDesc = dataList
-      .filter(data => data.countryiso3code === 'AUS')
+      .filter(data => data.countryiso3code === 'AUS' && data.value)
       .sort((a, b) => Number(b.date) - Number(a.date))
 
     const latestAusData = ausDataListDesc[0]
@@ -79,7 +150,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       `${dataLogPrefix} Latest Aus Data - Year: ${latestAusData.date} / value: ${latestAusData.value}`
     )
 
-    const korDataList = dataList.filter(data => data.countryiso3code === 'KOR')
+    const korDataList = dataList.filter(
+      data => data.countryiso3code === 'KOR' && data.value
+    )
 
     let ausKorCompare: AusKorCompare = null
 
@@ -90,12 +163,12 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       if (matchedKorData) {
         ausKorCompare = {
           aus: {
-            year: Number(matchedKorData.date),
-            value: matchedKorData.value.toString()
-          },
-          kor: {
             year: Number(ausData.date),
             value: ausData.value.toString()
+          },
+          kor: {
+            year: Number(matchedKorData.date),
+            value: matchedKorData.value.toString()
           }
         }
         console.log(

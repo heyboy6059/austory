@@ -1,16 +1,24 @@
 export enum DataGroupName {
   DEMOGRAPHIC = 'Demographic',
   ECONOMY = 'Economy',
-  SOCIAL = 'Social'
+  SOCIAL = 'Social',
+  ENVIRONMENT = 'Environment'
 }
 
 export enum UnitType {
   PEOPLE = 'People',
   CURRENCY = 'Currency',
   NUMBER = 'Number',
-  PERCENTAGE = 'Percentage'
+  PERCENTAGE = 'Percentage',
+  PERCENTAGE_FLOAT = 'PercentageFloat',
+  TON_PER_CAPITA = 'TonPerCapita'
 }
 
+export enum DataSourceType {
+  WORLD_BANK = 'WorldBank',
+  CENSUS = 'Census',
+  CUSTOM = 'Custom'
+}
 export interface DataDefinition {
   dataGroupName: DataGroupName
   dataLabelEng: string
@@ -19,6 +27,7 @@ export interface DataDefinition {
   sort: number
   unitType: UnitType
   isHighlight: boolean
+  dataSourceType: DataSourceType
   sourceLink?: string
   indicator?: string
 }

@@ -221,5 +221,11 @@ export const ausKorValueHandler = (
   if (unitType === UnitType.PERCENTAGE) {
     return `${parseInt(value)} %`
   }
+  if (unitType === UnitType.TON_PER_CAPITA) {
+    return `${parseInt(value)} 톤`
+  }
+  if (unitType === UnitType.PERCENTAGE_FLOAT) {
+    return `${parseInt((parseFloat(value) * 100).toString())} %`
+  }
   return value
 }
