@@ -131,8 +131,9 @@ const HousePrice: FC = () => {
       const labels = await getAllPropertyReportLabels(
         PropertyReportType.HOUSE_PRICE
       )
-      setLabelTabValue(labels[0].propertyReportLabelId)
-      setAllLabels(labels)
+      const sortedLabels = labels.sort((a, b) => b.createdAt - a.createdAt)
+      setLabelTabValue(sortedLabels[0].propertyReportLabelId)
+      setAllLabels(sortedLabels)
       const reports = await getAllPropertyReports(
         PropertyReportType.HOUSE_PRICE
       )
