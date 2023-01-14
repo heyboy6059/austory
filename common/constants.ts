@@ -96,7 +96,7 @@ export const WHTaxRates = {
   }
 }
 
-export const TEMP_KOR_AUS_RATE = 894
+export const TEMP_KOR_AUS_RATE = 850
 
 /**
  * ADSENSE
