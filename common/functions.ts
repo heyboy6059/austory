@@ -206,7 +206,11 @@ export const ausKorValueHandler = (
   value: string
 ): string => {
   if (unitType === UnitType.PEOPLE) {
-    return `${Number(value).toLocaleString('en-US')} 명`
+    return `${numToKorean(
+      roundUpKoreanWonValue(Number(value)),
+      FormatOptions.MIXED
+    )} 명 (${Number(value).toLocaleString('en-US')} 명)`
+    // return `${Number(value).toLocaleString('en-US')} 명`
   }
   if (unitType === UnitType.CURRENCY) {
     return new Intl.NumberFormat('en-US', {
@@ -226,6 +230,9 @@ export const ausKorValueHandler = (
   }
   if (unitType === UnitType.PERCENTAGE_FLOAT) {
     return `${parseInt((parseFloat(value) * 100).toString())} %`
+  }
+  if (unitType === UnitType.KM2) {
+    return `${Number(value).toLocaleString('en-US')} km2`
   }
   return value
 }

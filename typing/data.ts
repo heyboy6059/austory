@@ -1,4 +1,5 @@
 export enum DataGroupName {
+  NATIONAL_INFO = 'NationalInfo',
   DEMOGRAPHIC = 'Demographic',
   ECONOMY = 'Economy',
   SOCIAL = 'Social',
@@ -9,14 +10,19 @@ export enum UnitType {
   PEOPLE = 'People',
   CURRENCY = 'Currency',
   NUMBER = 'Number',
+  STRING = 'String',
   PERCENTAGE = 'Percentage',
   PERCENTAGE_FLOAT = 'PercentageFloat',
-  TON_PER_CAPITA = 'TonPerCapita'
+  TON_PER_CAPITA = 'TonPerCapita',
+  KM2 = 'Km2'
 }
 
 export enum DataSourceType {
-  WORLD_BANK = 'WorldBank',
+  WORLD_BANK = 'World Bank',
   CENSUS = 'Census',
+  THE_WORLD_FACT = 'The World Fact',
+  GOVERNMENT = 'Government',
+  WORLDOMETERS = 'Worldometers',
   CUSTOM = 'Custom'
 }
 export interface DataDefinition {
@@ -27,7 +33,7 @@ export interface DataDefinition {
   sort: number
   unitType: UnitType
   isHighlight: boolean
-  dataSourceType: DataSourceType
+  dataSourceType: DataSourceType | null
   sourceLink?: string
   indicator?: string
 }
@@ -39,7 +45,7 @@ export interface DataGroup {
 }
 
 export type DataValue = {
-  year: number
+  year: number | null
   value: string
   subValue?: string
 }
@@ -52,7 +58,7 @@ export type AusKorCompare = {
 export interface AusKorData {
   definition: DataDefinition
   sourceName: string
-  sourceLastUpdated: string
+  sourceLastUpdated: string | null
   data: {
     ausOnly: DataValue
     ausKorCompare: AusKorCompare

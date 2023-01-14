@@ -1,4 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next'
+import { customAusKorData } from '../../common/ausKorData'
 import { insertAusKorDataset } from '../../common/insert'
 import {
   AusKorCompare,
@@ -21,7 +22,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       dataGroupName: DataGroupName.DEMOGRAPHIC,
       dataLabelEng: 'Population',
       dataLabelKor: '총 인구',
-      dataDesc: '',
+      dataDesc: '한국이 호주보다 약 2배 정도 많습니다.',
       indicator: 'SP.POP.TOTL',
       sort: 100,
       unitType: UnitType.PEOPLE,
@@ -196,7 +197,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
   // TODO: custom data
 
-  // TODO: insert data into firebase
+  ausKorDataList.push(...customAusKorData())
 
   console.log(
     `${logPrefix} Num of completed data list: ${ausKorDataList.length}`

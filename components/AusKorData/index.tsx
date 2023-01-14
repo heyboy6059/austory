@@ -11,7 +11,13 @@ import AUFlag from 'country-flag-icons/react/3x2/AU'
 import KRFlag from 'country-flag-icons/react/3x2/KR'
 import { ausKorValueHandler } from '../../common/functions'
 import dayjs from 'dayjs'
-import { KOR_DATE_WITHOUT_TIME_FORMAT } from '../../common/constants'
+import { COLOURS, KOR_DATE_WITHOUT_TIME_FORMAT } from '../../common/constants'
+import styled from 'styled-components'
+
+const DescText = styled.div`
+  font-size: 0.8rem;
+  color: ${COLOURS.TEXT_GREY};
+`
 
 interface Props {
   ausKorDataset: AusKorDataset
@@ -47,24 +53,28 @@ const AusKorData: FC<Props> = ({ ausKorDataset }) => {
               >
                 <div>
                   <div>{ausKorData.definition.dataLabelKor}</div>
-                  <div>({ausKorData.data.ausKorCompare.aus.year})</div>
+                  {ausKorData.data.ausKorCompare.aus.year && (
+                    <div>{`(${ausKorData.data.ausKorCompare.aus.year})`}</div>
+                  )}
+                  <DescText>{ausKorData.definition.dataSourceType}</DescText>
                 </div>
                 {/* <div>{ausKorData.data.ausOnly.value}</div> */}
                 <div>
-                  <FlexVerticalCenterDiv style={{ gap: '4px' }}>
+                  <FlexVerticalCenterDiv style={{ gap: '6px' }}>
                     <AUFlag style={{ width: '24px' }} />{' '}
                     {ausKorValueHandler(
                       ausKorData.definition.unitType,
                       ausKorData.data.ausKorCompare.aus.value
                     )}
                   </FlexVerticalCenterDiv>
-                  <FlexVerticalCenterDiv style={{ gap: '4px' }}>
+                  <FlexVerticalCenterDiv style={{ gap: '6px' }}>
                     <KRFlag style={{ width: '24px' }} />{' '}
                     {ausKorValueHandler(
                       ausKorData.definition.unitType,
                       ausKorData.data.ausKorCompare.kor.value
                     )}
                   </FlexVerticalCenterDiv>
+                  <DescText>{ausKorData.definition.dataDesc || ''}</DescText>
                 </div>
               </GridDiv>
             </Paper>
