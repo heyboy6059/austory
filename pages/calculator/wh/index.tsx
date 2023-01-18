@@ -172,7 +172,7 @@ const WorkingHolidayCalculator: FC = () => {
       <Metatags
         title={`인크라우 - 호주 워홀 세금/환급 계산기`}
         description={`호주 워킹 홀리데이 세금 환급 계산기`}
-        type="article"
+        type="website"
         link={`${ROOT_INKRAU_URL}/calculator/wh`}
       />
       <Box sx={{ width: '100%' }}>
