@@ -13,6 +13,7 @@ import { ausKorValueHandler } from '../../common/functions'
 import dayjs from 'dayjs'
 import { COLOURS, KOR_DATE_WITHOUT_TIME_FORMAT } from '../../common/constants'
 import styled from 'styled-components'
+import { UnitType } from '../../typing/data'
 
 const DescText = styled.div`
   font-size: 0.8rem;
@@ -23,9 +24,21 @@ interface Props {
   ausKorDataset: AusKorDataset
 }
 const AusKorData: FC<Props> = ({ ausKorDataset }) => {
+  const renderMainSubStrData = (
+    unitType: UnitType,
+    value: string
+  ): JSX.Element => {
+    const { mainData, subData } = ausKorValueHandler(unitType, value)
+    return (
+      <div>
+        <span>{mainData}</span>
+        {subData ? <small>{subData}</small> : <></>}
+      </div>
+    )
+  }
   return (
     <>
-      <FlexCenterDiv>호주 데이터 센트럴</FlexCenterDiv>
+      <FlexCenterDiv>호주 백과사전</FlexCenterDiv>
       <FlexSpaceBetweenCenter>
         <FormControlLabel
           control={<Switch defaultChecked />}
@@ -46,7 +59,7 @@ const AusKorData: FC<Props> = ({ ausKorDataset }) => {
             <Paper
               variant="outlined"
               key={ausKorData.definition.dataLabelEng}
-              style={{ padding: '10px 10px' }}
+              style={{ padding: '10px 15px' }}
             >
               <GridDiv
                 style={{ gridTemplateColumns: '1.5fr 2.5fr', gap: '6px' }}
@@ -59,23 +72,23 @@ const AusKorData: FC<Props> = ({ ausKorDataset }) => {
                   <DescText>{ausKorData.definition.dataSourceType}</DescText>
                 </div>
                 {/* <div>{ausKorData.data.ausOnly.value}</div> */}
-                <div>
+                <GridDiv style={{ gap: '5px' }}>
                   <FlexVerticalCenterDiv style={{ gap: '6px' }}>
                     <AUFlag style={{ width: '24px' }} />{' '}
-                    {ausKorValueHandler(
+                    {renderMainSubStrData(
                       ausKorData.definition.unitType,
                       ausKorData.data.ausKorCompare.aus.value
                     )}
                   </FlexVerticalCenterDiv>
                   <FlexVerticalCenterDiv style={{ gap: '6px' }}>
                     <KRFlag style={{ width: '24px' }} />{' '}
-                    {ausKorValueHandler(
+                    {renderMainSubStrData(
                       ausKorData.definition.unitType,
                       ausKorData.data.ausKorCompare.kor.value
                     )}
                   </FlexVerticalCenterDiv>
                   <DescText>{ausKorData.definition.dataDesc || ''}</DescText>
-                </div>
+                </GridDiv>
               </GridDiv>
             </Paper>
           )

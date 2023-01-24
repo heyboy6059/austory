@@ -93,3 +93,8 @@ export type WorldBankData = {
 }
 
 export type WorldBankDataList = WorldBankData[]
+
+export type MainSubStrData = {
+  mainData: string
+  subData: string
+}

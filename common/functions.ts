@@ -1,7 +1,7 @@
 import { TEMP_KOR_AUS_RATE, WHTaxRates } from './constants'
 import { parse } from 'node-html-parser'
 import { numToKorean, FormatOptions } from 'num-to-korean'
-import { UnitType } from '../typing/data'
+import { MainSubStrData, UnitType } from '../typing/data'
 
 export const generateExcerpt = (strContent: string, maxLength: number) => {
   if (!strContent) return ''
@@ -204,35 +204,56 @@ export const relabelDomainEmbeddedHtml = (html: string) => {
 export const ausKorValueHandler = (
   unitType: UnitType,
   value: string
-): string => {
+): MainSubStrData => {
   if (unitType === UnitType.PEOPLE) {
-    return `${numToKorean(
-      roundUpKoreanWonValue(Number(value)),
-      FormatOptions.MIXED
-    )} 명 (${Number(value).toLocaleString('en-US')} 명)`
+    return {
+      mainData: `${numToKorean(
+        roundUpKoreanWonValue(Number(value)),
+        FormatOptions.MIXED
+      )} 명`,
+      subData: `(${Number(value).toLocaleString('en-US')} 명)`
+    }
     // return `${Number(value).toLocaleString('en-US')} 명`
   }
   if (unitType === UnitType.CURRENCY) {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
-      minimumFractionDigits: 0
-      // These options are needed to round to whole numbers if that's what you want.
-      //minimumFractionDigits: 0, // (this suffices for whole numbers, but will print 2500.10 as $2,500.1)
-      //maximumFractionDigits: 0, // (causes 2500.99 to be printed as $2,501)
-    }).format(parseInt(value))
+    return {
+      mainData: new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+        minimumFractionDigits: 0
+        // These options are needed to round to whole numbers if that's what you want.
+        //minimumFractionDigits: 0, // (this suffices for whole numbers, but will print 2500.10 as $2,500.1)
+        //maximumFractionDigits: 0, // (causes 2500.99 to be printed as $2,501)
+      }).format(parseInt(value)),
+      subData: ''
+    }
   }
   if (unitType === UnitType.PERCENTAGE) {
-    return `${parseInt(value)} %`
+    return {
+      mainData: `${parseInt(value)} %`,
+      subData: ''
+    }
   }
   if (unitType === UnitType.TON_PER_CAPITA) {
-    return `${parseInt(value)} 톤`
+    return {
+      mainData: `${parseInt(value)} 톤`,
+      subData: ''
+    }
   }
   if (unitType === UnitType.PERCENTAGE_FLOAT) {
-    return `${parseInt((parseFloat(value) * 100).toString())} %`
+    return {
+      mainData: `${parseInt((parseFloat(value) * 100).toString())} %`,
+      subData: ''
+    }
   }
   if (unitType === UnitType.KM2) {
-    return `${Number(value).toLocaleString('en-US')} km2`
+    return {
+      mainData: `${Number(value).toLocaleString('en-US')} km2`,
+      subData: ''
+    }
   }
-  return value
+  return {
+    mainData: value,
+    subData: ''
+  }
 }
