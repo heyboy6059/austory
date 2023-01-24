@@ -186,7 +186,7 @@ const HousePrice: FC = () => {
   return (
     <>
       <Metatags
-        title={`인크라우 - 호주 부동산 가격 트랜드 리포트`}
+        title={`호주 부동산 가격 트랜드 리포트 - 인크라우`}
         description={`호주 지역별 부동산(하우스, 유닛) 가격 트랜드 리포트. 시드니, 멜번, 브리즈번, 아들레이드, 캔버라, 퍼스, 다윈, 호주 전역 부동산`}
         type="website"
         link={`${ROOT_INKRAU_URL}/houseprice`}
